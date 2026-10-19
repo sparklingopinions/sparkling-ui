@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Foundations/Contrast gaps" />
+
+# Contrast gaps
+
+The default colours are MustLoop's, kept as they are so the extraction changes nothing on screen. These text pairs fall short of WCAG AA (4.5:1 for normal text; 3:1 for large or bold text of 18.66px and up). A story that shows one of them turns off only axe's `color-contrast` rule, with a comment pointing here; every other rule still fails the test.
+
+Fixing them is a design change: agree it first, then change the token defaults and drop the story exceptions.
+
+| Text on background              | Light | Dark | Where MustLoop uses it                                |
+| ------------------------------- | ----: | ---: | ----------------------------------------------------- |
+| `ink-subtle` on `surface`       |  4.48 | 6.56 | Ghost buttons, tabs, select options, links            |
+| `ink-subtle` on `sunken`        |  4.10 | 7.44 | Grey pills                                            |
+| `ink-muted` on `surface`        |  3.01 | 5.11 | Ledger labels, inline form hints, empty states, chips |
+| `ink-muted` on `canvas`         |  2.91 | 5.56 | The same text, on the page background                 |
+| `ink-faint` on `surface`        |  1.95 | 2.92 | Placeholders                                          |
+| `accent` on `surface`           |  4.86 | 3.63 | Active tabs, the selected calendar day                |
+| `accent` on `accent-wash`       |  4.46 | 3.53 | Tinted buttons                                        |
+| `accent` on `accent-soft`       |  4.18 | 2.79 | Tinted buttons on hover                               |
+| `on-accent` on `accent-hover`   |  5.89 | 3.77 | Primary buttons on hover                              |
+| `on-accent` on `danger`         |  4.66 | 3.00 | Danger buttons                                        |
+| `on-accent` on `danger-mid`     |  4.18 | 3.44 | Danger buttons on hover                               |
+| `danger` on `danger-soft`       |  4.02 | 4.13 | Danger pills, danger outline buttons on hover         |
+| `success-mid` on `success-soft` |  3.32 | 4.20 | Pills                                                 |
+| `warning-mid` on `warning-soft` |  2.83 | 4.56 | Pills                                                 |
+| `info-mid` on `info-soft`       |  4.54 | 3.98 | Pills                                                 |
+
+Pairs that pass in both modes: `ink`, `ink-emphasis` and `ink-body` on any surface, `danger` on `surface`, `on-contrast` on `contrast` and its hover, `on-inverse` on `inverse`, and `on-accent` on `accent`.

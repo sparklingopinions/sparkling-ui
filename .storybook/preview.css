@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/inter';
 @import '../src/styles/tailwind.css';
-
+@import '../src/styles/base.css';
+@import './desk.css';
 @source '../src';
+
+body {
+  font-family: 'Inter Variable', sans-serif;
+}

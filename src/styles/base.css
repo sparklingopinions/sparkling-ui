@@ -1,0 +1,49 @@
+/* Optional page defaults, for apps without their own: themed text and canvas, selection and scrollbars.
+   Import it after sparkling-ui/tailwind.css. */
+
+/* Any element without a text colour of its own follows the theme of its [data-mode] scope. */
+:root,
+[data-mode='light'],
+[data-mode='dark'] {
+  color: rgb(var(--sui-ink));
+}
+
+html {
+  background-color: rgb(var(--sui-canvas));
+}
+
+::selection {
+  background-color: rgb(var(--sui-accent-line));
+}
+
+/* Thin, quiet scrollbars: a rounded thumb on no track. Firefox and Chromium read the standard
+   properties, Safari the ::-webkit ones. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--sui-line-strong)) transparent;
+}
+
+*:hover {
+  scrollbar-color: rgb(var(--sui-ink-faint)) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 9999px;
+  background-clip: padding-box;
+  background-color: rgb(var(--sui-line-strong));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(var(--sui-ink-faint));
+}

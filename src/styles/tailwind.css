@@ -1,8 +1,201 @@
-/* The app's entry point to sparkling-ui. Import it into the app's own Tailwind 4
-   stylesheet, after `@import 'tailwindcss'`, so one build generates both the
-   app's classes and the ones the components use. */
+/* The stylesheet apps import into their Tailwind 4 entry, after their own theme:
+   it holds the token defaults and the theme keys and variant the components use. */
 
 /* The compiled components, relative to this file inside the installed package. */
 @source '../../dist';
 
 @custom-variant dark (&:where([data-mode='dark'], [data-mode='dark'] *));
+
+/* Every colour role as RGB channels, with MustLoop's values as the defaults.
+   Apps theme the components by setting these. */
+:root,
+[data-mode='light'] {
+  /* Surfaces */
+  --sui-canvas: 251 251 250;
+  --sui-surface: 255 255 255;
+  --sui-sunken: 245 245 244;
+
+  /* Lines */
+  --sui-line-subtle: 236 236 234;
+  --sui-line: 226 226 223;
+  --sui-line-strong: 207 207 204;
+
+  /* Ink */
+  --sui-ink: 35 35 38;
+  --sui-ink-emphasis: 69 68 74;
+  --sui-ink-body: 98 98 106;
+  --sui-ink-subtle: 120 118 126;
+  --sui-ink-muted: 148 148 155;
+  --sui-ink-faint: 185 185 191;
+
+  /* Contrast */
+  --sui-contrast: 35 35 38;
+  --sui-contrast-hover: 49 49 54;
+  --sui-on-contrast: 255 255 255;
+
+  /* Accent */
+  --sui-accent: 109 92 230;
+  --sui-accent-hover: 94 79 214;
+  --sui-on-accent: 255 255 255;
+  --sui-accent-wash: 246 244 253;
+  --sui-accent-soft: 239 236 252;
+  --sui-accent-line: 226 220 248;
+  --sui-focus-ring: 239 236 252;
+
+  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover) and the solid */
+  --sui-success-soft: 234 245 239;
+  --sui-success-line: 210 234 221;
+  --sui-success-mid: 56 149 104;
+  --sui-success: 46 125 87;
+
+  --sui-warning-soft: 250 243 231;
+  --sui-warning-line: 245 230 205;
+  --sui-warning-mid: 194 134 35;
+  --sui-warning: 168 116 30;
+
+  --sui-danger-soft: 252 234 235;
+  --sui-danger-line: 249 213 215;
+  --sui-danger-mid: 226 62 73;
+  --sui-danger: 223 41 53;
+
+  --sui-info-soft: 237 241 244;
+  --sui-info-line: 217 225 232;
+  --sui-info-mid: 83 112 142;
+  --sui-info: 71 96 122;
+
+  /* Inverse */
+  --sui-inverse: 69 68 74;
+  --sui-on-inverse: 255 255 255;
+
+  /* Behind dialogs, with an opacity modifier */
+  --sui-scrim: 0 0 0;
+}
+
+[data-mode='dark'] {
+  /* Surfaces */
+  --sui-canvas: 22 22 23;
+  --sui-surface: 30 30 32;
+  --sui-sunken: 17 17 18;
+
+  /* Lines */
+  --sui-line-subtle: 39 39 42;
+  --sui-line: 50 50 53;
+  --sui-line-strong: 67 67 71;
+
+  /* Ink */
+  --sui-ink: 228 228 231;
+  --sui-ink-emphasis: 204 204 209;
+  --sui-ink-body: 182 182 188;
+  --sui-ink-subtle: 162 162 169;
+  --sui-ink-muted: 142 142 149;
+  --sui-ink-faint: 102 102 109;
+
+  /* Contrast */
+  --sui-contrast: 228 228 231;
+  --sui-contrast-hover: 217 217 221;
+  --sui-on-contrast: 30 30 32;
+
+  /* Accent */
+  --sui-accent: 115 100 220;
+  --sui-accent-hover: 130 115 232;
+  --sui-on-accent: 255 255 255;
+  --sui-accent-wash: 33 31 45;
+  --sui-accent-soft: 50 47 74;
+  --sui-accent-line: 61 56 94;
+  --sui-focus-ring: 50 47 74;
+
+  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover) and the solid */
+  --sui-success-soft: 42 61 54;
+  --sui-success-line: 49 77 64;
+  --sui-success-mid: 87 172 131;
+  --sui-success: 92 185 140;
+
+  --sui-warning-soft: 69 57 39;
+  --sui-warning-line: 89 71 43;
+  --sui-warning-mid: 210 155 66;
+  --sui-warning: 227 167 69;
+
+  --sui-danger-soft: 71 46 43;
+  --sui-danger-line: 92 55 49;
+  --sui-danger-mid: 217 105 84;
+  --sui-danger: 235 112 89;
+
+  --sui-info-soft: 52 57 64;
+  --sui-info-line: 62 71 79;
+  --sui-info-mid: 129 154 176;
+  --sui-info: 138 166 190;
+
+  /* Inverse */
+  --sui-inverse: 64 64 69;
+  --sui-on-inverse: 228 228 231;
+
+  /* Behind dialogs, with an opacity modifier */
+  --sui-scrim: 0 0 0;
+}
+
+/* Prefixed, so they never meet an app's own colour names (bg-sui-surface, text-sui-ink).
+   Inline, so each colour reads its channels where it's used and [data-mode] can flip any subtree.
+   "/ 1" is the shape MustLoop's PostCSS turns opacity modifiers on into plain alpha. */
+@theme inline {
+  --color-sui-canvas: rgb(var(--sui-canvas) / 1);
+  --color-sui-surface: rgb(var(--sui-surface) / 1);
+  --color-sui-sunken: rgb(var(--sui-sunken) / 1);
+  --color-sui-line-subtle: rgb(var(--sui-line-subtle) / 1);
+  --color-sui-line: rgb(var(--sui-line) / 1);
+  --color-sui-line-strong: rgb(var(--sui-line-strong) / 1);
+  --color-sui-ink: rgb(var(--sui-ink) / 1);
+  --color-sui-ink-emphasis: rgb(var(--sui-ink-emphasis) / 1);
+  --color-sui-ink-body: rgb(var(--sui-ink-body) / 1);
+  --color-sui-ink-subtle: rgb(var(--sui-ink-subtle) / 1);
+  --color-sui-ink-muted: rgb(var(--sui-ink-muted) / 1);
+  --color-sui-ink-faint: rgb(var(--sui-ink-faint) / 1);
+  --color-sui-contrast: rgb(var(--sui-contrast) / 1);
+  --color-sui-contrast-hover: rgb(var(--sui-contrast-hover) / 1);
+  --color-sui-on-contrast: rgb(var(--sui-on-contrast) / 1);
+  --color-sui-accent: rgb(var(--sui-accent) / 1);
+  --color-sui-accent-hover: rgb(var(--sui-accent-hover) / 1);
+  --color-sui-on-accent: rgb(var(--sui-on-accent) / 1);
+  --color-sui-accent-wash: rgb(var(--sui-accent-wash) / 1);
+  --color-sui-accent-soft: rgb(var(--sui-accent-soft) / 1);
+  --color-sui-accent-line: rgb(var(--sui-accent-line) / 1);
+  --color-sui-focus-ring: rgb(var(--sui-focus-ring) / 1);
+  --color-sui-success-soft: rgb(var(--sui-success-soft) / 1);
+  --color-sui-success-line: rgb(var(--sui-success-line) / 1);
+  --color-sui-success-mid: rgb(var(--sui-success-mid) / 1);
+  --color-sui-success: rgb(var(--sui-success) / 1);
+  --color-sui-warning-soft: rgb(var(--sui-warning-soft) / 1);
+  --color-sui-warning-line: rgb(var(--sui-warning-line) / 1);
+  --color-sui-warning-mid: rgb(var(--sui-warning-mid) / 1);
+  --color-sui-warning: rgb(var(--sui-warning) / 1);
+  --color-sui-danger-soft: rgb(var(--sui-danger-soft) / 1);
+  --color-sui-danger-line: rgb(var(--sui-danger-line) / 1);
+  --color-sui-danger-mid: rgb(var(--sui-danger-mid) / 1);
+  --color-sui-danger: rgb(var(--sui-danger) / 1);
+  --color-sui-info-soft: rgb(var(--sui-info-soft) / 1);
+  --color-sui-info-line: rgb(var(--sui-info-line) / 1);
+  --color-sui-info-mid: rgb(var(--sui-info-mid) / 1);
+  --color-sui-info: rgb(var(--sui-info) / 1);
+  --color-sui-inverse: rgb(var(--sui-inverse) / 1);
+  --color-sui-on-inverse: rgb(var(--sui-on-inverse) / 1);
+  --color-sui-scrim: rgb(var(--sui-scrim) / 1);
+}
+
+/* MustLoop's off-scale sizes, named by px, with no line height of their own. */
+@theme {
+  --text-7: 0.4375rem;
+  --text-7\.5: 0.46875rem;
+  --text-8: 0.5rem;
+  --text-10: 0.625rem;
+  --text-10\.5: 0.65625rem;
+  --text-11: 0.6875rem;
+  --text-11\.5: 0.71875rem;
+  --text-12\.5: 0.78125rem;
+  --text-13: 0.8125rem;
+  --text-13\.5: 0.84375rem;
+  --text-14\.5: 0.90625rem;
+  --text-15: 0.9375rem;
+  --text-26: 1.625rem;
+
+  --tracking-snug: -0.015em;
+  --tracking-caps: 0.06em;
+}

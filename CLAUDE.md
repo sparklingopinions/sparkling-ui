@@ -35,10 +35,11 @@ Use Node 22.12 or later (`.nvmrc`); Vitest 5 and Changesets 3 refuse older versi
 src/
   components/<Name>/   <Name>.vue, its parts, <Name>.stories.ts, index.ts
   composables/         useConfirm, useToast, useColorMode
-  styles/              tailwind.css, the stylesheet apps import
+  styles/              tailwind.css (tokens, theme keys, dark variant) and the optional base.css: what apps import
+  stories/             Storybook's Foundations pages (colours, contrast gaps); never built or published
   tests/               unit tests mirroring components/, plus support/ (the axe helper)
   index.ts             the public API: everything apps can import
-.storybook/            Storybook config; preview.css loads Tailwind, Inter and the library styles
+.storybook/            Storybook config; preview.css loads Tailwind, Inter and the library styles, desk.css the Desk fixture
 .changeset/            pending release notes
 ```
 
@@ -49,14 +50,26 @@ src/
 - **No compiled CSS ships.** Components are styled with Tailwind classes in their templates, and anything a class can't express lives in `src/styles/` (in `@layer components`). Apps import `sparkling-ui/tailwind.css` into their own Tailwind 4 build; its `@source` points at `dist/`, so one build generates the app's classes and the components' together. Consequences:
   - Never build a class name at runtime (`` `bg-${hue}-10` ``): Tailwind can't see it. Use a lookup of full class strings, or an inline style.
   - Don't write `<style>` blocks in components; they would be compiled here and not in the app.
-- Package exports: `.` (components and composables) and `./tailwind.css`. Published to GitHub Packages as `@sparklingopinions/sparkling-ui`; apps alias it to `sparkling-ui`.
+- Apps import `tailwind.css` at the end of their Tailwind entry: an app theme that resets a namespace (Tamable's `--color-*: initial`) would otherwise remove ours. MustLoop's PostCSS inlines imports with `postcss-import` before Tailwind runs; it has to skip `sparkling-ui`, because only Tailwind's resolver reads `exports`.
+- Package exports: `.` (components and composables), `./tailwind.css` and `./base.css`. Published to GitHub Packages as `@sparklingopinions/sparkling-ui`; apps alias it to `sparkling-ui`.
+
+### Tokens and classes
+
+- **Colour roles** are RGB channel variables, `--sui-<role>`, with MustLoop's values as the light and dark defaults in `tailwind.css`. Each maps to one step of MustLoop's ramps (`surface` is `--g-0`, `ink-muted` is `--g-50`, `accent` is `--p-100`, a status's `-soft`, `-line`, `-mid` and solid are its 10, 20, 90 and 100); `.storybook/desk.css` applies the same mapping to Tamable's ramps. Add a role with the first component that needs it, from the step MustLoop uses, in both files.
+- Colour classes are prefixed, `bg-sui-surface`, `text-sui-ink`, so they never meet an app's own colour names. Their theme values end in `/ 1`, the shape MustLoop's PostCSS rewrites opacity modifiers on into plain alpha.
+- Components are compiled by each app's Tailwind, so a class must mean the same in plain Tailwind 4 (Storybook, Tamable) and in MustLoop, whose JS theme keeps Tailwind 3's names and replaces the default theme:
+  - Not `rounded`, `rounded-sm`, `shadow`, `shadow-sm`, `blur`, bare `ring` or `outline-none`; their sizes moved between 3 and 4. `rounded-md`/`-lg`/`-xl`/`-full`, `shadow-md`/`-lg`/`-xl`, `ring-<n>` and `outline-hidden` are safe.
+  - Spacing, sizes and widths only from MustLoop's scale (Tailwind 3's plus 0.75, 1.25, 1.75, 3.25, 4.5, 5.5, 7.5, 8.5, 9.5, 10.5, 13, 18, 22, 62, 85; `max-w-` only 0, 90, 95, 130, 140 and the named sizes up to 7xl, but not `3xs`/`2xs`, which differ). Anything else as an arbitrary value: `max-w-[16rem]`.
+  - Custom font sizes (`text-13`, `text-12.5`) and tracking (`tracking-caps`) are defined in `tailwind.css` with MustLoop's values; never redefine a shared name with a different value.
+- Never copy a class MustLoop's theme doesn't define (`bg-blue-500`, `text-gray-600`): it renders nothing there, but would render in an app with Tailwind's default palette.
 
 ### Tests and stories
 
 Every component gets three things in the same commit:
 
 - **A unit test** in `src/tests/` (Vitest + Vue Test Utils, jsdom) that ends with `await expectAccessible(wrapper.element)` from `tests/support/axe.ts`. Mount with `attachTo: document.body`. Colour contrast is off there: jsdom can't compute it.
-- **Stories** in `<Name>.stories.ts`, covering each variant and state. Story tests run every story in Chromium and fail on any axe violation, contrast included.
+- **Stories** in `<Name>.stories.ts`, covering each variant and state. Story tests run every story in Chromium, once in light and once in dark (the `stories-light` and `stories-dark` projects), and fail on any axe violation, contrast included.
+  - MustLoop's colours keep some text pairs below WCAG AA; they're listed, with ratios, in `src/stories/ContrastGaps.mdx`. A story that shows one turns off only the `color-contrast` rule (`parameters.a11y.config.rules`), with a comment naming the pair. Fixing a gap changes the look, so it waits for agreement.
 - **An export** from `src/index.ts`, with its prop types.
 
 Pre-bundle any new dependency the stories need in `optimizeDeps.include` (`vitest.config.ts`); found mid-run on a cold cache, it reloads the page and fails the run.

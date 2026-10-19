@@ -12,12 +12,28 @@ const preview: Preview = {
     mode: {
       description: 'Colour mode',
       toolbar: { title: 'Mode', icon: 'mirror', items: ['light', 'dark'], dynamicTitle: true }
+    },
+    theme: {
+      description: 'Theme',
+      toolbar: {
+        title: 'Theme',
+        icon: 'paintbrush',
+        items: [
+          { value: 'default', title: 'Default (MustLoop)' },
+          { value: 'desk', title: 'Desk (Tamable)' }
+        ],
+        dynamicTitle: true
+      }
     }
   },
-  initialGlobals: { mode: 'light' },
+  // The story tests run once per mode; see vitest.config.ts.
+  initialGlobals: { mode: import.meta.env.STORY_MODE ?? 'light', theme: 'default' },
   decorators: [
     (story, context) => {
-      document.documentElement.dataset.mode = context.globals.mode
+      const root = document.documentElement
+      root.dataset.mode = context.globals.mode
+      if (context.globals.theme === 'default') delete root.dataset.theme
+      else root.dataset.theme = context.globals.theme
       return story()
     }
   ]

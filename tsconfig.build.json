@@ -9,5 +9,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*.ts", "src/**/*.vue"],
-  "exclude": ["src/**/*.stories.ts", "src/tests"]
+  "exclude": ["src/**/*.stories.ts", "src/stories", "src/tests"]
 }
