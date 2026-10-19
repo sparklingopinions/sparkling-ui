@@ -35,7 +35,7 @@
   --sui-accent-line: 220 227 251;
   --sui-focus-ring: 234 237 250;
 
-  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover) and the solid */
+  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover), the solid, and for danger the text on it */
   --sui-success-soft: 234 243 239;
   --sui-success-line: 213 231 222;
   --sui-success-mid: 68 145 107;
@@ -50,6 +50,7 @@
   --sui-danger-line: 243 217 213;
   --sui-danger-mid: 200 83 68;
   --sui-danger: 194 64 47;
+  --sui-on-danger: 255 255 255;
 
   --sui-info-soft: 237 241 244;
   --sui-info-line: 217 225 232;
@@ -98,7 +99,7 @@
   --sui-accent-line: 43 56 102;
   --sui-focus-ring: 27 30 41;
 
-  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover) and the solid */
+  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover), the solid, and for danger the text on it */
   --sui-success-soft: 22 33 29;
   --sui-success-line: 29 51 41;
   --sui-success-mid: 83 178 125;
@@ -113,6 +114,7 @@
   --sui-danger-line: 62 36 35;
   --sui-danger-mid: 231 111 98;
   --sui-danger: 255 122 107;
+  --sui-on-danger: 255 255 255;
 
   --sui-info-soft: 52 57 64;
   --sui-info-line: 62 71 79;
@@ -125,4 +127,12 @@
 
   /* Behind dialogs, with an opacity modifier */
   --sui-scrim: 0 0 0;
+}
+
+[data-theme='desk'] {
+  --sui-button-height: 1.875rem;
+  --sui-button-padding-x: 0.75rem;
+  --sui-button-text: 0.8125rem;
+  --sui-radius-button: 7px;
+  --sui-shadow-raised: none;
 }

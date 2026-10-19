@@ -43,20 +43,29 @@ The package is published privately to GitHub Packages as `@sparklingopinions/spa
 
    For pages without defaults of their own (text colour, canvas, selection, scrollbars), also import `sparkling-ui/base.css`.
 
-4. Theme the components by setting the colour roles, as RGB channels, for each mode:
+4. Brand the components by overriding any token, in any CSS file of the app. The library's defaults have zero specificity, so a plain `:root` rule wins wherever it sits:
 
    ```css
+   /* One value for both modes */
+   :root,
+   [data-mode] {
+     --sui-radius-button: 0.375rem;
+   }
+
+   /* Or one per mode: colours are RGB channels */
    :root,
    [data-mode='light'] {
      --sui-accent: 47 79 201;
+     --sui-accent-hover: 39 66 174;
    }
 
    [data-mode='dark'] {
      --sui-accent: 143 168 255;
+     --sui-accent-hover: 166 185 255;
    }
    ```
 
-   The defaults are MustLoop's. Storybook's "Foundations/Colors" lists every role, and its toolbar switches between light and dark and a second theme (Tamable's Desk).
+   Include `[data-mode]` in the selector, so a section that sets its own mode (`<div data-mode="dark">`) gets the app's values too. A colour set only for light also applies in dark (`:root` is the page in either mode), replacing the dark default: set both, as above. Colour roles (`--sui-surface`, `--sui-ink`, `--sui-accent`, `--sui-danger` and the rest) are listed in Storybook under Foundations/Colors; sizes and shapes are `--sui-button-height`, `--sui-button-padding-x`, `--sui-button-text`, `--sui-radius-button` and `--sui-shadow-raised`. The defaults are MustLoop's, and Storybook's toolbar switches to a second theme (Tamable's Desk) to show what an override set looks like (`.storybook/desk.css`).
 
 5. Import components where they're used:
 
