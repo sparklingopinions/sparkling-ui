@@ -1,0 +1,8 @@
+/* The app's entry point to sparkling-ui. Import it into the app's own Tailwind 4
+   stylesheet, after `@import 'tailwindcss'`, so one build generates both the
+   app's classes and the ones the components use. */
+
+/* The compiled components, relative to this file inside the installed package. */
+@source '../../dist';
+
+@custom-variant dark (&:where([data-mode='dark'], [data-mode='dark'] *));
