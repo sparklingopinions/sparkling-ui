@@ -12,6 +12,7 @@ const groups: { title: string; roles: string[] }[] = [
       'accent',
       'accent-solid',
       'accent-hover',
+      'accent-bright',
       'on-accent',
       'accent-wash',
       'accent-soft',
