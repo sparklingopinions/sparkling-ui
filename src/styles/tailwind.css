@@ -319,6 +319,10 @@
   --animate-sui-scrim-out: sui-scrim-out 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
   --animate-sui-dialog-in: sui-dialog-in 200ms ease-out;
   --animate-sui-dialog-out: sui-dialog-out 200ms ease-out forwards;
+  --animate-sui-toast-in: sui-toast-in 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-sui-toast-out:
+    sui-toast-collapse 450ms cubic-bezier(0, 1, 0, 1) forwards,
+    sui-toast-fade 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 
   @keyframes sui-spinner-dash {
     0% {
@@ -379,6 +383,29 @@
     to {
       opacity: 0;
       transform: scale(0.75);
+    }
+  }
+
+  @keyframes sui-toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(50%);
+    }
+  }
+
+  @keyframes sui-toast-collapse {
+    from {
+      max-height: 1000px;
+    }
+    to {
+      max-height: 0;
+    }
+  }
+
+  @keyframes sui-toast-fade {
+    to {
+      opacity: 0;
+      margin-bottom: 0;
     }
   }
 
