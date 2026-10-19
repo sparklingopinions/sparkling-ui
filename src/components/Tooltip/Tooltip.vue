@@ -10,6 +10,9 @@ export interface TooltipProps {
   disabled?: boolean
 }
 
+// Attributes go to the trigger, so another component's as-child trigger can sit around the Tooltip.
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<TooltipProps>(), { text: undefined, side: 'top' })
 
 const slots = useSlots()
@@ -20,7 +23,7 @@ const empty = computed(() => !props.text && !slots.content)
 <template>
   <TooltipProvider :delay-duration="0" disable-hoverable-content :skip-delay-duration="0">
     <TooltipRoot :disabled="disabled || empty">
-      <TooltipTrigger as-child>
+      <TooltipTrigger v-bind="$attrs" as-child>
         <slot />
       </TooltipTrigger>
       <TooltipPortal>

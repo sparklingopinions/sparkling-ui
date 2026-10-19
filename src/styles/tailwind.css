@@ -313,6 +313,7 @@
   --animate-sui-spinner-dash: sui-spinner-dash 1.5s ease-in-out infinite;
   --animate-sui-typing: sui-typing 1.2s infinite;
   --animate-sui-fade-in: sui-fade-in 250ms linear;
+  --animate-sui-menu-in: sui-fade-in 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --animate-sui-overlay-in: sui-overlay-in 120ms cubic-bezier(0, 0, 0.2, 1);
   --animate-sui-overlay-out: sui-overlay-out 100ms linear forwards;
   --animate-sui-scrim-in: sui-scrim-in 300ms cubic-bezier(0.4, 0, 0.2, 1);
