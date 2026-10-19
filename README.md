@@ -77,6 +77,7 @@ The package is published privately to GitHub Packages as `@sparklingopinions/spa
 
    ```ts
    import { defineAsyncComponent } from 'vue'
+
    import { setIconResolver } from 'sparkling-ui'
 
    setIconResolver((name) => defineAsyncComponent(() => import(`./assets/icons/${name}.svg`)))
