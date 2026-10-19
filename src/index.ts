@@ -1,2 +1,5 @@
 export * from './components/Button'
 export * from './components/Icon'
+export * from './components/Skeleton'
+export * from './components/Spinner'
+export * from './components/TypingDots'
