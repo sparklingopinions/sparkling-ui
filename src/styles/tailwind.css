@@ -6,10 +6,10 @@
 
 @custom-variant dark (&:where([data-mode='dark'], [data-mode='dark'] *));
 
-/* Every colour role as RGB channels, with MustLoop's values as the defaults.
-   Apps theme the components by setting these. */
-:root,
-[data-mode='light'] {
+/* Every colour role as RGB channels, with MustLoop's values as the defaults. Apps brand the components
+   by setting any of them. :where() keeps the defaults at zero specificity, so an app's own rule wins
+   wherever it sits in the CSS. */
+:where(:root, [data-mode='light']) {
   /* Surfaces */
   --sui-canvas: 251 251 250;
   --sui-surface: 255 255 255;
@@ -42,7 +42,7 @@
   --sui-accent-line: 226 220 248;
   --sui-focus-ring: 239 236 252;
 
-  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover) and the solid */
+  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover), the solid, and for danger the text on it */
   --sui-success-soft: 234 245 239;
   --sui-success-line: 210 234 221;
   --sui-success-mid: 56 149 104;
@@ -57,6 +57,7 @@
   --sui-danger-line: 249 213 215;
   --sui-danger-mid: 226 62 73;
   --sui-danger: 223 41 53;
+  --sui-on-danger: 255 255 255;
 
   --sui-info-soft: 237 241 244;
   --sui-info-line: 217 225 232;
@@ -71,7 +72,7 @@
   --sui-scrim: 0 0 0;
 }
 
-[data-mode='dark'] {
+:where([data-mode='dark']) {
   /* Surfaces */
   --sui-canvas: 22 22 23;
   --sui-surface: 30 30 32;
@@ -104,7 +105,7 @@
   --sui-accent-line: 61 56 94;
   --sui-focus-ring: 50 47 74;
 
-  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover) and the solid */
+  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover), the solid, and for danger the text on it */
   --sui-success-soft: 42 61 54;
   --sui-success-line: 49 77 64;
   --sui-success-mid: 87 172 131;
@@ -119,6 +120,7 @@
   --sui-danger-line: 92 55 49;
   --sui-danger-mid: 217 105 84;
   --sui-danger: 235 112 89;
+  --sui-on-danger: 255 255 255;
 
   --sui-info-soft: 52 57 64;
   --sui-info-line: 62 71 79;
@@ -171,6 +173,7 @@
   --color-sui-danger-line: rgb(var(--sui-danger-line) / 1);
   --color-sui-danger-mid: rgb(var(--sui-danger-mid) / 1);
   --color-sui-danger: rgb(var(--sui-danger) / 1);
+  --color-sui-on-danger: rgb(var(--sui-on-danger) / 1);
   --color-sui-info-soft: rgb(var(--sui-info-soft) / 1);
   --color-sui-info-line: rgb(var(--sui-info-line) / 1);
   --color-sui-info-mid: rgb(var(--sui-info-mid) / 1);
@@ -178,6 +181,15 @@
   --color-sui-inverse: rgb(var(--sui-inverse) / 1);
   --color-sui-on-inverse: rgb(var(--sui-on-inverse) / 1);
   --color-sui-scrim: rgb(var(--sui-scrim) / 1);
+}
+
+/* Sizes and shapes, the same in both modes. */
+:where(:root) {
+  --sui-button-height: 2.25rem;
+  --sui-button-padding-x: 0.875rem;
+  --sui-button-text: 0.875rem;
+  --sui-radius-button: 0.5rem;
+  --sui-shadow-raised: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 }
 
 /* MustLoop's off-scale sizes, named by px, with no line height of their own. */

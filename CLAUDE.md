@@ -55,7 +55,9 @@ src/
 
 ### Tokens and classes
 
+- **Tokens are how apps brand the library**: every colour, size and shape a component could reasonably differ by between products is a `--sui-*` variable, never a hard-coded value. The defaults sit in `:where()` selectors, at zero specificity, so an app's plain `:root` override wins wherever it is in its CSS; keep it that way.
 - **Colour roles** are RGB channel variables, `--sui-<role>`, with MustLoop's values as the light and dark defaults in `tailwind.css`. Each maps to one step of MustLoop's ramps (`surface` is `--g-0`, `ink-muted` is `--g-50`, `accent` is `--p-100`, a status's `-soft`, `-line`, `-mid` and solid are its 10, 20, 90 and 100); `.storybook/desk.css` applies the same mapping to Tamable's ramps. Add a role with the first component that needs it, from the step MustLoop uses, in both files.
+- **Sizes and shapes** (`--sui-button-height`, `--sui-radius-button`, `--sui-shadow-raised`...) are plain CSS values, mode-independent, used through Tailwind's variable shorthand: `h-(--sui-button-height)`, `rounded-(--sui-radius-button)`, `shadow-(--sui-shadow-raised)`, `text-(length:--sui-button-text)`. Desk overrides them too.
 - Colour classes are prefixed, `bg-sui-surface`, `text-sui-ink`, so they never meet an app's own colour names. Their theme values end in `/ 1`, the shape MustLoop's PostCSS rewrites opacity modifiers on into plain alpha.
 - Components are compiled by each app's Tailwind, so a class must mean the same in plain Tailwind 4 (Storybook, Tamable) and in MustLoop, whose JS theme keeps Tailwind 3's names and replaces the default theme:
   - Not `rounded`, `rounded-sm`, `shadow`, `shadow-sm`, `blur`, bare `ring` or `outline-none`; their sizes moved between 3 and 4. `rounded-md`/`-lg`/`-xl`/`-full`, `shadow-md`/`-lg`/`-xl`, `ring-<n>` and `outline-hidden` are safe.
@@ -69,7 +71,7 @@ Every component gets three things in the same commit:
 
 - **A unit test** in `src/tests/` (Vitest + Vue Test Utils, jsdom) that ends with `await expectAccessible(wrapper.element)` from `tests/support/axe.ts`. Mount with `attachTo: document.body`. Colour contrast is off there: jsdom can't compute it.
 - **Stories** in `<Name>.stories.ts`, covering each variant and state. Story tests run every story in Chromium, once in light and once in dark (the `stories-light` and `stories-dark` projects), and fail on any axe violation, contrast included.
-  - MustLoop's colours keep some text pairs below WCAG AA; they're listed, with ratios, in `src/stories/ContrastGaps.mdx`. A story that shows one turns off only the `color-contrast` rule (`parameters.a11y.config.rules`), with a comment naming the pair. Fixing a gap changes the look, so it waits for agreement.
+  - MustLoop's colours keep some text pairs below WCAG AA. Foundations/Contrast gaps (`src/stories/ContrastPairs.vue`) lists every text pair the components use with live ratios in both modes; add a pair there when a component introduces one. A story that shows one turns off only the `color-contrast` rule (`parameters.a11y.config.rules`), with a comment naming the pair. Fixing a gap changes the look, so it waits for agreement.
 - **An export** from `src/index.ts`, with its prop types.
 
 Pre-bundle any new dependency the stories need in `optimizeDeps.include` (`vitest.config.ts`); found mid-run on a cold cache, it reloads the page and fails the run.

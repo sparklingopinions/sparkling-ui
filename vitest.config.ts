@@ -10,7 +10,7 @@ const storyProject = (mode: 'light' | 'dark') => ({
   plugins: [storybookTest({ configDir: '.storybook' })],
   define: { 'import.meta.env.STORY_MODE': JSON.stringify(mode) },
   // Found mid-run on a cold cache (always, in CI), Vite reloads the page and the run fails.
-  optimizeDeps: { include: ['vue'] },
+  optimizeDeps: { include: ['vue', 'reka-ui'] },
   test: {
     name: `stories-${mode}`,
     browser: {
@@ -26,8 +26,6 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      // Until the first unit test lands; remove with it.
-      passWithNoTests: true,
       projects: [
         {
           extends: true,

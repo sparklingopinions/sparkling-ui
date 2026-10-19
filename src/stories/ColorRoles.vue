@@ -12,7 +12,7 @@ const groups: { title: string; roles: string[] }[] = [
   },
   ...['success', 'warning', 'danger', 'info'].map((status) => ({
     title: `Status: ${status}`,
-    roles: [`${status}-soft`, `${status}-line`, `${status}-mid`, status]
+    roles: [`${status}-soft`, `${status}-line`, `${status}-mid`, status, ...(status === 'danger' ? ['on-danger'] : [])]
   })),
   { title: 'Inverse', roles: ['inverse', 'on-inverse', 'scrim'] }
 ]
