@@ -64,6 +64,7 @@ src/
   - Not `rounded-sm`, `shadow`, `shadow-sm`, `blur`, `blur-sm`, bare `ring` or `outline-none`; their sizes moved between 3 and 4. `rounded`, `rounded-md`/`-lg`/`-xl`/`-full`, `shadow-md`/`-lg`/`-xl`, `ring-<n>` and `outline-hidden` are safe.
   - Spacing, sizes and widths only from MustLoop's scale (Tailwind 3's plus 0.75, 1.25, 1.75, 3.25, 4.5, 5.5, 7.5, 8.5, 9.5, 10.5, 13, 18, 22, 62, 85; `max-w-` only 0, 90, 95, 130, 140 and the named sizes up to 7xl, but not `3xs`/`2xs`, which differ). Anything else as an arbitrary value: `max-w-[16rem]`.
   - Custom font sizes (`text-13`, `text-12.5`) and tracking (`tracking-caps`) are defined in `tailwind.css` with MustLoop's values; never redefine a shared name with a different value.
+- Apps may load `@tailwindcss/forms` (MustLoop and Tamable do): its `[type='text']:focus` and similar rules outrank plain utilities, so a bare field inside a component also cancels them with `focus:` classes (`focus:border-none focus:shadow-none focus:ring-0`).
 - Never copy a class MustLoop's theme doesn't define (`bg-blue-500`, `text-gray-600`): it renders nothing there, but would render in an app with Tailwind's default palette.
 
 ### Icons
@@ -74,7 +75,7 @@ Icons belong to each app: `Icon` renders whatever the app registered with `setIc
 
 Every component gets three things in the same commit:
 
-- **A unit test** in `src/tests/` (Vitest + Vue Test Utils, jsdom) that ends with `await expectAccessible(wrapper.element)` from `tests/support/axe.ts`. Mount with `attachTo: document.body`. Colour contrast is off there: jsdom can't compute it.
+- **A unit test** in `src/tests/` (Vitest + Vue Test Utils, jsdom) that ends with `await expectAccessible(wrapper.element)` from `tests/support/axe.ts`. Mount with `attachTo: document.body`. Colour contrast is off there: jsdom can't compute it. `tests/support/setup.ts` fills in what jsdom lacks (`scrollIntoView`).
 - **Stories** in `<Name>.stories.ts`, covering each variant and state. Story tests run every story in Chromium, once in light and once in dark (the `stories-light` and `stories-dark` projects), and fail on any axe violation, contrast included.
   - Every text pair meets WCAG AA in both modes, and no story turns the contrast rule off. Foundations/Contrast (`src/stories/ContrastPairs.vue`) lists every text pair the components use with live ratios; add a pair there when a component introduces one. axe doesn't check every text (it skipped single-letter avatar initials), so a new pair's ratio is checked there too.
 - **An export** from `src/index.ts`, with its prop types.

@@ -33,6 +33,7 @@ export default mergeConfig(
             name: 'unit',
             globals: true,
             environment: 'jsdom',
+            setupFiles: ['src/tests/support/setup.ts'],
             include: ['src/tests/**/*.test.ts']
           }
         },

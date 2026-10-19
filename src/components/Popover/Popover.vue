@@ -4,15 +4,17 @@ import { onBeforeUnmount, ref, useAttrs, watch } from 'vue'
 import { PopoverAnchor, PopoverContent, PopoverPortal, PopoverRoot } from 'reka-ui'
 
 export interface PopoverProps {
-  /** The gap to the anchor, in px. */
+  /** The gap to the anchor, in px; negative overlaps it. */
   offset?: number
+  /** Shifts it along the anchor's edge, in px. */
+  alignOffset?: number
   closeOnEscape?: boolean
 }
 
 // Root is Reka's renderless PopoverRoot: class and attributes belong on the panel.
 defineOptions({ inheritAttrs: false })
 
-const props = withDefaults(defineProps<PopoverProps>(), { offset: 4, closeOnEscape: true })
+const props = withDefaults(defineProps<PopoverProps>(), { offset: 4, alignOffset: 0, closeOnEscape: true })
 
 const emit = defineEmits<{ show: []; hide: [] }>()
 
@@ -96,6 +98,7 @@ onBeforeUnmount(() => {
       <PopoverContent
         v-bind="$attrs"
         align="start"
+        :align-offset="alignOffset"
         :aria-label="label"
         class="z-[1000] block w-64 origin-center rounded-lg border border-sui-line-subtle bg-sui-surface text-sui-ink shadow-xl data-[state=closed]:animate-sui-overlay-out data-[state=open]:animate-sui-overlay-in"
         side="bottom"
