@@ -65,6 +65,10 @@ src/
   - Custom font sizes (`text-13`, `text-12.5`) and tracking (`tracking-caps`) are defined in `tailwind.css` with MustLoop's values; never redefine a shared name with a different value.
 - Never copy a class MustLoop's theme doesn't define (`bg-blue-500`, `text-gray-600`): it renders nothing there, but would render in an app with Tailwind's default palette.
 
+### Icons
+
+Icons belong to each app: `Icon` renders whatever the app registered with `setIconResolver`. A library component that needs an icon of its own (close, chevron, check) draws it inline as an internal component, never through the resolver, so it works in any app. Icon colours are a lookup of full class strings per role (`colors.ts`), as with any class.
+
 ### Tests and stories
 
 Every component gets three things in the same commit:

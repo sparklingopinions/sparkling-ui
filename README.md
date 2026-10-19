@@ -70,8 +70,19 @@ The package is published privately to GitHub Packages as `@sparklingopinions/spa
 5. Import components where they're used:
 
    ```ts
-   import { Avatar } from 'sparkling-ui'
+   import { Button } from 'sparkling-ui'
    ```
+
+6. To use `Icon`, register the app's icons once, before mounting. With SVG files imported as components (e.g. `vite-svg-loader`):
+
+   ```ts
+   import { defineAsyncComponent } from 'vue'
+   import { setIconResolver } from 'sparkling-ui'
+
+   setIconResolver((name) => defineAsyncComponent(() => import(`./assets/icons/${name}.svg`)))
+   ```
+
+   Then `<Icon name="mail" color="ink-muted" />`. Icons the library's own components need (a dialog's close button, a select's chevron) are built in.
 
 ## Local setup
 

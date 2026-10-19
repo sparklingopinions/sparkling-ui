@@ -1,10 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
+import Icon from '../Icon/Icon.vue'
 import Button from './Button.vue'
-
-// Until Icon lands: a plus, drawn the way MustLoop's icons are (stroked, no fill).
-const plus =
-  '<svg aria-hidden="true" class="size-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>'
 
 // See Foundations/Contrast gaps: MustLoop's colours, kept until a fix is agreed.
 const contrastGap = { a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } } }
@@ -22,7 +19,7 @@ const meta: Meta<typeof Button> = {
     iconPosition: { control: 'inline-radio', options: ['start', 'end'] }
   },
   render: (args) => ({
-    components: { Button },
+    components: { Button, Icon },
     setup: () => ({ args }),
     template: '<Button v-bind="args">Add contact</Button>'
   })
@@ -50,7 +47,7 @@ export const Danger: Story = { args: { variant: 'danger' }, parameters: contrast
 
 export const Sizes: Story = {
   render: (args) => ({
-    components: { Button },
+    components: { Button, Icon },
     setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-3">
@@ -66,27 +63,27 @@ export const Sizes: Story = {
 export const WithIcon: Story = {
   args: { variant: 'primary' },
   render: (args) => ({
-    components: { Button },
+    components: { Button, Icon },
     setup: () => ({ args }),
-    template: `<Button v-bind="args">${plus}Add contact</Button>`
+    template: `<Button v-bind="args"><Icon name="plus" />Add contact</Button>`
   })
 }
 
 export const IconAtEnd: Story = {
   args: { iconPosition: 'end' },
   render: (args) => ({
-    components: { Button },
+    components: { Button, Icon },
     setup: () => ({ args }),
-    template: `<Button v-bind="args">Add contact${plus}</Button>`
+    template: `<Button v-bind="args">Add contact<Icon name="plus" /></Button>`
   })
 }
 
 export const IconOnly: Story = {
   args: { iconOnly: true },
   render: (args) => ({
-    components: { Button },
+    components: { Button, Icon },
     setup: () => ({ args }),
-    template: `<Button v-bind="args" aria-label="Add contact">${plus}</Button>`
+    template: `<Button v-bind="args" aria-label="Add contact"><Icon name="plus" /></Button>`
   })
 }
 
@@ -97,7 +94,7 @@ export const Disabled: Story = { args: { variant: 'primary', disabled: true } }
 export const AsLink: Story = {
   args: { variant: 'primary', asChild: true },
   render: (args) => ({
-    components: { Button },
+    components: { Button, Icon },
     setup: () => ({ args }),
     template: '<Button v-bind="args"><a href="#people">Open people</a></Button>'
   })
