@@ -313,6 +313,8 @@
   --animate-sui-spinner-dash: sui-spinner-dash 1.5s ease-in-out infinite;
   --animate-sui-typing: sui-typing 1.2s infinite;
   --animate-sui-fade-in: sui-fade-in 250ms linear;
+  --animate-sui-overlay-in: sui-overlay-in 120ms cubic-bezier(0, 0, 0.2, 1);
+  --animate-sui-overlay-out: sui-overlay-out 100ms linear forwards;
 
   @keyframes sui-spinner-dash {
     0% {
@@ -331,6 +333,19 @@
 
   @keyframes sui-fade-in {
     from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes sui-overlay-in {
+    from {
+      opacity: 0;
+      transform: scaleY(0.8);
+    }
+  }
+
+  @keyframes sui-overlay-out {
+    to {
       opacity: 0;
     }
   }
