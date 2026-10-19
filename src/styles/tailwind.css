@@ -312,6 +312,7 @@
   /* Emitted only where a component uses them. */
   --animate-sui-spinner-dash: sui-spinner-dash 1.5s ease-in-out infinite;
   --animate-sui-typing: sui-typing 1.2s infinite;
+  --animate-sui-fade-in: sui-fade-in 250ms linear;
 
   @keyframes sui-spinner-dash {
     0% {
@@ -325,6 +326,12 @@
     100% {
       stroke-dasharray: 89, 200;
       stroke-dashoffset: -124px;
+    }
+  }
+
+  @keyframes sui-fade-in {
+    from {
+      opacity: 0;
     }
   }
 
