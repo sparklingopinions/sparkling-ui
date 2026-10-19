@@ -26,7 +26,19 @@ const pairs: { text: string; background: string; usage: string }[] = [
   { text: 'success-mid', background: 'success-soft', usage: 'Pills' },
   { text: 'warning-mid', background: 'warning-soft', usage: 'Pills' },
   { text: 'info-mid', background: 'info-soft', usage: 'Pills' },
-  { text: 'on-inverse', background: 'inverse', usage: 'Tooltips, toasts' }
+  { text: 'on-inverse', background: 'inverse', usage: 'Tooltips, toasts' },
+  { text: 'ink-body', background: 'sunken', usage: 'Tags, grey avatars' },
+  { text: 'warning-mid', background: 'surface', usage: 'Text pills' },
+  { text: 'success-mid', background: 'surface', usage: 'Text pills' },
+  { text: 'info-mid', background: 'surface', usage: 'Text pills' },
+  { text: 'hue-blue-ink', background: 'hue-blue-soft', usage: 'Avatar initials' },
+  { text: 'hue-green-ink', background: 'hue-green-soft', usage: 'Avatar initials' },
+  { text: 'hue-orange-ink', background: 'hue-orange-soft', usage: 'Avatar initials' },
+  { text: 'hue-pink-ink', background: 'hue-pink-soft', usage: 'Avatar initials' },
+  { text: 'hue-purple-ink', background: 'hue-purple-soft', usage: 'Avatar initials' },
+  { text: 'hue-slate-ink', background: 'hue-slate-soft', usage: 'Avatar initials' },
+  { text: 'hue-red-ink', background: 'hue-red-soft', usage: 'Avatar initials' },
+  { text: 'hue-amber-ink', background: 'hue-amber-soft', usage: 'Avatar initials' }
 ]
 
 const probes = ref<Record<Mode, HTMLElement | null>>({ light: null, dark: null })

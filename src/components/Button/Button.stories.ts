@@ -1,10 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
+import { contrastGap } from '../../stories/contrast'
 import Icon from '../Icon/Icon.vue'
 import Button from './Button.vue'
-
-// See Foundations/Contrast gaps: MustLoop's colours, kept until a fix is agreed.
-const contrastGap = { a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } } }
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',

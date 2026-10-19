@@ -12,7 +12,18 @@ const groups: { title: string; roles: string[] }[] = [
   },
   ...['success', 'warning', 'danger', 'info'].map((status) => ({
     title: `Status: ${status}`,
-    roles: [`${status}-soft`, `${status}-line`, `${status}-mid`, status, ...(status === 'danger' ? ['on-danger'] : [])]
+    roles: [
+      `${status}-soft`,
+      `${status}-line`,
+      `${status}-mid`,
+      status,
+      ...(status === 'warning' ? ['warning-bright'] : []),
+      ...(status === 'danger' ? ['on-danger'] : [])
+    ]
+  })),
+  ...['blue', 'green', 'orange', 'pink', 'purple', 'slate', 'red', 'amber'].map((hue) => ({
+    title: `Hue: ${hue}`,
+    roles: [`hue-${hue}-soft`, `hue-${hue}-line`, `hue-${hue}-ink`]
   })),
   { title: 'Inverse', roles: ['inverse', 'on-inverse', 'scrim'] }
 ]
