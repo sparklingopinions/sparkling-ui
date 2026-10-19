@@ -36,7 +36,7 @@ src/
   components/<Name>/   <Name>.vue, its parts, <Name>.stories.ts, index.ts
   composables/         useConfirm, useToast, useColorMode
   styles/              tailwind.css (tokens, theme keys, dark variant) and the optional base.css: what apps import
-  stories/             Storybook's Foundations pages (colours, contrast gaps); never built or published
+  stories/             Storybook's Foundations pages (colours, contrast); never built or published
   tests/               unit tests mirroring components/, plus support/ (the axe helper)
   index.ts             the public API: everything apps can import
 .storybook/            Storybook config; preview.css loads Tailwind, Inter and the library styles, desk.css the Desk fixture
@@ -56,7 +56,8 @@ src/
 ### Tokens and classes
 
 - **Tokens are how apps brand the library**: every colour, size and shape a component could reasonably differ by between products is a `--sui-*` variable, never a hard-coded value. The defaults sit in `:where()` selectors, at zero specificity, so an app's plain `:root` override wins wherever it is in its CSS; keep it that way.
-- **Colour roles** are RGB channel variables, `--sui-<role>`, with MustLoop's values as the light and dark defaults in `tailwind.css`. Each maps to one step of MustLoop's ramps (`surface` is `--g-0`, `ink-muted` is `--g-50`, `accent` is `--p-100`, a status's `-soft`, `-line`, `-mid` and solid are its 10, 20, 90 and 100); `.storybook/desk.css` applies the same mapping to Tamable's ramps. Add a role with the first component that needs it, from the step MustLoop uses, in both files.
+- **Colour roles** are RGB channel variables, `--sui-<role>`, with MustLoop's values as the light and dark defaults in `tailwind.css`, including the WCAG AA fix Claude Design made to them (`Contrast Fix.dc.html` in the MustLoop design project). Each maps to one step of MustLoop's ramps (`surface` is `--g-0`, `ink-muted` and `ink-faint` are `--g-50`, `accent` is `--p-100` and `accent-solid` `--p-90`, a status's `-soft` and `-line` are its 10 and 20); `.storybook/desk.css` applies the same mapping to Tamable's ramps. Add a role with the first component that needs it, from the step MustLoop uses, in both files.
+- **Text roles and fill roles are separate**, so every text pair keeps 4.5:1 in both modes. `accent` and `danger` colour text; fills with white text on them use `accent-solid` and `danger-solid`, whose hovers (`accent-hover`, `danger-hover`) deepen in both modes. `ink-faint` is text (placeholders); a faint mark that isn't text (a dot, a scrollbar) uses `mark-faint`.
 - **Sizes and shapes** (`--sui-button-height`, `--sui-radius-button`, `--sui-shadow-raised`...) are plain CSS values, mode-independent, used through Tailwind's variable shorthand: `h-(--sui-button-height)`, `rounded-(--sui-radius-button)`, `shadow-(--sui-shadow-raised)`, `text-(length:--sui-button-text)`. Desk overrides them too.
 - Colour classes are prefixed, `bg-sui-surface`, `text-sui-ink`, so they never meet an app's own colour names. Their theme values end in `/ 1`, the shape MustLoop's PostCSS rewrites opacity modifiers on into plain alpha.
 - Components are compiled by each app's Tailwind, so a class must mean the same in plain Tailwind 4 (Storybook, Tamable) and in MustLoop, whose JS theme keeps Tailwind 3's names and replaces the default theme:
@@ -75,7 +76,7 @@ Every component gets three things in the same commit:
 
 - **A unit test** in `src/tests/` (Vitest + Vue Test Utils, jsdom) that ends with `await expectAccessible(wrapper.element)` from `tests/support/axe.ts`. Mount with `attachTo: document.body`. Colour contrast is off there: jsdom can't compute it.
 - **Stories** in `<Name>.stories.ts`, covering each variant and state. Story tests run every story in Chromium, once in light and once in dark (the `stories-light` and `stories-dark` projects), and fail on any axe violation, contrast included.
-  - MustLoop's colours keep some text pairs below WCAG AA. Foundations/Contrast gaps (`src/stories/ContrastPairs.vue`) lists every text pair the components use with live ratios in both modes; add a pair there when a component introduces one. A story that shows one sets `parameters: contrastGap` (`src/stories/contrast.ts`), which turns off only the `color-contrast` rule, with a comment naming the pair. Fixing a gap changes the look, so it waits for agreement.
+  - Every text pair meets WCAG AA in both modes, and no story turns the contrast rule off. Foundations/Contrast (`src/stories/ContrastPairs.vue`) lists every text pair the components use with live ratios; add a pair there when a component introduces one. axe doesn't check every text (it skipped single-letter avatar initials), so a new pair's ratio is checked there too.
 - **An export** from `src/index.ts`, with its prop types.
 
 Pre-bundle any new dependency the stories need in `optimizeDeps.include` (`vitest.config.ts`); found mid-run on a cold cache, it reloads the page and fails the run.

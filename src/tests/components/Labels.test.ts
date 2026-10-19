@@ -34,7 +34,7 @@ describe('Avatar', () => {
     const wrapper = mount(Avatar, { props: { name: 'Ada', hue: 'amber', shape: 'square', size: 'lg', badge: true } })
 
     expect(wrapper.classes()).toEqual(expect.arrayContaining(['bg-sui-hue-amber-soft', 'rounded-lg', 'h-10']))
-    expect(wrapper.find('span.bg-sui-accent').exists()).toBe(true)
+    expect(wrapper.find('span.bg-sui-accent-solid').exists()).toBe(true)
   })
 
   it('keeps a stable hue per first letter, never purple, red or grey', () => {

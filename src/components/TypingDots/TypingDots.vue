@@ -4,7 +4,7 @@
     <span
       v-for="n in 3"
       :key="n"
-      class="size-1 animate-sui-typing rounded-full bg-sui-accent"
+      class="size-1 animate-sui-typing rounded-full bg-sui-accent-solid"
       :style="{ animationDelay: `${(n - 1) * 0.15}s` }"
     />
   </span>

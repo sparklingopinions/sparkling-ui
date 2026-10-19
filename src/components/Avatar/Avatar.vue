@@ -61,7 +61,7 @@ const colorClass = computed(() => (props.image ? 'border-sui-line-subtle' : hues
     <template v-else>{{ initial }}</template>
     <span
       v-if="badge"
-      class="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-sui-accent ring-2 ring-sui-surface"
+      class="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-sui-accent-solid ring-2 ring-sui-surface"
     />
   </div>
 </template>

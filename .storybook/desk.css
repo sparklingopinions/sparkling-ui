@@ -13,21 +13,23 @@
   --sui-line: 222 222 218;
   --sui-line-strong: 201 201 197;
 
-  /* Ink */
+  /* Ink: text, darkest first. ink-faint (placeholders) shares ink-muted's grey; mark-faint is for non-text marks */
   --sui-ink: 24 24 27;
   --sui-ink-emphasis: 54 54 58;
   --sui-ink-body: 69 69 75;
   --sui-ink-subtle: 102 102 108;
   --sui-ink-muted: 124 124 130;
-  --sui-ink-faint: 156 156 162;
+  --sui-ink-faint: 124 124 130;
+  --sui-mark-faint: 156 156 162;
 
   /* Contrast */
   --sui-contrast: 24 24 27;
   --sui-contrast-hover: 35 35 38;
   --sui-on-contrast: 255 255 255;
 
-  /* Accent */
+  /* Accent: accent is for text, accent-solid for fills; one step can't hold contrast as both in dark mode */
   --sui-accent: 47 79 201;
+  --sui-accent-solid: 68 97 206;
   --sui-accent-hover: 39 66 174;
   --sui-on-accent: 255 255 255;
   --sui-accent-wash: 241 244 253;
@@ -35,28 +37,30 @@
   --sui-accent-line: 220 227 251;
   --sui-focus-ring: 234 237 250;
 
-  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover) and the solid;
-     warning also has a brighter dot, danger the text on its solid */
+  /* Status: a soft fill, its line, a mid step for borders, dots and chip text, and the solid; warning also has
+     a brighter dot, and danger a solid fill and hover of its own, for white text */
   --sui-success-soft: 234 243 239;
   --sui-success-line: 213 231 222;
-  --sui-success-mid: 68 145 107;
+  --sui-success-mid: 47 133 90;
   --sui-success: 47 133 90;
 
   --sui-warning-soft: 248 242 233;
   --sui-warning-line: 241 228 210;
-  --sui-warning-mid: 190 134 53;
-  --sui-warning-bright: 205 161 98;
+  --sui-warning-mid: 183 121 31;
   --sui-warning: 183 121 31;
+  --sui-warning-bright: 205 161 98;
 
   --sui-danger-soft: 249 236 234;
   --sui-danger-line: 243 217 213;
   --sui-danger-mid: 200 83 68;
   --sui-danger: 194 64 47;
+  --sui-danger-solid: 194 64 47;
+  --sui-danger-hover: 200 83 68;
   --sui-on-danger: 255 255 255;
 
   --sui-info-soft: 237 241 244;
   --sui-info-line: 217 225 232;
-  --sui-info-mid: 83 112 142;
+  --sui-info-mid: 71 96 122;
   --sui-info: 71 96 122;
 
   /* Categorical hues, for avatars and tags: a soft fill, its line and its ink */
@@ -105,21 +109,23 @@
   --sui-line: 47 50 55;
   --sui-line-strong: 60 64 70;
 
-  /* Ink */
+  /* Ink: text, darkest first. ink-faint (placeholders) shares ink-muted's grey; mark-faint is for non-text marks */
   --sui-ink: 236 237 238;
   --sui-ink-emphasis: 197 199 204;
   --sui-ink-body: 180 183 189;
   --sui-ink-subtle: 139 143 152;
   --sui-ink-muted: 120 124 133;
-  --sui-ink-faint: 95 99 107;
+  --sui-ink-faint: 120 124 133;
+  --sui-mark-faint: 95 99 107;
 
   /* Contrast */
   --sui-contrast: 236 237 238;
   --sui-contrast-hover: 214 215 218;
   --sui-on-contrast: 14 15 17;
 
-  /* Accent */
+  /* Accent: accent is for text, accent-solid for fills; one step can't hold contrast as both in dark mode */
   --sui-accent: 143 168 255;
+  --sui-accent-solid: 130 153 231;
   --sui-accent-hover: 166 185 255;
   --sui-on-accent: 255 255 255;
   --sui-accent-wash: 22 27 43;
@@ -127,28 +133,30 @@
   --sui-accent-line: 43 56 102;
   --sui-focus-ring: 27 30 41;
 
-  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover) and the solid;
-     warning also has a brighter dot, danger the text on its solid */
+  /* Status: a soft fill, its line, a mid step for borders, dots and chip text, and the solid; warning also has
+     a brighter dot, and danger a solid fill and hover of its own, for white text */
   --sui-success-soft: 22 33 29;
   --sui-success-line: 29 51 41;
-  --sui-success-mid: 83 178 125;
+  --sui-success-mid: 91 196 137;
   --sui-success: 91 196 137;
 
   --sui-warning-soft: 36 32 23;
   --sui-warning-line: 57 48 28;
-  --sui-warning-mid: 208 164 68;
-  --sui-warning-bright: 165 131 57;
+  --sui-warning-mid: 229 180 74;
   --sui-warning: 229 180 74;
+  --sui-warning-bright: 165 131 57;
 
   --sui-danger-soft: 38 26 26;
   --sui-danger-line: 62 36 35;
   --sui-danger-mid: 231 111 98;
   --sui-danger: 255 122 107;
+  --sui-danger-solid: 255 122 107;
+  --sui-danger-hover: 231 111 98;
   --sui-on-danger: 255 255 255;
 
   --sui-info-soft: 52 57 64;
   --sui-info-line: 62 71 79;
-  --sui-info-mid: 129 154 176;
+  --sui-info-mid: 138 166 190;
   --sui-info: 138 166 190;
 
   /* Categorical hues, for avatars and tags: a soft fill, its line and its ink */

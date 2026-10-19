@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
-import { contrastGap } from '../../stories/contrast'
 import Kbd from './Kbd.vue'
 
 const meta: Meta<typeof Kbd> = {
@@ -14,5 +13,4 @@ const meta: Meta<typeof Kbd> = {
 
 export default meta
 
-// ink-faint on the canvas: 1.95 light, 2.92 dark.
-export const Default: StoryObj<typeof Kbd> = { parameters: contrastGap }
+export const Default: StoryObj<typeof Kbd> = {}

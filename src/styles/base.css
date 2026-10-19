@@ -24,7 +24,7 @@ html {
 }
 
 *:hover {
-  scrollbar-color: rgb(var(--sui-ink-faint)) transparent;
+  scrollbar-color: rgb(var(--sui-mark-faint)) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -45,5 +45,5 @@ html {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(var(--sui-ink-faint));
+  background-color: rgb(var(--sui-mark-faint));
 }

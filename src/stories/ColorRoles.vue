@@ -4,11 +4,20 @@ import { onMounted, ref } from 'vue'
 const groups: { title: string; roles: string[] }[] = [
   { title: 'Surfaces', roles: ['canvas', 'surface', 'sunken'] },
   { title: 'Lines', roles: ['line-subtle', 'line', 'line-strong'] },
-  { title: 'Ink', roles: ['ink', 'ink-emphasis', 'ink-body', 'ink-subtle', 'ink-muted', 'ink-faint'] },
+  { title: 'Ink', roles: ['ink', 'ink-emphasis', 'ink-body', 'ink-subtle', 'ink-muted', 'ink-faint', 'mark-faint'] },
   { title: 'Contrast', roles: ['contrast', 'contrast-hover', 'on-contrast'] },
   {
     title: 'Accent',
-    roles: ['accent', 'accent-hover', 'on-accent', 'accent-wash', 'accent-soft', 'accent-line', 'focus-ring']
+    roles: [
+      'accent',
+      'accent-solid',
+      'accent-hover',
+      'on-accent',
+      'accent-wash',
+      'accent-soft',
+      'accent-line',
+      'focus-ring'
+    ]
   },
   ...['success', 'warning', 'danger', 'info'].map((status) => ({
     title: `Status: ${status}`,
@@ -18,7 +27,7 @@ const groups: { title: string; roles: string[] }[] = [
       `${status}-mid`,
       status,
       ...(status === 'warning' ? ['warning-bright'] : []),
-      ...(status === 'danger' ? ['on-danger'] : [])
+      ...(status === 'danger' ? ['danger-solid', 'danger-hover', 'on-danger'] : [])
     ]
   })),
   ...['blue', 'green', 'orange', 'pink', 'purple', 'slate', 'red', 'amber'].map((hue) => ({
