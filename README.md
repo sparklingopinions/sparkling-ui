@@ -83,7 +83,17 @@ The package is published privately to GitHub Packages as `@sparklingopinions/spa
    setIconResolver((name) => defineAsyncComponent(() => import(`./assets/icons/${name}.svg`)))
    ```
 
-   Then `<Icon name="mail" color="ink-muted" />`. Icons the library's own components need (a dialog's close button, a select's chevron) are built in.
+   Then `<Icon name="mail" color="ink-muted" />`.
+
+7. To use `useConfirm`, mount one `<ConfirmDialog />` near the app root (it takes default `confirm-label` and `cancel-label` for translation). Then anywhere:
+
+   ````ts
+   const confirm = useConfirm()
+   if (await confirm({ title: 'Revoke key?', message: 'It stops working right away.', confirmLabel: 'Revoke', confirmVariant: 'danger' })) {
+     // revoke
+   }
+   ``` Icons the library's own components need (a dialog's close button, a select's chevron) are built in.
+   ````
 
 ## Local setup
 

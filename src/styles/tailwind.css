@@ -315,6 +315,10 @@
   --animate-sui-fade-in: sui-fade-in 250ms linear;
   --animate-sui-overlay-in: sui-overlay-in 120ms cubic-bezier(0, 0, 0.2, 1);
   --animate-sui-overlay-out: sui-overlay-out 100ms linear forwards;
+  --animate-sui-scrim-in: sui-scrim-in 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-sui-scrim-out: sui-scrim-out 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  --animate-sui-dialog-in: sui-dialog-in 200ms ease-out;
+  --animate-sui-dialog-out: sui-dialog-out 200ms ease-out forwards;
 
   @keyframes sui-spinner-dash {
     0% {
@@ -347,6 +351,34 @@
   @keyframes sui-overlay-out {
     to {
       opacity: 0;
+    }
+  }
+
+  @keyframes sui-scrim-in {
+    from {
+      background-color: transparent;
+      backdrop-filter: blur(0);
+    }
+  }
+
+  @keyframes sui-scrim-out {
+    to {
+      background-color: transparent;
+      backdrop-filter: blur(0);
+    }
+  }
+
+  @keyframes sui-dialog-in {
+    from {
+      opacity: 0;
+      transform: scale(0.75);
+    }
+  }
+
+  @keyframes sui-dialog-out {
+    to {
+      opacity: 0;
+      transform: scale(0.75);
     }
   }
 
