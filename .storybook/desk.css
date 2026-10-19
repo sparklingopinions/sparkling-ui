@@ -27,26 +27,28 @@
   --sui-contrast-hover: 35 35 38;
   --sui-on-contrast: 255 255 255;
 
-  /* Accent: accent is for text, accent-solid for fills; one step can't hold contrast as both in dark mode */
+  /* Accent: accent is for text, accent-solid for fills (one step can't hold contrast as both in dark mode),
+     accent-bright for hover borders */
   --sui-accent: 47 79 201;
   --sui-accent-solid: 68 97 206;
   --sui-accent-hover: 39 66 174;
+  --sui-accent-bright: 89 114 212;
   --sui-on-accent: 255 255 255;
   --sui-accent-wash: 241 244 253;
   --sui-accent-soft: 234 237 250;
   --sui-accent-line: 220 227 251;
   --sui-focus-ring: 234 237 250;
 
-  /* Status: a soft fill, its line, a mid step for borders, dots and chip text, and the solid; warning also has
+  /* Status: a soft fill, its line, a mid step for borders and dots, and the solid, also the text colour; warning also has
      a brighter dot, and danger a solid fill and hover of its own, for white text */
   --sui-success-soft: 234 243 239;
   --sui-success-line: 213 231 222;
-  --sui-success-mid: 47 133 90;
+  --sui-success-mid: 68 145 107;
   --sui-success: 47 133 90;
 
   --sui-warning-soft: 248 242 233;
   --sui-warning-line: 241 228 210;
-  --sui-warning-mid: 183 121 31;
+  --sui-warning-mid: 190 134 53;
   --sui-warning: 183 121 31;
   --sui-warning-bright: 205 161 98;
 
@@ -60,7 +62,7 @@
 
   --sui-info-soft: 237 241 244;
   --sui-info-line: 217 225 232;
-  --sui-info-mid: 71 96 122;
+  --sui-info-mid: 83 112 142;
   --sui-info: 71 96 122;
 
   /* Categorical hues, for avatars and tags: a soft fill, its line and its ink */
@@ -123,26 +125,28 @@
   --sui-contrast-hover: 214 215 218;
   --sui-on-contrast: 14 15 17;
 
-  /* Accent: accent is for text, accent-solid for fills; one step can't hold contrast as both in dark mode */
+  /* Accent: accent is for text, accent-solid for fills (one step can't hold contrast as both in dark mode),
+     accent-bright for hover borders */
   --sui-accent: 143 168 255;
   --sui-accent-solid: 130 153 231;
   --sui-accent-hover: 166 185 255;
+  --sui-accent-bright: 117 137 207;
   --sui-on-accent: 255 255 255;
   --sui-accent-wash: 22 27 43;
   --sui-accent-soft: 27 30 41;
   --sui-accent-line: 43 56 102;
   --sui-focus-ring: 27 30 41;
 
-  /* Status: a soft fill, its line, a mid step for borders, dots and chip text, and the solid; warning also has
+  /* Status: a soft fill, its line, a mid step for borders and dots, and the solid, also the text colour; warning also has
      a brighter dot, and danger a solid fill and hover of its own, for white text */
   --sui-success-soft: 22 33 29;
   --sui-success-line: 29 51 41;
-  --sui-success-mid: 91 196 137;
+  --sui-success-mid: 83 178 125;
   --sui-success: 91 196 137;
 
   --sui-warning-soft: 36 32 23;
   --sui-warning-line: 57 48 28;
-  --sui-warning-mid: 229 180 74;
+  --sui-warning-mid: 208 164 68;
   --sui-warning: 229 180 74;
   --sui-warning-bright: 165 131 57;
 
@@ -156,7 +160,7 @@
 
   --sui-info-soft: 52 57 64;
   --sui-info-line: 62 71 79;
-  --sui-info-mid: 138 166 190;
+  --sui-info-mid: 129 154 176;
   --sui-info: 138 166 190;
 
   /* Categorical hues, for avatars and tags: a soft fill, its line and its ink */

@@ -17,16 +17,16 @@ const tones: Record<PillTone, { chip: string; text: string; dot: string }> = {
   neutral: { chip: 'bg-sui-sunken text-sui-ink-subtle', text: 'text-sui-ink-muted', dot: 'bg-sui-mark-faint' },
   accent: { chip: 'bg-sui-accent-wash text-sui-accent', text: 'text-sui-accent', dot: 'bg-sui-accent-solid' },
   success: {
-    chip: 'bg-sui-success-soft text-sui-success-mid',
-    text: 'text-sui-success-mid',
+    chip: 'bg-sui-success-soft text-sui-success',
+    text: 'text-sui-success',
     dot: 'bg-sui-success-mid'
   },
   warning: {
-    chip: 'bg-sui-warning-soft text-sui-warning-mid',
-    text: 'text-sui-warning-mid',
+    chip: 'bg-sui-warning-soft text-sui-warning',
+    text: 'text-sui-warning',
     dot: 'bg-sui-warning-bright'
   },
-  info: { chip: 'bg-sui-info-soft text-sui-info-mid', text: 'text-sui-info-mid', dot: 'bg-sui-info-mid' },
+  info: { chip: 'bg-sui-info-soft text-sui-info', text: 'text-sui-info', dot: 'bg-sui-info-mid' },
   danger: { chip: 'bg-sui-danger-soft text-sui-danger', text: 'text-sui-danger', dot: 'bg-sui-danger-solid' }
 }
 

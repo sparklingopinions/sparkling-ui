@@ -70,7 +70,7 @@ describe('Pill', () => {
   it('can be a dot and coloured text only, or have no dot', () => {
     const wrapper = mount(Pill, { props: { tone: 'warning', variant: 'text', dot: false }, slots: { default: 'Cool' } })
 
-    expect(wrapper.classes()).toContain('text-sui-warning-mid')
+    expect(wrapper.classes()).toContain('text-sui-warning')
     expect(wrapper.classes()).not.toContain('h-6')
     expect(wrapper.find('span span').exists()).toBe(false)
     expect(wrapper.text()).toBe('Cool')
