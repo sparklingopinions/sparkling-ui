@@ -42,7 +42,8 @@
   --sui-accent-line: 226 220 248;
   --sui-focus-ring: 239 236 252;
 
-  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover), the solid, and for danger the text on it */
+  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover) and the solid;
+     warning also has a brighter dot, danger the text on its solid */
   --sui-success-soft: 234 245 239;
   --sui-success-line: 210 234 221;
   --sui-success-mid: 56 149 104;
@@ -51,6 +52,7 @@
   --sui-warning-soft: 250 243 231;
   --sui-warning-line: 245 230 205;
   --sui-warning-mid: 194 134 35;
+  --sui-warning-bright: 221 165 72;
   --sui-warning: 168 116 30;
 
   --sui-danger-soft: 252 234 235;
@@ -63,6 +65,32 @@
   --sui-info-line: 217 225 232;
   --sui-info-mid: 83 112 142;
   --sui-info: 71 96 122;
+
+  /* Categorical hues, for avatars and tags: a soft fill, its line and its ink */
+  --sui-hue-blue-soft: 235 240 251;
+  --sui-hue-blue-line: 215 225 247;
+  --sui-hue-blue-ink: 58 103 216;
+  --sui-hue-green-soft: 234 245 239;
+  --sui-hue-green-line: 210 234 221;
+  --sui-hue-green-ink: 46 125 87;
+  --sui-hue-orange-soft: 255 239 238;
+  --sui-hue-orange-line: 255 223 221;
+  --sui-hue-orange-ink: 254 95 85;
+  --sui-hue-pink-soft: 253 245 253;
+  --sui-hue-pink-line: 251 235 251;
+  --sui-hue-pink-ink: 235 159 239;
+  --sui-hue-purple-soft: 239 236 252;
+  --sui-hue-purple-line: 226 220 248;
+  --sui-hue-purple-ink: 109 92 230;
+  --sui-hue-slate-soft: 237 241 244;
+  --sui-hue-slate-line: 217 225 232;
+  --sui-hue-slate-ink: 71 96 122;
+  --sui-hue-red-soft: 252 234 235;
+  --sui-hue-red-line: 249 213 215;
+  --sui-hue-red-ink: 223 41 53;
+  --sui-hue-amber-soft: 250 243 231;
+  --sui-hue-amber-line: 245 230 205;
+  --sui-hue-amber-ink: 168 116 30;
 
   /* Inverse */
   --sui-inverse: 69 68 74;
@@ -105,7 +133,8 @@
   --sui-accent-line: 61 56 94;
   --sui-focus-ring: 50 47 74;
 
-  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover), the solid, and for danger the text on it */
+  /* Status: a soft fill, its line, a mid step (borders, dots, chip text, the solid's hover) and the solid;
+     warning also has a brighter dot, danger the text on its solid */
   --sui-success-soft: 42 61 54;
   --sui-success-line: 49 77 64;
   --sui-success-mid: 87 172 131;
@@ -114,6 +143,7 @@
   --sui-warning-soft: 69 57 39;
   --sui-warning-line: 89 71 43;
   --sui-warning-mid: 210 155 66;
+  --sui-warning-bright: 175 131 59;
   --sui-warning: 227 167 69;
 
   --sui-danger-soft: 71 46 43;
@@ -126,6 +156,32 @@
   --sui-info-line: 62 71 79;
   --sui-info-mid: 129 154 176;
   --sui-info: 138 166 190;
+
+  /* Categorical hues, for avatars and tags: a soft fill, its line and its ink */
+  --sui-hue-blue-soft: 53 58 74;
+  --sui-hue-blue-line: 64 72 94;
+  --sui-hue-blue-ink: 143 170 240;
+  --sui-hue-green-soft: 42 61 54;
+  --sui-hue-green-line: 49 77 64;
+  --sui-hue-green-ink: 92 185 140;
+  --sui-hue-orange-soft: 75 53 53;
+  --sui-hue-orange-line: 97 64 63;
+  --sui-hue-orange-ink: 254 143 136;
+  --sui-hue-pink-soft: 72 60 74;
+  --sui-hue-pink-line: 93 74 95;
+  --sui-hue-pink-ink: 239 178 242;
+  --sui-hue-purple-soft: 50 47 74;
+  --sui-hue-purple-line: 61 56 94;
+  --sui-hue-purple-ink: 115 100 220;
+  --sui-hue-slate-soft: 52 57 64;
+  --sui-hue-slate-line: 62 71 79;
+  --sui-hue-slate-ink: 138 166 190;
+  --sui-hue-red-soft: 71 46 43;
+  --sui-hue-red-line: 92 55 49;
+  --sui-hue-red-ink: 235 112 89;
+  --sui-hue-amber-soft: 69 57 39;
+  --sui-hue-amber-line: 89 71 43;
+  --sui-hue-amber-ink: 227 167 69;
 
   /* Inverse */
   --sui-inverse: 64 64 69;
@@ -178,6 +234,31 @@
   --color-sui-info-line: rgb(var(--sui-info-line) / 1);
   --color-sui-info-mid: rgb(var(--sui-info-mid) / 1);
   --color-sui-info: rgb(var(--sui-info) / 1);
+  --color-sui-warning-bright: rgb(var(--sui-warning-bright) / 1);
+  --color-sui-hue-blue-soft: rgb(var(--sui-hue-blue-soft) / 1);
+  --color-sui-hue-blue-line: rgb(var(--sui-hue-blue-line) / 1);
+  --color-sui-hue-blue-ink: rgb(var(--sui-hue-blue-ink) / 1);
+  --color-sui-hue-green-soft: rgb(var(--sui-hue-green-soft) / 1);
+  --color-sui-hue-green-line: rgb(var(--sui-hue-green-line) / 1);
+  --color-sui-hue-green-ink: rgb(var(--sui-hue-green-ink) / 1);
+  --color-sui-hue-orange-soft: rgb(var(--sui-hue-orange-soft) / 1);
+  --color-sui-hue-orange-line: rgb(var(--sui-hue-orange-line) / 1);
+  --color-sui-hue-orange-ink: rgb(var(--sui-hue-orange-ink) / 1);
+  --color-sui-hue-pink-soft: rgb(var(--sui-hue-pink-soft) / 1);
+  --color-sui-hue-pink-line: rgb(var(--sui-hue-pink-line) / 1);
+  --color-sui-hue-pink-ink: rgb(var(--sui-hue-pink-ink) / 1);
+  --color-sui-hue-purple-soft: rgb(var(--sui-hue-purple-soft) / 1);
+  --color-sui-hue-purple-line: rgb(var(--sui-hue-purple-line) / 1);
+  --color-sui-hue-purple-ink: rgb(var(--sui-hue-purple-ink) / 1);
+  --color-sui-hue-slate-soft: rgb(var(--sui-hue-slate-soft) / 1);
+  --color-sui-hue-slate-line: rgb(var(--sui-hue-slate-line) / 1);
+  --color-sui-hue-slate-ink: rgb(var(--sui-hue-slate-ink) / 1);
+  --color-sui-hue-red-soft: rgb(var(--sui-hue-red-soft) / 1);
+  --color-sui-hue-red-line: rgb(var(--sui-hue-red-line) / 1);
+  --color-sui-hue-red-ink: rgb(var(--sui-hue-red-ink) / 1);
+  --color-sui-hue-amber-soft: rgb(var(--sui-hue-amber-soft) / 1);
+  --color-sui-hue-amber-line: rgb(var(--sui-hue-amber-line) / 1);
+  --color-sui-hue-amber-ink: rgb(var(--sui-hue-amber-ink) / 1);
   --color-sui-inverse: rgb(var(--sui-inverse) / 1);
   --color-sui-on-inverse: rgb(var(--sui-on-inverse) / 1);
   --color-sui-scrim: rgb(var(--sui-scrim) / 1);
