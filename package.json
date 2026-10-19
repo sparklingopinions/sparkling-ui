@@ -20,7 +20,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./tailwind.css": "./src/styles/tailwind.css"
+    "./tailwind.css": "./src/styles/tailwind.css",
+    "./base.css": "./src/styles/base.css"
   },
   "engines": {
     "node": ">=22.12.0"
@@ -33,7 +34,7 @@
     "lint": "eslint . --fix",
     "format": "prettier --write src/ .storybook/",
     "test:unit": "vitest --project unit",
-    "test:stories": "vitest run --project storybook",
+    "test:stories": "vitest run --project 'stories-*'",
     "changeset": "changeset",
     "release": "npm run build && changeset publish"
   },

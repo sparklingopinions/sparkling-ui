@@ -4,11 +4,29 @@ import { defineConfig, mergeConfig } from 'vitest/config'
 
 import viteConfig from './vite.config.ts'
 
+// Every story runs as a browser test in each mode, so axe checks contrast in both.
+const storyProject = (mode: 'light' | 'dark') => ({
+  extends: true,
+  plugins: [storybookTest({ configDir: '.storybook' })],
+  define: { 'import.meta.env.STORY_MODE': JSON.stringify(mode) },
+  // Found mid-run on a cold cache (always, in CI), Vite reloads the page and the run fails.
+  optimizeDeps: { include: ['vue'] },
+  test: {
+    name: `stories-${mode}`,
+    browser: {
+      enabled: true,
+      headless: true,
+      provider: playwright(),
+      instances: [{ browser: 'chromium' as const }]
+    }
+  }
+})
+
 export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      // Until the first component lands; remove with it.
+      // Until the first unit test lands; remove with it.
       passWithNoTests: true,
       projects: [
         {
@@ -20,21 +38,8 @@ export default mergeConfig(
             include: ['src/tests/**/*.test.ts']
           }
         },
-        {
-          extends: true,
-          plugins: [storybookTest({ configDir: '.storybook' })],
-          // Found mid-run on a cold cache (always, in CI), Vite reloads the page and the run fails.
-          optimizeDeps: { include: ['vue'] },
-          test: {
-            name: 'storybook',
-            browser: {
-              enabled: true,
-              headless: true,
-              provider: playwright(),
-              instances: [{ browser: 'chromium' }]
-            }
-          }
-        }
+        storyProject('light'),
+        storyProject('dark')
       ]
     }
   })
