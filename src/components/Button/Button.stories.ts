@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
-import { contrastGap } from '../../stories/contrast'
 import Icon from '../Icon/Icon.vue'
 import Button from './Button.vue'
 
@@ -34,14 +33,11 @@ export const Contrast: Story = { args: { variant: 'contrast' } }
 
 export const DangerOutline: Story = { args: { variant: 'danger-outline' } }
 
-// accent on accent-wash: 4.46 light, 3.53 dark.
-export const Tinted: Story = { args: { variant: 'tinted' }, parameters: contrastGap }
+export const Tinted: Story = { args: { variant: 'tinted' } }
 
-// ink-subtle on the canvas: 4.32 light.
-export const Ghost: Story = { args: { variant: 'ghost' }, parameters: contrastGap }
+export const Ghost: Story = { args: { variant: 'ghost' } }
 
-// on-danger on danger: 3.00 dark.
-export const Danger: Story = { args: { variant: 'danger' }, parameters: contrastGap }
+export const Danger: Story = { args: { variant: 'danger' } }
 
 export const Sizes: Story = {
   render: (args) => ({

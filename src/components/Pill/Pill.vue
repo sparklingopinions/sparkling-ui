@@ -14,8 +14,8 @@ export interface PillProps {
 const props = withDefaults(defineProps<PillProps>(), { tone: 'neutral', variant: 'soft', dot: true, label: undefined })
 
 const tones: Record<PillTone, { chip: string; text: string; dot: string }> = {
-  neutral: { chip: 'bg-sui-sunken text-sui-ink-subtle', text: 'text-sui-ink-muted', dot: 'bg-sui-ink-faint' },
-  accent: { chip: 'bg-sui-accent-wash text-sui-accent', text: 'text-sui-accent', dot: 'bg-sui-accent' },
+  neutral: { chip: 'bg-sui-sunken text-sui-ink-subtle', text: 'text-sui-ink-muted', dot: 'bg-sui-mark-faint' },
+  accent: { chip: 'bg-sui-accent-wash text-sui-accent', text: 'text-sui-accent', dot: 'bg-sui-accent-solid' },
   success: {
     chip: 'bg-sui-success-soft text-sui-success-mid',
     text: 'text-sui-success-mid',
@@ -27,7 +27,7 @@ const tones: Record<PillTone, { chip: string; text: string; dot: string }> = {
     dot: 'bg-sui-warning-bright'
   },
   info: { chip: 'bg-sui-info-soft text-sui-info-mid', text: 'text-sui-info-mid', dot: 'bg-sui-info-mid' },
-  danger: { chip: 'bg-sui-danger-soft text-sui-danger', text: 'text-sui-danger', dot: 'bg-sui-danger' }
+  danger: { chip: 'bg-sui-danger-soft text-sui-danger', text: 'text-sui-danger', dot: 'bg-sui-danger-solid' }
 }
 
 const tone = computed(() => tones[props.tone])

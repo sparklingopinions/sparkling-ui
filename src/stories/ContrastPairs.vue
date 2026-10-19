@@ -16,11 +16,11 @@ const pairs: { text: string; background: string; usage: string }[] = [
   { text: 'accent', background: 'surface', usage: 'Active tabs, the selected calendar day' },
   { text: 'accent', background: 'accent-wash', usage: 'Tinted buttons' },
   { text: 'accent', background: 'accent-soft', usage: 'Tinted buttons on hover' },
-  { text: 'on-accent', background: 'accent', usage: 'Primary buttons' },
+  { text: 'on-accent', background: 'accent-solid', usage: 'Primary buttons' },
   { text: 'on-accent', background: 'accent-hover', usage: 'Primary buttons on hover' },
   { text: 'on-contrast', background: 'contrast', usage: 'Contrast buttons' },
-  { text: 'on-danger', background: 'danger', usage: 'Danger buttons' },
-  { text: 'on-danger', background: 'danger-mid', usage: 'Danger buttons on hover' },
+  { text: 'on-danger', background: 'danger-solid', usage: 'Danger buttons' },
+  { text: 'on-danger', background: 'danger-hover', usage: 'Danger buttons on hover' },
   { text: 'danger', background: 'surface', usage: 'Danger outline buttons, errors' },
   { text: 'danger', background: 'danger-soft', usage: 'Danger pills, danger outline buttons on hover' },
   { text: 'success-mid', background: 'success-soft', usage: 'Pills' },
@@ -93,7 +93,6 @@ const rgb = (mode: Mode, role: string) => `rgb(${channels.value[mode][role]?.joi
             <td class="py-2 pr-2">
               <span
                 class="inline-flex h-7 items-center rounded-md border border-sui-line-subtle px-2.5 font-medium whitespace-nowrap"
-                data-specimen
                 :style="{ backgroundColor: rgb(mode, pair.background), color: rgb(mode, pair.text) }"
               >
                 Add contact

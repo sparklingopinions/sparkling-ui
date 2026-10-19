@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    'border border-sui-accent bg-sui-accent text-sui-on-accent not-data-disabled:hover:border-sui-accent-hover not-data-disabled:hover:bg-sui-accent-hover [&_svg]:stroke-sui-on-accent',
+    'border border-sui-accent-solid bg-sui-accent-solid text-sui-on-accent not-data-disabled:hover:border-sui-accent-hover not-data-disabled:hover:bg-sui-accent-hover [&_svg]:stroke-sui-on-accent',
   secondary:
     'border border-sui-line bg-sui-surface text-sui-ink-emphasis shadow-(--sui-shadow-raised) not-data-disabled:hover:border-sui-line-strong not-data-disabled:hover:bg-sui-canvas [&_svg]:stroke-sui-ink-emphasis',
   tinted:
@@ -37,7 +37,7 @@ const variants: Record<ButtonVariant, string> = {
   contrast:
     'border border-sui-contrast bg-sui-contrast text-sui-on-contrast not-data-disabled:hover:border-sui-contrast-hover not-data-disabled:hover:bg-sui-contrast-hover',
   // No border, as in MustLoop: it's 2px narrower than the other variants.
-  danger: 'bg-sui-danger text-sui-on-danger not-data-disabled:hover:bg-sui-danger-mid',
+  danger: 'bg-sui-danger-solid text-sui-on-danger not-data-disabled:hover:bg-sui-danger-hover',
   'danger-outline':
     'border border-sui-danger-line bg-sui-surface text-sui-danger not-data-disabled:hover:bg-sui-danger-soft [&_svg]:stroke-sui-danger'
 }

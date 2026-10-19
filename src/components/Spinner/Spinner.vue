@@ -20,7 +20,7 @@ const sizes = { sm: 'size-4', md: 'size-6', lg: 'size-8' }
     <!-- The arc grows and shrinks without turning, as MustLoop's does: its preset's spin classes never reached the svg. -->
     <svg class="size-full" viewBox="25 25 50 50">
       <circle
-        class="animate-sui-spinner-dash stroke-sui-accent"
+        class="animate-sui-spinner-dash stroke-sui-accent-solid"
         cx="50"
         cy="50"
         fill="none"
