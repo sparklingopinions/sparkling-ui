@@ -1,0 +1,10 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "types": ["node", "vitest/globals"],
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["env.d.ts", "src/**/*.ts", "src/**/*.vue", ".storybook/**/*.ts", "*.config.ts"]
+}

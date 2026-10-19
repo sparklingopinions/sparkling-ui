@@ -1,0 +1,16 @@
+node_modules
+dist
+storybook-static
+coverage
+*.log
+*.local
+.DS_Store
+
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# Vitest browser mode and Playwright
+__screenshots__
+test-results
+.vitest-attachments
