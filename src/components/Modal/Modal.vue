@@ -7,6 +7,7 @@ import Button from '../Button/Button.vue'
 import Icon from '../Icon/Icon.vue'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import CloseIcon from '../internal/CloseIcon.vue'
+import { bodyClass, focusFirst, footerClass, overlayClass, panelClass } from './classes'
 
 export interface ModalProps {
   title?: string
@@ -46,32 +47,18 @@ function cancel() {
   emit('cancel')
   open.value = false
 }
-
-// Focus goes to an [autofocus] field (footer first, then header, then body), as PrimeVue's did; otherwise to the
-// dialog itself, so keyboard focus is inside it.
-function onOpenAutoFocus(event: Event) {
-  event.preventDefault()
-  const dialog = event.target as HTMLElement
-  const target = ['[data-modal-footer]', '[data-modal-header]', '[data-modal-body]']
-    .map((part) => dialog.querySelector<HTMLElement>(`${part} [autofocus]`))
-    .find(Boolean)
-  ;(target ?? dialog).focus()
-}
 </script>
 
 <template>
   <DialogRoot v-model:open="open">
     <DialogPortal>
-      <DialogOverlay
-        class="fixed inset-0 z-[1100] flex items-center justify-center bg-sui-scrim/40 backdrop-blur-[4px] data-[state=closed]:animate-sui-scrim-out data-[state=open]:animate-sui-scrim-in"
-      >
+      <DialogOverlay :class="overlayClass">
         <DialogContent
           :aria-describedby="undefined"
-          class="flex max-h-[90vh] w-full flex-col rounded-xl bg-sui-surface shadow-xl outline-hidden data-[state=closed]:animate-sui-dialog-out data-[state=open]:animate-sui-dialog-in"
-          :class="sizes[size]"
+          :class="[panelClass, 'rounded-xl', sizes[size]]"
           @escape-key-down="emit('cancel')"
           @interact-outside.prevent
-          @open-auto-focus="onOpenAutoFocus"
+          @open-auto-focus="focusFirst"
         >
           <div
             v-if="!headerless"
@@ -93,19 +80,11 @@ function onOpenAutoFocus(event: Event) {
           </div>
           <DialogTitle v-else class="sr-only">{{ title }}</DialogTitle>
 
-          <div
-            class="overflow-y-auto bg-sui-surface p-5 text-sm text-sui-ink-emphasis"
-            :class="!hasFooter && 'rounded-b-xl'"
-            data-modal-body
-          >
+          <div :class="[bodyClass, !hasFooter && 'rounded-b-xl']" data-modal-body>
             <slot />
           </div>
 
-          <div
-            v-if="hasFooter"
-            class="flex shrink-0 items-center justify-end gap-3 rounded-b-xl border-t border-sui-line-subtle bg-sui-canvas px-5 py-4 text-right text-sui-ink"
-            data-modal-footer
-          >
+          <div v-if="hasFooter" :class="[footerClass, 'gap-3 rounded-b-xl px-5 py-4']" data-modal-footer>
             <slot name="footer">
               <Button type="button" variant="ghost" @click="cancel">{{ cancelLabel }}</Button>
               <Button :disabled="confirmDisabled" type="button" variant="primary" @click="emit('confirm')">
