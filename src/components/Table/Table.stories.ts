@@ -1,0 +1,123 @@
+import { type Component, ref } from 'vue'
+
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+
+import { people, stageLabels, stageTones } from '../../stories/people'
+import Avatar from '../Avatar/Avatar.vue'
+import Banner from '../Banner/Banner.vue'
+import Button from '../Button/Button.vue'
+import EmptyState from '../EmptyState/EmptyState.vue'
+import OptionsMenu from '../OptionsMenu/OptionsMenu.vue'
+import Pagination from '../Pagination/Pagination.vue'
+import Pill from '../Pill/Pill.vue'
+import Select from '../Select/Select.vue'
+import Table from './Table.vue'
+import type { TableColumn, TableSort } from './types'
+
+const columns: TableColumn[] = [
+  { key: 'name', label: 'Name', sortable: true },
+  { key: 'email', label: 'Email' },
+  { key: 'stage', label: 'Stage', width: 140, sortable: true },
+  { key: 'lastContact', label: 'Last contact', width: 140, align: 'right' },
+  { key: 'menu', width: 56, align: 'right' }
+]
+const menu = [
+  { type: 'action', label: 'Edit', icon: 'edit' },
+  { type: 'action', label: 'Delete', icon: 'trash', variant: 'danger' }
+]
+
+// No `component`: Table is generic over its rows, which Storybook's component typing can't take.
+const meta: Meta = {
+  title: 'Components/Table',
+  args: { columns, rows: people.slice(0, 6), caption: 'People', size: 'md', loading: false, selectable: false },
+  render: (args, { parameters }) => ({
+    components: {
+      Avatar,
+      Banner,
+      Button,
+      EmptyState,
+      OptionsMenu,
+      Pagination,
+      Pill,
+      Select,
+      Table: Table as Component
+    },
+    setup: () => ({
+      args,
+      menu,
+      stageLabels,
+      stageTones,
+      sort: ref<TableSort | null>(parameters.sort ?? null),
+      selected: ref<unknown[]>(parameters.selected ?? []),
+      page: ref(1),
+      perPage: ref(25)
+    }),
+    template: `
+      <Table v-bind="args" v-model:selected="selected" v-model:sort="sort">
+        <template #cell-name="{ row }">
+          <span class="flex items-center gap-3"><Avatar :name="row.name" size="md" />{{ row.name }}</span>
+        </template>
+        <template #cell-stage="{ row }">
+          <Pill :label="stageLabels[row.stage]" :tone="stageTones[row.stage]" dot variant="text" />
+        </template>
+        <template #cell-menu>
+          <OptionsMenu align="end" :items="menu" />
+        </template>
+        ${parameters.slots ?? ''}
+      </Table>
+    `
+  })
+}
+
+export default meta
+type Story = StoryObj
+
+export const Default: Story = {}
+
+export const Sorted: Story = { parameters: { sort: { key: 'name', dir: 'asc' } } }
+
+export const Selectable: Story = { args: { selectable: true }, parameters: { selected: [2, 3] } }
+
+export const Small: Story = { args: { size: 'sm' } }
+
+export const Loading: Story = { args: { loading: true, selectable: true } }
+
+export const Empty: Story = {
+  args: { rows: [] },
+  parameters: {
+    slots: `
+      <template #empty>
+        <EmptyState icon="users" title="No people yet" description="People are individual contacts you interact with." />
+      </template>
+    `
+  }
+}
+
+export const Failed: Story = {
+  parameters: {
+    slots: `
+      <template #error>
+        <div class="p-4">
+          <Banner inset tone="danger">
+            Couldn’t load people.
+            <template #action><Button size="sm">Try again</Button></template>
+          </Banner>
+        </div>
+      </template>
+    `
+  }
+}
+
+export const WithFooter: Story = {
+  parameters: {
+    slots: `
+      <template #footer>
+        <div class="flex items-center gap-2">
+          <Select v-model="perPage" aria-label="Rows per page" :options="[10, 25, 50].map((n) => ({ value: n, label: String(n) }))" size="sm" />
+          <span>1–25 of 1,000</span>
+        </div>
+        <Pagination v-model:page="page" :page-count="40" />
+      </template>
+    `
+  }
+}

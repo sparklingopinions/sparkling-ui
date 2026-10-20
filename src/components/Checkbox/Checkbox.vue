@@ -4,6 +4,8 @@ import { computed, useAttrs } from 'vue'
 export interface CheckboxProps {
   invalid?: boolean
   disabled?: boolean
+  /** Some but not all of a group are checked, e.g. a table's select-all. Shows a dash; checking clears it. */
+  indeterminate?: boolean
 }
 
 defineOptions({ inheritAttrs: false })
@@ -19,15 +21,17 @@ const inputAttrs = computed(() => {
   return rest
 })
 
+const filled = computed(() => model.value || props.indeterminate)
+
 const box = computed(() => [
-  model.value
+  filled.value
     ? 'border-sui-accent-solid bg-sui-accent-solid'
     : props.invalid
       ? 'border-sui-danger-mid'
       : 'border-sui-line-control bg-sui-surface',
   props.disabled
     ? 'cursor-default opacity-60'
-    : [!model.value && !props.invalid && 'peer-hover:border-sui-accent-solid', 'peer-focus-visible:sui-ring']
+    : [!filled.value && !props.invalid && 'peer-hover:border-sui-accent-solid', 'peer-focus-visible:sui-ring']
 ])
 </script>
 
@@ -43,12 +47,23 @@ const box = computed(() => [
       :checked="model"
       class="peer absolute top-0 left-0 z-10 m-0 h-full w-full cursor-pointer appearance-none p-0 opacity-0 outline-hidden"
       :disabled="disabled"
+      :indeterminate="indeterminate && !model"
       type="checkbox"
       @change="model = ($event.target as HTMLInputElement).checked"
     />
     <div class="flex h-4 w-4 items-center justify-center rounded border transition-colors duration-200" :class="box">
       <svg
-        v-if="model"
+        v-if="indeterminate && !model"
+        aria-hidden="true"
+        class="size-2.5 fill-none stroke-current"
+        stroke-linecap="round"
+        stroke-width="2"
+        viewBox="0 0 10 10"
+      >
+        <path d="M2 5h6" />
+      </svg>
+      <svg
+        v-else-if="model"
         aria-hidden="true"
         class="h-4 w-4 text-base leading-none text-sui-on-accent transition-all duration-200"
         fill="none"
