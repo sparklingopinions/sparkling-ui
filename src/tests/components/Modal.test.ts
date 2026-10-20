@@ -2,7 +2,7 @@ import { defineComponent, h, ref } from 'vue'
 
 import { flushPromises, mount } from '@vue/test-utils'
 
-import { ConfirmDialog, Modal, useConfirm } from '../../index'
+import { ConfirmDialog, Modal, saveHint, useConfirm } from '../../index'
 import { expectAccessible } from '../support/axe'
 
 const dialog = () => document.body.querySelector<HTMLElement>('[role="dialog"], [role="alertdialog"]')
@@ -73,6 +73,55 @@ describe('Modal', () => {
     expect(document.body.querySelector('[aria-label="Close"]')).toBeNull()
     wrapper.unmount()
   })
+
+  it('confirms on ⌘ or Ctrl Enter, unless disabled', async () => {
+    const wrapper = mountModal({ confirmLabel: 'Revoke' }, { default: '<input aria-label="Name" />' })
+    await flushPromises()
+    const enter = () =>
+      dialog()!
+        .querySelector('input')!
+        .dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', ctrlKey: true, bubbles: true }))
+
+    enter()
+    expect(wrapper.emitted('confirm')).toHaveLength(1)
+    await wrapper.setProps({ confirmDisabled: true })
+    enter()
+    expect(wrapper.emitted('confirm')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
+  it('draws a record form under a tinted band, with a hero, a hint and a footer start', async () => {
+    const wrapper = mountModal(
+      {
+        title: 'New contact',
+        band: 'rgb(var(--sui-hue-blue-soft))',
+        confirmLabel: 'Add contact',
+        hint: '⌘ Enter to save'
+      },
+      { hero: 'Ada Lovelace', 'footer-start': '<button type="button">Delete</button>' }
+    )
+    await flushPromises()
+    const band = dialog()!.querySelector<HTMLElement>('[data-modal-header]')!
+
+    expect(dialog()!.className).toContain('rounded-2xl')
+    expect(dialog()!.className).toContain('max-w-130')
+    expect(band.style.backgroundColor).toBe('rgb(var(--sui-hue-blue-soft))')
+    expect(band.textContent).toContain('New contact')
+    expect(band.textContent).toContain('Ada Lovelace')
+    const footer = dialog()!.querySelector('[data-modal-footer]')!.textContent
+    expect(footer).toMatch(/Delete.*⌘ Enter to save.*Cancel.*Add contact/)
+    await expectAccessible(document.body)
+    wrapper.unmount()
+  })
+
+  it('takes a danger confirm and a size', async () => {
+    const wrapper = mountModal({ confirmLabel: 'Revoke', confirmVariant: 'danger', size: 'sm' })
+    await flushPromises()
+
+    expect(dialog()!.className).toContain('max-w-[27rem]')
+    expect(button('Revoke').className).toContain('bg-sui-danger-solid')
+    wrapper.unmount()
+  })
 })
 
 describe('useConfirm', () => {
@@ -120,5 +169,12 @@ describe('useConfirm', () => {
     expect(button('Revoke').className).toContain('bg-sui-danger-solid')
     await expectAccessible(document.body)
     wrapper.unmount()
+  })
+})
+
+describe('saveHint', () => {
+  it('names the platform key', () => {
+    expect(saveHint()).toMatch(/^(⌘|Ctrl) Enter to save$/)
+    expect(saveHint('{key}+Enter')).toMatch(/^(⌘|Ctrl)\+Enter$/)
   })
 })

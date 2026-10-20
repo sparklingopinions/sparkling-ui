@@ -7,7 +7,7 @@ export interface LedgerMoreProps {
   /** What's folded away, shown beside the label while closed, e.g. "Phone, birthday". */
   summary: string
   /** Opens it, when any of its fields holds a value. */
-  filled: boolean
+  filled?: boolean
   label?: string
 }
 
