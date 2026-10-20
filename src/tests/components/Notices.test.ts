@@ -71,6 +71,19 @@ describe('EmptyState', () => {
     wrapper.unmount()
   })
 
+  it('titles itself with an h2, or the heading level given', () => {
+    expect(
+      mount(EmptyState, { props: { title: 'No people yet' } })
+        .find('h2')
+        .text()
+    ).toBe('No people yet')
+    expect(
+      mount(EmptyState, { props: { title: 'No people yet', headingLevel: 3 } })
+        .find('h3')
+        .exists()
+    ).toBe(true)
+  })
+
   it('renders a description as text, never as HTML', () => {
     const wrapper = mount(EmptyState, { props: { title: 'Empty', description: '<img src=x onerror=alert(1)>' } })
 
