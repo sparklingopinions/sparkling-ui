@@ -1,33 +1,24 @@
-import { markRaw, ref } from 'vue'
+import { ref } from 'vue'
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
+import InlineField from './InlineField.vue'
 import InlineForm from './InlineForm.vue'
-import InlineFormInputSelect from './InlineFormInputSelect.vue'
-import InlineFormInputText from './InlineFormInputText.vue'
-import InlineFormInputTitle from './InlineFormInputTitle.vue'
 
 const fields = [
-  { id: 'role', label: 'Role', component: markRaw(InlineFormInputText), placeholder: 'Add a role' },
+  { id: 'role', label: 'Role', placeholder: 'Add a role' },
   {
     id: 'stage',
     label: 'Stage',
-    component: markRaw(InlineFormInputSelect),
+    type: 'select' as const,
     placeholder: 'Pick a stage',
-    props: {
-      options: [
-        { label: 'Lead', value: 'lead' },
-        { label: 'Customer', value: 'customer' }
-      ]
-    }
+    options: [
+      { label: 'Lead', value: 'lead' },
+      { label: 'Customer', value: 'customer' }
+    ]
   },
-  {
-    id: 'notes',
-    label: 'Notes',
-    component: markRaw(InlineFormInputText),
-    placeholder: 'Add notes',
-    props: { multipleRows: true }
-  }
+  { id: 'notes', label: 'Notes', type: 'multiline' as const, placeholder: 'Add notes' },
+  { id: 'source', label: 'Source', placeholder: 'Imported', disabled: true }
 ]
 
 const meta: Meta<typeof InlineForm> = {
@@ -37,20 +28,20 @@ const meta: Meta<typeof InlineForm> = {
     docs: {
       description: {
         component:
-          "A record's details, each value edited where it is: click or Enter to edit, Enter or leaving to save, Escape to undo. Fields name their editor (`InlineFormInputText`, `InlineFormInputSelect`, or your own); `change` reports the one field that changed."
+          "A record's details, each value an `InlineField` edited where it is: click or Enter to edit, Enter or leaving to save, Escape to undo. A field's `type` is `text`, `multiline` or `select`; `change` reports the one field that changed. `InlineField` alone, with `variant=\"title\"`, edits a record's name."
       }
     }
   },
   render: () => ({
-    components: { InlineForm, InlineFormInputTitle },
+    components: { InlineField, InlineForm },
     setup: () => ({
       fields,
       name: ref('Ada Lovelace'),
-      model: ref({ role: 'Head of growth', stage: 'customer', notes: null })
+      model: ref({ role: 'Head of growth', stage: 'customer', notes: null, source: null })
     }),
     template: `
       <div class="w-96">
-        <InlineFormInputTitle v-model="name" aria-label="Name" placeholder="Name" />
+        <InlineField v-model="name" aria-label="Name" placeholder="Name" variant="title" />
         <InlineForm v-model="model" class="mt-2" :fields="fields" />
       </div>
     `

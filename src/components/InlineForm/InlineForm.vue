@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
+import type { SelectOption, SelectValue } from '../Select/types'
+import InlineField from './InlineField.vue'
 
 export interface InlineFormField {
   id: string
-  /** The field's editor, e.g. InlineFormInputText. */
-  component: Component
   label?: string
+  /** How the value is edited: one line, several, or picked from `options`. */
+  type?: 'text' | 'multiline' | 'select'
   placeholder?: string
-  class?: string
-  /** Passed on to the editor as they are. */
-  props?: Record<string, unknown>
-  [key: string]: unknown
+  options?: SelectOption[]
+  disabled?: boolean
 }
 
 defineProps<{ fields: InlineFormField[] }>()
@@ -20,37 +19,35 @@ const model = defineModel<Record<string, unknown>>({ required: true })
 // `change` names the one field that changed, for hosts that save field by field.
 const emit = defineEmits<{ submit: []; change: [id: string, value: unknown] }>()
 
+const valueOf = (id: string) => (model.value[id] ?? null) as SelectValue | null
+
 function update(id: string, value: unknown) {
-  model.value[id] = value
+  model.value = { ...model.value, [id]: value }
   emit('change', id, value)
 }
 </script>
 
-<!-- Label and value side by side, each value edited where it is. -->
+<!-- A record's details: a quiet label beside each value, every value an InlineField edited where it is. -->
 <template>
-  <form class="relative" @submit.prevent="emit('submit')">
-    <div v-for="(field, index) of fields" :key="field.id">
-      <div class="mb-1.5 flex items-start gap-2">
-        <label
-          v-if="field.label"
-          class="block w-22 shrink-0 pt-1.5 text-sm font-normal text-sui-ink-muted"
-          :for="field.id"
-        >
-          {{ field.label }}
-        </label>
-        <component
-          :is="field.component"
-          :id="field.id"
-          :autofocus="index === 0"
-          :class="field.class ?? undefined"
-          :data-test="field.id"
-          :inline="true"
-          v-bind="field.props"
-          :model-value="model[field.id]"
-          :placeholder="field.placeholder"
-          @update:model-value="(value: unknown) => update(field.id, value)"
-        />
-      </div>
+  <form class="relative flex flex-col" @submit.prevent="emit('submit')">
+    <div v-for="field of fields" :key="field.id" class="mb-1.5 flex items-start gap-2">
+      <label
+        v-if="field.label"
+        class="block w-22 shrink-0 pt-1.5 text-sm font-normal text-sui-ink-muted"
+        :for="field.id"
+      >
+        {{ field.label }}
+      </label>
+      <InlineField
+        :id="field.id"
+        :aria-label="field.label"
+        :disabled="field.disabled"
+        :model-value="valueOf(field.id)"
+        :options="field.options"
+        :placeholder="field.placeholder"
+        :variant="field.type ?? 'text'"
+        @update:model-value="(value) => update(field.id, value)"
+      />
     </div>
   </form>
 </template>
