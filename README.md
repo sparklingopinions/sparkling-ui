@@ -13,23 +13,15 @@ For architecture and conventions, see [`CLAUDE.md`](CLAUDE.md).
 
 ## Using it in an app
 
-The package is published privately to GitHub Packages as `@sparklingopinions/sparkling-ui`. Apps install it under the name `sparkling-ui`, so imports read `from 'sparkling-ui'`.
+The package is published to npm as `@sparklingopinions/sparkling-ui`. Apps install it under the name `sparkling-ui`, so imports read `from 'sparkling-ui'`.
 
-1. Point the scope at GitHub Packages in the app's `.npmrc`:
-
-   ```
-   @sparklingopinions:registry=https://npm.pkg.github.com
-   ```
-
-   Locally, add a GitHub token with `read:packages` to `~/.npmrc` (`//npm.pkg.github.com/:_authToken=...`). In GitHub Actions, give the app's repository access to the package and pass `NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}` to `npm ci`.
-
-2. Install it:
+1. Install it:
 
    ```bash
    npm install sparkling-ui@npm:@sparklingopinions/sparkling-ui
    ```
 
-3. Import its stylesheet at the end of the app's Tailwind entry, after the app's own theme:
+2. Import its stylesheet at the end of the app's Tailwind entry, after the app's own theme:
 
    ```css
    @import 'tailwindcss';
@@ -45,7 +37,7 @@ The package is published privately to GitHub Packages as `@sparklingopinions/spa
 
    For pages without defaults of their own (text colour, canvas, selection, scrollbars), also import `sparkling-ui/base.css`.
 
-4. Brand the components by overriding any token, in any CSS file of the app. The library's defaults have zero specificity, so a plain `:root` rule wins wherever it sits:
+3. Brand the components by overriding any token, in any CSS file of the app. The library's defaults have zero specificity, so a plain `:root` rule wins wherever it sits:
 
    ```css
    /* One value for both modes */
@@ -69,13 +61,13 @@ The package is published privately to GitHub Packages as `@sparklingopinions/spa
 
    Include `[data-mode]` in the selector, so a section that sets its own mode (`<div data-mode="dark">`) gets the app's values too. A colour set only for light also applies in dark (`:root` is the page in either mode), replacing the dark default: set both, as above. Colour roles (`--sui-surface`, `--sui-ink`, `--sui-accent`, `--sui-danger` and the rest) are listed in Storybook under Foundations/Colors, and Foundations/Contrast checks every text pair against WCAG AA in the current theme; keep text roles (`accent`, `danger`) and fill roles (`accent-solid`, `danger-solid`) apart when overriding them; control borders use `line-control`, which should keep 3:1 against the surfaces; sizes and shapes are `--sui-button-height`, `--sui-button-padding-x`, `--sui-button-text`, `--sui-radius-button` and `--sui-shadow-raised`, and the focus ring's are `--sui-focus-width`, `--sui-focus-offset`, `--sui-focus-offset-field` and `--sui-focus-offset-inset`. The defaults are MustLoop's, and Storybook's toolbar switches to a second theme (Tamable's Desk) to show what an override set looks like (`.storybook/desk.css`).
 
-5. Import components where they're used:
+4. Import components where they're used:
 
    ```ts
    import { Button } from 'sparkling-ui'
    ```
 
-6. `Icon` draws the library's set of 78 icons by name: `<Icon name="users" color="ink-muted" />`. Older names (`people`, `companies`, `dot-vertical`...) resolve as aliases, and `iconNames` lists the set. To add icons or replace some of the set, register a resolver once, before mounting; names it returns a component for win. With SVG files imported as components (e.g. `vite-svg-loader`):
+5. `Icon` draws the library's set of 78 icons by name: `<Icon name="users" color="ink-muted" />`. Older names (`people`, `companies`, `dot-vertical`...) resolve as aliases, and `iconNames` lists the set. To add icons or replace some of the set, register a resolver once, before mounting; names it returns a component for win. With SVG files imported as components (e.g. `vite-svg-loader`):
 
    ```ts
    import { type Component, defineAsyncComponent } from 'vue'
@@ -89,11 +81,11 @@ The package is published privately to GitHub Packages as `@sparklingopinions/spa
    })
    ```
 
-7. For light and dark, call `initColorMode()` once before mounting (it sets `data-mode` on `<html>` from the saved choice or the system's); then `useColorMode()` gives `mode`, `resolved`, `isDark`, `setMode` and `toggle`, and `useForceLightMode()` keeps a page light while it's mounted.
+6. For light and dark, call `initColorMode()` once before mounting (it sets `data-mode` on `<html>` from the saved choice or the system's); then `useColorMode()` gives `mode`, `resolved`, `isDark`, `setMode` and `toggle`, and `useForceLightMode()` keeps a page light while it's mounted.
 
-8. For toasts, mount one `<Toaster />` near the app root, then call `toast.info('Draft saved')`, `toast.success(...)` or `toast.error(...)` anywhere, with `{ detail, life, closable }` as options.
+7. For toasts, mount one `<Toaster />` near the app root, then call `toast.info('Draft saved')`, `toast.success(...)` or `toast.error(...)` anywhere, with `{ detail, life, closable }` as options.
 
-9. To use `useConfirm`, mount one `<AlertDialog />` near the app root (it takes default `confirm-label` and `cancel-label` for translation). Then anywhere:
+8. To use `useConfirm`, mount one `<AlertDialog />` near the app root (it takes default `confirm-label` and `cancel-label` for translation). Then anywhere:
 
    ```ts
    const confirm = useConfirm()
@@ -127,4 +119,6 @@ npm run changeset      # Describe a change for the next release
 
 ## Releasing
 
-Every PR that changes what apps get adds a changeset (`npm run changeset`). Merging to `main` opens a "Version packages" PR; merging that one publishes the new version to GitHub Packages and tags it.
+Every PR that changes what apps get adds a changeset (`npm run changeset`). Merging to `main` opens a "Version packages" PR; merging that one publishes the new version to npm, with provenance, and tags it.
+
+Storybook is published to GitHub Pages from `main`: https://sparklingopinions.github.io/sparkling-ui/
