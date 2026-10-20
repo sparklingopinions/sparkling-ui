@@ -46,6 +46,11 @@ export const Default: Story = {
 
 export const WithLabel: Story = { args: { buttonLabel: 'Actions' } }
 
+export const AlignEnd: Story = {
+  args: { align: 'end' },
+  decorators: [() => ({ template: '<div class="flex w-80 justify-end"><story /></div>' })]
+}
+
 export const CustomTrigger: Story = {
   render: (args) => ({
     components: { Button, Icon, OptionsMenu },

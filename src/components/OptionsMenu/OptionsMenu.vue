@@ -39,6 +39,8 @@ export interface OptionsMenuProps {
   buttonLabel?: string
   /** The trigger's tooltip and name; null for none. */
   tooltip?: string | null
+  /** Lines the menu up with the trigger's start or end edge. */
+  align?: 'start' | 'end'
   confirmTitle?: string
   confirmMessage?: string
   confirmLabel?: string
@@ -52,6 +54,7 @@ const props = withDefaults(defineProps<OptionsMenuProps>(), {
   buttonIcon: 'dot-vertical',
   buttonLabel: undefined,
   tooltip: 'More actions',
+  align: 'start',
   confirmTitle: 'Are you sure?',
   confirmMessage: "This can't be undone.",
   confirmLabel: 'Confirm',
@@ -110,7 +113,7 @@ function onOpenChange(value: boolean) {
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
-          align="start"
+          :align="align"
           class="z-[1000] min-w-[max(12rem,var(--reka-dropdown-menu-trigger-width))] rounded-xl border border-sui-line-subtle bg-sui-surface p-1 shadow-lg outline-hidden data-[state=open]:animate-sui-menu-in"
           side="bottom"
         >
