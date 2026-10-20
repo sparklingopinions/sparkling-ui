@@ -28,3 +28,5 @@ export const Checked: Story = { args: { modelValue: true } }
 export const Invalid: Story = { args: { invalid: true } }
 
 export const Disabled: Story = { args: { modelValue: true, disabled: true } }
+
+export const Indeterminate: Story = { args: { indeterminate: true } }
