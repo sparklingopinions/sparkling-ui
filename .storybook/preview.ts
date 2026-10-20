@@ -1,11 +1,6 @@
 import type { Preview } from '@storybook/vue3-vite'
 
-import { setIconResolver } from '../src'
-import { storyIcons } from '../src/stories/icons'
-
 import './preview.css'
-
-setIconResolver((name) => storyIcons[name])
 
 const preview: Preview = {
   parameters: {

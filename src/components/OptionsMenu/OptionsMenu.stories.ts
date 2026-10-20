@@ -10,7 +10,7 @@ import OptionsMenu, { type OptionsMenuItem } from './OptionsMenu.vue'
 
 const items: OptionsMenuItem[] = [
   { type: 'action', label: 'Rename', action: 'rename', icon: 'search', shortcut: 'R' },
-  { type: 'action', label: 'Send an email', action: 'email', icon: 'mail' },
+  { type: 'action', label: 'Send an email', action: 'email', icon: 'inbox' },
   { type: 'separator' },
   { type: 'action', label: 'Delete', action: 'delete', icon: 'close', variant: 'danger', confirmed: true }
 ]

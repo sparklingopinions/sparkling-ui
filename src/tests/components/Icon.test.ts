@@ -2,11 +2,11 @@ import { defineComponent, h, nextTick } from 'vue'
 
 import { mount } from '@vue/test-utils'
 
-import { Icon, setIconResolver } from '../../index'
+import { Icon, iconNames, setIconResolver } from '../../index'
 import { expectAccessible } from '../support/axe'
 
 const svg = (id: string) => defineComponent(() => () => h('svg', { 'data-icon': id, viewBox: '0 0 16 16' }))
-const icons: Record<string, ReturnType<typeof svg>> = { plus: svg('plus'), close: svg('close') }
+const icons: Record<string, ReturnType<typeof svg>> = { plus: svg('plus'), close: svg('close'), mail: svg('mail') }
 
 describe('Icon', () => {
   beforeEach(() => setIconResolver((name) => icons[name]))
@@ -49,5 +49,26 @@ describe('Icon', () => {
     expect(wrapper.html()).toBe('<!--v-if-->')
     expect(warn).toHaveBeenCalledWith('[sparkling-ui] No icon named "nope".')
     warn.mockRestore()
+  })
+  it("draws the library's set when the app has no icon of that name", () => {
+    const wrapper = mount(Icon, { props: { name: 'users', color: 'ink-muted' } })
+
+    expect(wrapper.element.tagName).toBe('svg')
+    expect(wrapper.attributes()).toMatchObject({ viewBox: '0 0 16 16', 'stroke-width': '1.5', style: 'fill: none;' })
+    expect(wrapper.find('path').exists()).toBe(true)
+    expect(iconNames).toHaveLength(78)
+  })
+
+  it('resolves older names, and fills the filled icons', () => {
+    const wrapper = mount(Icon, { props: { name: 'dot-vertical' } })
+
+    expect(wrapper.findAll('circle')).toHaveLength(3)
+    expect(wrapper.attributes('style')).toBe('stroke: none;')
+    expect(mount(Icon, { props: { name: 'people' } }).html()).toBe(mount(Icon, { props: { name: 'users' } }).html())
+  })
+
+  it("lets the app add icons and replace the set's", () => {
+    expect(mount(Icon, { props: { name: 'mail' } }).attributes('data-icon')).toBe('mail')
+    expect(mount(Icon, { props: { name: 'plus' } }).attributes('data-icon')).toBe('plus')
   })
 })

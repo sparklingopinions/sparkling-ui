@@ -71,7 +71,7 @@ src/
 
 ### Icons
 
-Icons belong to each app: `Icon` renders whatever the app registered with `setIconResolver`. A library component that needs an icon of its own (close, chevron, check) draws it inline as an internal component, never through the resolver, so it works in any app. Icon colours are a lookup of full class strings per role (`colors.ts`), as with any class.
+`Icon` draws the library's set (`components/Icon/iconSet.ts`: the design system's 78 icons with neutral names, plus `iconAliases` for older and common names). An app adds icons or replaces some with `setIconResolver`; its components win. A library component that needs a glyph of its own (close, chevron, check) draws it inline as an internal component, so an app's overrides never change it. Icon colours are a lookup of full class strings per role (`colors.ts`), as with any class.
 
 ### Tests and stories
 
