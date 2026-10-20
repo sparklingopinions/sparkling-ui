@@ -34,10 +34,10 @@ export const Tones: Story = {
   })
 }
 
-export const InsetWithIcon: Story = { ...Tones, args: { inset: true, icon: 'mail' } }
+export const InsetWithIcon: Story = { ...Tones, args: { inset: true, icon: 'inbox' } }
 
 export const WithAction: Story = {
-  args: { tone: 'info', icon: 'mail', dismissible: true },
+  args: { tone: 'info', icon: 'inbox', dismissible: true },
   render: (args) => ({
     components: { Banner, Button },
     setup: () => ({ args }),

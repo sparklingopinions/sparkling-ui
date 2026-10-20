@@ -51,7 +51,7 @@ export interface OptionsMenuProps {
 const props = withDefaults(defineProps<OptionsMenuProps>(), {
   id: undefined,
   items: () => [],
-  buttonIcon: 'dot-vertical',
+  buttonIcon: 'more-vertical',
   buttonLabel: undefined,
   tooltip: 'More actions',
   align: 'start',

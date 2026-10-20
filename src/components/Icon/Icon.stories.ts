@@ -1,22 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
-import { storyIcons } from '../../stories/icons'
 import Icon from './Icon.vue'
 import { iconColors } from './colors'
+import { iconNames } from './resolver'
 
 const meta: Meta<typeof Icon> = {
   title: 'Components/Icon',
   component: Icon,
   args: { name: 'plus' },
   argTypes: {
-    name: { control: 'select', options: Object.keys(storyIcons) },
+    name: { control: 'select', options: iconNames },
     color: { control: 'select', options: Object.keys(iconColors) }
   },
   parameters: {
     docs: {
       description: {
         component:
-          "Renders one of the app's icons by name. Register them once with `setIconResolver((name) => component)`, e.g. SVG files imported as components. Storybook registers a few stand-ins."
+          "A 16px icon from the library's set, by name, coloured by a role. Older names (`people`, `companies`, `dot-vertical`...) still resolve. An app adds or replaces icons with `setIconResolver((name) => component)`; names it returns a component for win."
       }
     }
   }
@@ -38,8 +38,23 @@ export const Colours: Story = {
     template: `
       <ul class="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3 text-13 text-sui-ink">
         <li v-for="color in colors" :key="color" class="flex items-center gap-2">
-          <Icon :color="color" name="mail" />
+          <Icon :color="color" name="inbox" />
           <code>{{ color }}</code>
+        </li>
+      </ul>
+    `
+  })
+}
+
+export const Set: Story = {
+  render: () => ({
+    components: { Icon },
+    setup: () => ({ names: iconNames }),
+    template: `
+      <ul class="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3 text-13 text-sui-ink">
+        <li v-for="name in names" :key="name" class="flex items-center gap-2">
+          <Icon color="ink-body" :name="name" />
+          <code>{{ name }}</code>
         </li>
       </ul>
     `

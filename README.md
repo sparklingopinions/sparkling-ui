@@ -75,17 +75,19 @@ The package is published privately to GitHub Packages as `@sparklingopinions/spa
    import { Button } from 'sparkling-ui'
    ```
 
-6. To use `Icon`, register the app's icons once, before mounting. With SVG files imported as components (e.g. `vite-svg-loader`):
+6. `Icon` draws the library's set of 78 icons by name: `<Icon name="users" color="ink-muted" />`. Older names (`people`, `companies`, `dot-vertical`...) resolve as aliases, and `iconNames` lists the set. To add icons or replace some of the set, register a resolver once, before mounting; names it returns a component for win. With SVG files imported as components (e.g. `vite-svg-loader`):
 
    ```ts
-   import { defineAsyncComponent } from 'vue'
+   import { type Component, defineAsyncComponent } from 'vue'
 
    import { setIconResolver } from 'sparkling-ui'
 
-   setIconResolver((name) => defineAsyncComponent(() => import(`./assets/icons/${name}.svg`)))
+   const own = import.meta.glob('./assets/icons/*.svg')
+   setIconResolver((name) => {
+     const file = own[`./assets/icons/${name}.svg`]
+     return file && defineAsyncComponent(file as () => Promise<Component>)
+   })
    ```
-
-   Then `<Icon name="mail" color="ink-muted" />`.
 
 7. For light and dark, call `initColorMode()` once before mounting (it sets `data-mode` on `<html>` from the saved choice or the system's); then `useColorMode()` gives `mode`, `resolved`, `isDark`, `setMode` and `toggle`, and `useForceLightMode()` keeps a page light while it's mounted.
 
@@ -93,13 +95,12 @@ The package is published privately to GitHub Packages as `@sparklingopinions/spa
 
 9. To use `useConfirm`, mount one `<ConfirmDialog />` near the app root (it takes default `confirm-label` and `cancel-label` for translation). Then anywhere:
 
-   ````ts
+   ```ts
    const confirm = useConfirm()
    if (await confirm({ title: 'Revoke key?', message: 'It stops working right away.', confirmLabel: 'Revoke', confirmVariant: 'danger' })) {
      // revoke
    }
-   ``` Icons the library's own components need (a dialog's close button, a select's chevron) are built in.
-   ````
+   ```
 
 ## Local setup
 
