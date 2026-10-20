@@ -1,7 +1,7 @@
 import { flushPromises, mount } from '@vue/test-utils'
 
 import { toasts } from '../../composables/toast'
-import { ToastMessage, Toaster, toast } from '../../index'
+import { Toaster, toast } from '../../index'
 import { expectAccessible } from '../support/axe'
 
 const messages = () => [...document.body.querySelectorAll('[data-sui-toasts] > div')]
@@ -24,7 +24,8 @@ describe('toast', () => {
       'Reply sent',
       'Couldn’t sendThe server didn’t answer'
     ])
-    expect(messages()[2]!.firstElementChild!.className).toContain('before:bg-sui-danger-solid')
+    expect(messages()[2]!.firstElementChild!.className).toContain('bg-sui-danger-solid')
+    expect(messages()[0]!.firstElementChild!.className).not.toContain('rounded-full')
     await expectAccessible(document.body)
     wrapper.unmount()
   })
@@ -57,15 +58,16 @@ describe('toast', () => {
   })
 })
 
-describe('ToastMessage', () => {
-  it('draws one message, without a close button when not closable', async () => {
-    const wrapper = mount(ToastMessage, {
-      props: { summary: 'Imported', detail: '12 people added', closable: false },
+describe('Toaster preview', () => {
+  it('draws toasts in place, without a close button when not closable', async () => {
+    const wrapper = mount(Toaster, {
+      props: { preview: [{ summary: 'Imported', detail: '12 people added', closable: false }, { summary: 'Saved' }] },
       attachTo: document.body
     })
 
-    expect(wrapper.text()).toBe('Imported12 people added')
-    expect(wrapper.find('button').exists()).toBe(false)
+    expect(wrapper.text()).toBe('Imported12 people addedSaved')
+    expect(wrapper.findAll('button')).toHaveLength(1)
+    expect(toasts).toHaveLength(0)
     await expectAccessible(wrapper.element)
     wrapper.unmount()
   })

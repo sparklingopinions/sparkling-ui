@@ -19,14 +19,18 @@ const model = defineModel<T>({ required: true })
 
 <!-- A few choices side by side, one picked: the chosen one lifts onto a card. Arrow keys move between them. -->
 <template>
-  <RadioGroupRoot v-model="model" class="flex gap-0.5 rounded-lg bg-sui-surface/60 p-0.75" orientation="horizontal">
+  <RadioGroupRoot
+    v-model="model"
+    class="flex w-fit gap-0.5 rounded-lg bg-sui-sunken p-0.75 ring-1 ring-sui-line-subtle ring-inset"
+    orientation="horizontal"
+  >
     <RadioGroupItem
       v-for="option in options"
       :key="option.value"
       class="inline-flex h-7 items-center gap-1.5 rounded-md pr-3 pl-2.5 text-13 font-medium transition-colors focus-visible:sui-ring-inset [&_svg]:[stroke-linecap:round] [&_svg]:[stroke-linejoin:round]"
       :class="
         option.value === model
-          ? 'bg-sui-surface text-sui-ink shadow-(--sui-shadow-raised)'
+          ? 'bg-sui-surface text-sui-ink shadow-(--sui-shadow-raised) ring-1 ring-sui-line-subtle'
           : 'text-sui-ink-body hover:text-sui-ink'
       "
       :value="option.value"

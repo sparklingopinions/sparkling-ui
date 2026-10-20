@@ -28,7 +28,7 @@ const empty = computed(() => !props.text && !slots.content)
       </TooltipTrigger>
       <TooltipPortal>
         <TooltipContent
-          class="z-[1100] max-w-lg animate-sui-fade-in rounded-md bg-sui-inverse px-1.5 py-1 text-sm leading-none break-words whitespace-pre-line text-sui-on-inverse shadow-md"
+          class="z-[1100] max-w-lg animate-sui-fade-in rounded-md bg-sui-inverse px-2 py-1.25 text-xs leading-4 font-medium break-words whitespace-pre-line text-sui-on-inverse shadow-md"
           :side="side"
           :side-offset="4"
         >

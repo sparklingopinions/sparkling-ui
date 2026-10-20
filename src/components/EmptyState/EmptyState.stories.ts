@@ -5,7 +5,7 @@ import EmptyState from './EmptyState.vue'
 const meta: Meta<typeof EmptyState> = {
   title: 'Components/EmptyState',
   component: EmptyState,
-  args: { emoji: '👤', title: 'No people yet', description: 'People are individual contacts you interact with.' }
+  args: { icon: 'users', title: 'No people yet', description: 'People are individual contacts you interact with.' }
 }
 
 export default meta
@@ -15,13 +15,17 @@ export const Default: Story = {}
 
 export const WithAction: Story = {
   args: {
-    emoji: '💼',
+    icon: 'building',
     title: 'No companies yet',
     description: 'Companies associated with your contacts and loops.',
     actionLabel: 'New company'
   }
 }
 
-export const NoEmoji: Story = {
-  args: { emoji: undefined, title: 'No matches', description: 'No records match your current filters.' }
+export const NoMatches: Story = {
+  args: { icon: 'search', tone: 'neutral', title: 'No matches', description: 'No records match your current filters.' }
+}
+
+export const WithoutIcon: Story = {
+  args: { icon: undefined, title: 'Nothing here', description: 'Items you add show up here.' }
 }

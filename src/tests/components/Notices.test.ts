@@ -57,15 +57,17 @@ describe('Banner', () => {
 })
 
 describe('EmptyState', () => {
-  it('shows a decorative emoji, a title and a description', async () => {
+  it('shows a decorative icon tile, a title and a description', async () => {
     const wrapper = mount(EmptyState, {
-      props: { emoji: '👤', title: 'No people yet', description: 'Add your first contact.' },
+      props: { icon: 'users', title: 'No people yet', description: 'Add your first contact.' },
       attachTo: document.body
     })
 
     expect(wrapper.text()).toContain('No people yet')
     expect(wrapper.text()).toContain('Add your first contact.')
-    expect(wrapper.find('[aria-hidden="true"]').text()).toBe('👤')
+    const tile = wrapper.find('div[aria-hidden="true"]')
+    expect(tile.classes()).toContain('bg-sui-accent-wash')
+    expect(tile.find('[data-icon="users"]').classes()).toContain('stroke-sui-accent')
     expect(wrapper.find('button').exists()).toBe(false)
     await expectAccessible(wrapper.element)
     wrapper.unmount()
@@ -89,6 +91,13 @@ describe('EmptyState', () => {
 
     expect(wrapper.find('img').exists()).toBe(false)
     expect(wrapper.text()).toContain('<img src=x onerror=alert(1)>')
+  })
+
+  it('draws a neutral tile for no matches', () => {
+    const wrapper = mount(EmptyState, { props: { icon: 'search', tone: 'neutral', title: 'No matches' } })
+
+    expect(wrapper.find('div[aria-hidden="true"]').classes()).toContain('bg-sui-sunken')
+    expect(wrapper.find('[data-icon="search"]').classes()).toContain('stroke-sui-ink-muted')
   })
 
   it('emits action from its primary button', async () => {

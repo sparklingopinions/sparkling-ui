@@ -3,39 +3,41 @@ import { expect, userEvent, within } from 'storybook/test'
 
 import { toast } from '../../composables/toast'
 import Button from '../Button/Button.vue'
-import ToastMessage from './ToastMessage.vue'
 import Toaster from './Toaster.vue'
 
-const meta: Meta<typeof ToastMessage> = {
+const meta: Meta<typeof Toaster> = {
   title: 'Components/Toast',
-  component: ToastMessage,
+  component: Toaster,
   parameters: {
     docs: {
       description: {
         component:
-          'Mount one `<Toaster />` near the app root, then `toast.info(message)`, `toast.success(...)` or `toast.error(...)`, with `{ detail, life, closable }`. `ToastMessage` draws a single toast, for previews.'
+          'Mount one `<Toaster />` near the app root, then `toast.info(message)`, `toast.success(...)` or `toast.error(...)`, with `{ detail, life, closable }`. `preview` draws toasts in place instead, for docs and designs.'
       }
     }
   },
-  args: { summary: 'Draft saved', severity: 'info', closable: true },
-  argTypes: { severity: { control: 'inline-radio', options: ['info', 'success', 'error'] } },
-  render: (args) => ({
-    components: { ToastMessage },
-    setup: () => ({ args }),
-    template: '<div class="w-96"><ToastMessage v-bind="args" /></div>'
-  })
+  args: { preview: [{ summary: 'Draft saved' }] }
 }
 
 export default meta
-type Story = StoryObj<typeof ToastMessage>
+type Story = StoryObj<typeof Toaster>
 
 export const Info: Story = {}
 
-export const Success: Story = { args: { severity: 'success', summary: 'Reply sent' } }
+export const Success: Story = { args: { preview: [{ severity: 'success', summary: 'Reply sent' }] } }
 
-export const Error: Story = { args: { severity: 'error', summary: 'Couldn’t send the reply' } }
+export const Error: Story = { args: { preview: [{ severity: 'error', summary: 'Couldn’t send the reply' }] } }
 
-export const WithDetail: Story = { args: { summary: 'Imported', detail: '12 people added' } }
+export const WithDetail: Story = { args: { preview: [{ summary: 'Imported', detail: '12 people added' }] } }
+
+export const Stack: Story = {
+  args: {
+    preview: [
+      { severity: 'success', summary: 'Reply sent' },
+      { summary: 'Imported', detail: '12 people added', closable: false }
+    ]
+  }
+}
 
 export const Live: Story = {
   render: () => ({
