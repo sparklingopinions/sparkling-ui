@@ -32,3 +32,5 @@ jobs:
           commit-message: Version packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # npm only logs why a trusted publishing token exchange failed at verbose level.
+          NPM_CONFIG_LOGLEVEL: verbose
