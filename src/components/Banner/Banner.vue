@@ -82,7 +82,7 @@ const tone = computed(() => tones[props.tone])
     <button
       v-if="dismissible"
       :aria-label="dismissLabel"
-      class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-sui-ink-faint transition-colors hover:bg-sui-sunken hover:text-sui-ink-body"
+      class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-sui-ink-faint transition-colors hover:bg-sui-sunken hover:text-sui-ink-body focus-visible:sui-ring"
       type="button"
       @click="$emit('dismiss')"
     >

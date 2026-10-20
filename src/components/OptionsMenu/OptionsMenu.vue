@@ -118,7 +118,7 @@ function onOpenChange(value: boolean) {
             <DropdownMenuSeparator v-if="item.type === 'separator'" class="my-1 border-t border-sui-line-subtle" />
             <DropdownMenuItem
               v-else
-              class="relative rounded-lg text-sm text-sui-ink transition-colors duration-150 outline-hidden hover:bg-sui-sunken data-highlighted:bg-sui-sunken"
+              class="relative rounded-lg text-sm text-sui-ink transition-colors duration-150 outline-hidden hover:bg-sui-sunken focus-visible:sui-ring-inset data-highlighted:bg-sui-sunken"
               @select="select(item)"
             >
               <div

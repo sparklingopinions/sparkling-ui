@@ -64,7 +64,7 @@ const texts: Record<ButtonSize, string> = {
 }
 
 const classes = computed(() => [
-  'flex items-center justify-center font-medium text-nowrap transition-all duration-200 ease-in-out data-disabled:opacity-50',
+  'flex items-center justify-center font-medium text-nowrap transition-all duration-200 ease-in-out focus-visible:sui-ring data-disabled:opacity-50',
   variants[props.variant],
   heights[props.size],
   texts[props.size],

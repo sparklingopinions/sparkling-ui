@@ -91,9 +91,16 @@ function onHighlight() {
   nextTick(() => listbox.value && (listbox.value.highlightedElement = null))
 }
 
+// The focus ring marks the highlighted option only once the arrow keys move it, not under the pointer.
+const keyboard = ref(false)
+const onKeydown = (event: KeyboardEvent) => {
+  if (['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) keyboard.value = true
+}
+
+const itemClass =
+  'relative flex min-h-8 cursor-pointer items-center rounded-md px-2 py-1 text-sm text-sui-ink data-highlighted:bg-sui-sunken group-data-keyboard/list:data-highlighted:sui-ring-inset'
 // MustLoop styled every span in an option as one truncated block, a custom option's too.
-const optionClass =
-  'relative flex min-h-8 cursor-pointer items-center rounded-md px-2 py-1 text-sm text-sui-ink data-highlighted:bg-sui-sunken [&_span]:block [&_span]:truncate'
+const optionClass = `${itemClass} [&_span]:block [&_span]:truncate`
 
 function onBackspace() {
   if (query.value || !selected.value.length) return
@@ -102,7 +109,14 @@ function onBackspace() {
 </script>
 
 <template>
-  <ListboxRoot ref="listbox" :highlight-on-hover="true" :model-value="undefined" @highlight="onHighlight">
+  <ListboxRoot
+    ref="listbox"
+    :highlight-on-hover="true"
+    :model-value="undefined"
+    @highlight="onHighlight"
+    @keydown="onKeydown"
+    @pointermove="keyboard = false"
+  >
     <div class="-m-0.5 flex min-h-12 flex-wrap items-center px-4 py-3">
       <Tag
         v-for="item in selected"
@@ -129,7 +143,12 @@ function onBackspace() {
     <span v-if="loading" class="flex justify-center py-8 text-sm font-normal text-sui-ink-subtle">
       <Spinner size="sm" />
     </span>
-    <ListboxContent v-else-if="filtered.length || showCreate" :aria-label="label" class="max-h-56 overflow-auto p-2">
+    <ListboxContent
+      v-else-if="filtered.length || showCreate"
+      :aria-label="label"
+      class="group/list max-h-56 overflow-auto p-2"
+      :data-keyboard="keyboard || undefined"
+    >
       <div v-if="virtual" class="h-40 overflow-auto">
         <ListboxVirtualizer
           v-slot="{ option }"
@@ -161,12 +180,7 @@ function onBackspace() {
           </slot>
         </ListboxItem>
       </template>
-      <ListboxItem
-        v-if="showCreate"
-        class="relative flex min-h-8 cursor-pointer items-center rounded-md px-2 py-1 text-sm text-sui-ink data-highlighted:bg-sui-sunken"
-        value="create"
-        @select="onSelect($event, 'create')"
-      >
+      <ListboxItem v-if="showCreate" :class="itemClass" value="create" @select="onSelect($event, 'create')">
         {{ createLabel }}
         <Tag v-if="createColored" class="ml-2" :color="newColor" :name="query" />
         <span v-else class="ml-1 font-medium text-sui-ink">“{{ query }}”</span>

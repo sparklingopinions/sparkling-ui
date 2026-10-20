@@ -22,7 +22,7 @@ const isOpen = computed(() => open.value || props.filled)
   <div>
     <button
       :aria-expanded="isOpen"
-      class="flex h-10.5 w-full items-center gap-1.5 bg-transparent p-0 text-13 font-medium text-sui-ink-body"
+      class="flex h-10.5 w-full items-center gap-1.5 bg-transparent p-0 text-13 font-medium text-sui-ink-body focus-visible:sui-ring"
       type="button"
       @click="open = !open"
     >

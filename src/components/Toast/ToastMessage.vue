@@ -39,7 +39,7 @@ const dots: Record<ToastSeverity, string> = {
       <div v-if="closable">
         <button
           :aria-label="closeLabel"
-          class="relative ml-auto flex h-4 w-4 items-center justify-center overflow-hidden rounded-full bg-transparent outline-hidden transition duration-200 ease-in-out hover:bg-sui-on-inverse/20 focus-visible:ring-2 focus-visible:ring-sui-on-inverse/40"
+          class="relative ml-auto flex h-4 w-4 items-center justify-center overflow-hidden rounded-full bg-transparent transition duration-200 ease-in-out hover:bg-sui-on-inverse/20 focus-visible:sui-ring-inverse"
           type="button"
           @click="$emit('close')"
         >

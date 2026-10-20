@@ -52,8 +52,8 @@ const close = () => panel.value?.hide()
   <div
     :class="
       inline
-        ? 'inline-flex w-full max-w-[16rem] cursor-pointer items-center overflow-hidden rounded-lg px-3 py-1.5 outline-hidden transition-colors hover:bg-sui-sunken focus-visible:ring-2 focus-visible:ring-sui-accent-line [&>*]:basis-full'
-        : 'max-w-[16rem] flex-1 rounded-lg outline-hidden transition-shadow focus:ring-3 focus:ring-sui-focus-ring'
+        ? 'inline-flex w-full max-w-[16rem] cursor-pointer items-center overflow-hidden rounded-lg px-3 py-1.5 outline-hidden transition-colors hover:bg-sui-sunken focus-visible:sui-ring-field [&>*]:basis-full'
+        : 'max-w-[16rem] flex-1 rounded-lg outline-hidden focus-visible:sui-ring-field'
     "
     tabindex="0"
     @keydown.enter="open"

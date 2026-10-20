@@ -3,7 +3,8 @@ import { onMounted, ref } from 'vue'
 
 type Mode = 'light' | 'dark'
 
-const pairs: { text: string; background: string; usage: string }[] = [
+// `min: 3` marks a boundary or a focus ring, not text: WCAG 1.4.11 asks 3:1 of those.
+const pairs: { text: string; background: string; usage: string; min?: number }[] = [
   { text: 'ink', background: 'surface', usage: 'Headings, primary text' },
   { text: 'ink-emphasis', background: 'surface', usage: 'Secondary buttons, dialog titles' },
   { text: 'ink-body', background: 'surface', usage: 'Body text' },
@@ -42,7 +43,14 @@ const pairs: { text: string; background: string; usage: string }[] = [
   { text: 'hue-purple-ink', background: 'hue-purple-soft', usage: 'Avatar initials' },
   { text: 'hue-slate-ink', background: 'hue-slate-soft', usage: 'Avatar initials' },
   { text: 'hue-red-ink', background: 'hue-red-soft', usage: 'Avatar initials' },
-  { text: 'hue-amber-ink', background: 'hue-amber-soft', usage: 'Avatar initials' }
+  { text: 'hue-amber-ink', background: 'hue-amber-soft', usage: 'Avatar initials' },
+  { text: 'line-control', background: 'surface', usage: 'Field, checkbox and radio borders', min: 3 },
+  { text: 'line-control', background: 'canvas', usage: 'The same borders, on the page background', min: 3 },
+  { text: 'line-control', background: 'sunken', usage: 'The same borders, on sunken panels', min: 3 },
+  { text: 'accent', background: 'surface', usage: 'The focus ring', min: 3 },
+  { text: 'accent', background: 'canvas', usage: 'The focus ring, on the page background', min: 3 },
+  { text: 'accent', background: 'sunken', usage: 'The focus ring on a highlighted option', min: 3 },
+  { text: 'on-inverse', background: 'inverse', usage: 'The focus ring on toasts', min: 3 }
 ]
 
 const probes = ref<Record<Mode, HTMLElement | null>>({ light: null, dark: null })
@@ -80,7 +88,7 @@ const rgb = (mode: Mode, role: string) => `rgb(${channels.value[mode][role]?.joi
     <table class="w-full border-collapse text-left text-sm">
       <thead>
         <tr class="border-b border-sui-line text-13 text-sui-ink-body">
-          <th class="py-2 pr-4 font-medium" scope="col">Text on background</th>
+          <th class="py-2 pr-4 font-medium" scope="col">Colour on background</th>
           <th class="py-2 pr-4 font-medium" colspan="2" scope="colgroup">Light</th>
           <th class="py-2 pr-4 font-medium" colspan="2" scope="colgroup">Dark</th>
           <th class="py-2 font-medium" scope="col">Where MustLoop uses it</th>
@@ -96,6 +104,14 @@ const rgb = (mode: Mode, role: string) => `rgb(${channels.value[mode][role]?.joi
           <template v-for="mode in ['light', 'dark'] as const" :key="mode">
             <td class="py-2 pr-2">
               <span
+                v-if="pair.min"
+                class="flex h-7 w-24 items-center justify-center rounded-md border border-sui-line-subtle"
+                :style="{ backgroundColor: rgb(mode, pair.background) }"
+              >
+                <span class="h-4 w-14 rounded-sm border-2" :style="{ borderColor: rgb(mode, pair.text) }" />
+              </span>
+              <span
+                v-else
                 class="inline-flex h-7 items-center rounded-md border border-sui-line-subtle px-2.5 font-medium whitespace-nowrap"
                 :style="{ backgroundColor: rgb(mode, pair.background), color: rgb(mode, pair.text) }"
               >
@@ -104,7 +120,10 @@ const rgb = (mode: Mode, role: string) => `rgb(${channels.value[mode][role]?.joi
             </td>
             <td class="py-2 pr-4 whitespace-nowrap tabular-nums">
               {{ ratio(mode, pair.text, pair.background).toFixed(2) }}
-              <span v-if="ratio(mode, pair.text, pair.background) < 4.5" class="ml-1 font-medium text-sui-danger">
+              <span
+                v-if="ratio(mode, pair.text, pair.background) < (pair.min ?? 4.5)"
+                class="ml-1 font-medium text-sui-danger"
+              >
                 Below AA
               </span>
             </td>

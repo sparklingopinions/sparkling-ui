@@ -82,7 +82,7 @@ onUnmounted(revoke)
   <div class="flex items-center gap-4">
     <div
       :aria-label="label"
-      class="relative shrink-0 cursor-pointer overflow-hidden border bg-sui-sunken transition-colors"
+      class="relative shrink-0 cursor-pointer overflow-hidden border bg-sui-sunken transition-colors focus-visible:sui-ring"
       :class="[
         variant === 'circle' ? 'rounded-full' : 'rounded-xl',
         dragging ? 'border-sui-accent-solid ring-2 ring-sui-focus-ring' : 'border-sui-line-subtle hover:border-sui-line'
@@ -105,7 +105,7 @@ onUnmounted(revoke)
     <div class="flex flex-col gap-1.5">
       <div class="flex items-center gap-2">
         <button
-          class="rounded-lg border border-sui-line bg-sui-surface px-3 py-1.5 text-13 font-medium text-sui-ink-body transition-colors hover:border-sui-line-strong"
+          class="rounded-lg border border-sui-line bg-sui-surface px-3 py-1.5 text-13 font-medium text-sui-ink-body transition-colors hover:border-sui-line-strong focus-visible:sui-ring"
           type="button"
           @click="pick"
         >
@@ -113,7 +113,7 @@ onUnmounted(revoke)
         </button>
         <button
           v-if="imageUrl"
-          class="rounded-lg px-3 py-1.5 text-13 font-medium text-sui-ink-muted transition-colors hover:bg-sui-danger-soft hover:text-sui-danger"
+          class="rounded-lg px-3 py-1.5 text-13 font-medium text-sui-ink-muted transition-colors hover:bg-sui-danger-soft hover:text-sui-danger focus-visible:sui-ring"
           type="button"
           @click="remove"
         >
