@@ -1,3 +1,5 @@
+import { nextTick } from 'vue'
+
 import { flushPromises, mount } from '@vue/test-utils'
 
 import { toasts } from '../../composables/toast'
@@ -69,6 +71,40 @@ describe('Toaster preview', () => {
     expect(wrapper.findAll('button')).toHaveLength(1)
     expect(toasts).toHaveLength(0)
     await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
+
+  it("emits close with the toast's id, or its index without one", async () => {
+    const wrapper = mount(Toaster, {
+      props: { preview: [{ summary: 'Saved' }, { id: 'snoozed', summary: 'Snoozed' }] },
+      attachTo: document.body
+    })
+
+    const [first, second] = wrapper.findAll('button')
+    await first!.trigger('click')
+    await second!.trigger('click')
+    expect(wrapper.emitted('close')).toEqual([[0], ['snoozed']])
+    wrapper.unmount()
+  })
+
+  it('animates a toast in when it joins the list and out when it leaves', async () => {
+    const wrapper = mount(Toaster, {
+      props: { preview: [{ id: 1, summary: 'Saved' }] },
+      attachTo: document.body,
+      global: { stubs: { 'transition-group': false } }
+    })
+
+    await wrapper.setProps({
+      preview: [
+        { id: 1, summary: 'Saved' },
+        { id: 2, summary: 'Snoozed' }
+      ]
+    })
+    expect(wrapper.findAll('.animate-sui-toast-in').map((m) => m.text())).toEqual(['Snoozed'])
+
+    await wrapper.setProps({ preview: [{ id: 2, summary: 'Snoozed' }] })
+    await nextTick()
+    expect(wrapper.find('.animate-sui-toast-out').text()).toBe('Saved')
     wrapper.unmount()
   })
 })
