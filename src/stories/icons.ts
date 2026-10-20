@@ -1,6 +1,6 @@
 import { type FunctionalComponent, h } from 'vue'
 
-// Stand-ins for an app's icons, drawn like MustLoop's: 16px, stroked, a fixed colour Icon's `color` replaces.
+// Stand-ins for an app's icons, drawn like the design system's: 16px, stroked, a fixed colour Icon's `color` replaces.
 const paths: Record<string, string> = {
   plus: 'M8 3.5v9M3.5 8h9',
   check: 'M3.5 8.5l3 3 6-7',

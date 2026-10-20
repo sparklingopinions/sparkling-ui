@@ -1,4 +1,4 @@
-/** Focus goes to an [autofocus] field (footer first, then header, then body), as PrimeVue's did; or else the dialog. */
+/** Focus goes to an [autofocus] field (footer first, then header, then body) or else the dialog. */
 export function focusFirst(event: Event) {
   event.preventDefault()
   const dialog = event.target as HTMLElement

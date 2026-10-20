@@ -24,8 +24,8 @@ const preview: Preview = {
         title: 'Theme',
         icon: 'paintbrush',
         items: [
-          { value: 'default', title: 'Default (MustLoop)' },
-          { value: 'desk', title: 'Desk (Tamable)' }
+          { value: 'default', title: 'Default' },
+          { value: 'desk', title: 'Desk (a second theme)' }
         ],
         dynamicTitle: true
       }

@@ -19,7 +19,7 @@ const slots = useSlots()
 const empty = computed(() => !props.text && !slots.content)
 </script>
 
-<!-- Shows at once and only while the trigger is hovered or focused, as MustLoop's PrimeVue tooltip did. -->
+<!-- Shows at once, and only while the trigger is hovered or focused. -->
 <template>
   <TooltipProvider :delay-duration="0" disable-hoverable-content :skip-delay-duration="0">
     <TooltipRoot :disabled="disabled || empty">

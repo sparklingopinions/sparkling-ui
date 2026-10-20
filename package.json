@@ -1,7 +1,7 @@
 {
   "name": "@sparklingopinions/sparkling-ui",
   "version": "0.0.0",
-  "description": "Shared Vue 3 component library for MustLoop, Tamable and what comes next",
+  "description": "A product-agnostic Vue 3 component library, themed by semantic tokens",
   "type": "module",
   "repository": {
     "type": "git",

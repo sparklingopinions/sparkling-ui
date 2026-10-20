@@ -6,7 +6,7 @@
 
 @custom-variant dark (&:where([data-mode='dark'], [data-mode='dark'] *));
 
-/* Every colour role as RGB channels, with MustLoop's values as the defaults. Apps brand the components
+/* Every colour role as RGB channels, with the base theme's values as the defaults. Apps brand the components
    by setting any of them. :where() keeps the defaults at zero specificity, so an app's own rule wins
    wherever it sits in the CSS. */
 :where(:root, [data-mode='light']) {
@@ -211,7 +211,7 @@
 
 /* Prefixed, so they never meet an app's own colour names (bg-sui-surface, text-sui-ink).
    Inline, so each colour reads its channels where it's used and [data-mode] can flip any subtree.
-   "/ 1" is the shape MustLoop's PostCSS turns opacity modifiers on into plain alpha. */
+   "/ 1" is the shape an app's PostCSS can rewrite opacity modifiers on into plain alpha. */
 @theme inline {
   --color-sui-canvas: rgb(var(--sui-canvas) / 1);
   --color-sui-surface: rgb(var(--sui-surface) / 1);
@@ -324,7 +324,7 @@
   outline-offset: var(--sui-focus-offset);
 }
 
-/* MustLoop's off-scale sizes, named by px, with no line height of their own. */
+/* Off-scale sizes, named by px, with no line height of their own. */
 @theme {
   --text-7: 0.4375rem;
   --text-7\.5: 0.46875rem;

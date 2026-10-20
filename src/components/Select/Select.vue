@@ -96,7 +96,7 @@ const showCreate = computed(() => {
   const text = query.value.trim().toLowerCase()
   return props.canCreate && !!text && !props.options.some((option) => option.label.toLowerCase() === text)
 })
-// More than this and the list renders only the rows in view, as MustLoop's did past 20.
+// More than this and the list renders only the rows in view.
 const virtual = computed(() => listed.value.length > 20)
 
 const createHues: Hue[] = ['gray', 'purple', 'red', 'green', 'orange', 'pink', 'blue', 'slate']

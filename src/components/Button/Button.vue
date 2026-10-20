@@ -36,7 +36,7 @@ const variants: Record<ButtonVariant, string> = {
     'border border-transparent bg-transparent text-sui-ink-subtle not-data-disabled:hover:bg-sui-sunken not-data-disabled:hover:text-sui-ink-emphasis',
   contrast:
     'border border-sui-contrast bg-sui-contrast text-sui-on-contrast not-data-disabled:hover:border-sui-contrast-hover not-data-disabled:hover:bg-sui-contrast-hover',
-  // No border, as in MustLoop: it's 2px narrower than the other variants.
+  // No border: it's 2px narrower than the other variants.
   danger: 'bg-sui-danger-solid text-sui-on-danger not-data-disabled:hover:bg-sui-danger-hover',
   'danger-outline':
     'border border-sui-danger-line bg-sui-surface text-sui-danger not-data-disabled:hover:bg-sui-danger-soft [&_svg]:stroke-sui-danger'

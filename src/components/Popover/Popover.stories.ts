@@ -15,7 +15,7 @@ const meta: Meta<typeof Popover> = {
     docs: {
       description: {
         component:
-          "Opened from code, as PrimeVue's was: `popover.value.toggle(event)`, `show(event, target?)` and `hide()`. It sits below its trigger (or `target`), closes on Escape, an outside click, a scroll or a resize, and only moves focus to an `[autofocus]` field inside."
+          'Opened from code: `popover.value.toggle(event)`, `show(event, target?)` and `hide()`. It sits below its trigger (or `target`), closes on Escape, an outside click, a scroll or a resize, and only moves focus to an `[autofocus]` field inside.'
       }
     }
   },

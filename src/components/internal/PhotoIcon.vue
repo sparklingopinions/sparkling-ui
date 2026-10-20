@@ -1,4 +1,4 @@
-<!-- MustLoop's photo icon, with its own fixed stroke. -->
+<!-- A photo glyph, with its own fixed stroke. -->
 <template>
   <svg
     aria-hidden="true"

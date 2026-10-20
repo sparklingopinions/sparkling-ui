@@ -7,7 +7,7 @@ import Tooltip from './Tooltip.vue'
 const meta: Meta<typeof Tooltip> = {
   title: 'Components/Tooltip',
   component: Tooltip,
-  args: { text: 'Archive this loop', side: 'top', disabled: false },
+  args: { text: 'Archive this conversation', side: 'top', disabled: false },
   argTypes: { side: { control: 'inline-radio', options: ['top', 'right', 'bottom', 'left'] } },
   parameters: { layout: 'centered' },
   render: (args) => ({
@@ -24,7 +24,7 @@ type Story = StoryObj<typeof Tooltip>
 export const Top: Story = {
   play: async ({ canvasElement }) => {
     within(canvasElement).getByRole('button').focus()
-    await expect(await within(document.body).findByRole('tooltip')).toHaveTextContent('Archive this loop')
+    await expect(await within(document.body).findByRole('tooltip')).toHaveTextContent('Archive this conversation')
   }
 }
 
@@ -32,7 +32,7 @@ export const Bottom: Story = { args: { side: 'bottom' } }
 
 export const Right: Story = { args: { side: 'right' } }
 
-export const Multiline: Story = { args: { text: 'Archive this loop\nYou can find it under Done' } }
+export const Multiline: Story = { args: { text: 'Archive this conversation\nYou can find it under Done' } }
 
 export const RichContent: Story = {
   render: (args) => ({

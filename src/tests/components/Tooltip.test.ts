@@ -18,13 +18,13 @@ describe('Tooltip', () => {
   afterEach(() => (document.body.innerHTML = ''))
 
   it('shows its text while the trigger has keyboard focus, and Escape hides it', async () => {
-    const wrapper = mountTooltip({ text: 'Archive this loop' })
+    const wrapper = mountTooltip({ text: 'Archive this conversation' })
     const button = wrapper.get('button')
 
     expect(tooltip()).toBeNull()
     await button.trigger('focus')
     await nextTick()
-    expect(tooltip()?.textContent).toBe('Archive this loop')
+    expect(tooltip()?.textContent).toBe('Archive this conversation')
     expect(button.attributes('aria-describedby')).toBeTruthy()
     await expectAccessible(document.body)
 
