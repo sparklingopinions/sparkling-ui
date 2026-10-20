@@ -57,6 +57,15 @@ describe('OptionsMenu', () => {
     wrapper.unmount()
   })
 
+  it('lines the menu up with the end of its trigger when asked', async () => {
+    const wrapper = mount(OptionsMenu, { props: { items, align: 'end' }, attachTo: document.body })
+    await wrapper.get('button').trigger('keydown', { key: 'Enter' })
+    await flushPromises()
+
+    expect(document.body.querySelector('[role="menu"]')?.getAttribute('data-align')).toBe('end')
+    wrapper.unmount()
+  })
+
   it('emits a chosen action with the menu id', async () => {
     const wrapper = await openMenu()
     menuitems()[0]!.click()
