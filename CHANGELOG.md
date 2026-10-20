@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.2.0
+
+### Minor Changes
+
+- 142abb2: `Toaster`'s `preview` can now stand in for live toasts in a demo. Give each preview item an `id` and its toasts animate in and out as you add and remove items, as live ones do; their close button emits `close` with the item's `id` (or its index without one), so you can remove it. A preview that never changes renders as before.
+
 ## 0.1.1
 
 ### Patch Changes
