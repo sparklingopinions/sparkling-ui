@@ -48,10 +48,10 @@ watch(model, () => nextTick(resize))
     :aria-invalid="invalid ? 'true' : undefined"
     class="m-0 w-full appearance-none rounded-md border bg-sui-surface px-3 py-1.5 font-sans text-sm leading-5 text-sui-ink transition-colors duration-200 placeholder:text-sui-ink-faint"
     :class="[
-      invalid ? 'border-sui-danger-mid' : 'border-sui-line-subtle hover:border-sui-line-strong',
+      invalid ? 'border-sui-danger-mid' : 'border-sui-line-control hover:border-sui-ink-muted',
       disabled
         ? 'pointer-events-none cursor-default opacity-60 select-none'
-        : 'focus:border-sui-accent-solid focus:shadow-[0_1px_2px_0_rgb(0_0_0/0.05)] focus:ring-3 focus:ring-sui-focus-ring focus:outline-hidden focus:outline-offset-0'
+        : 'focus:border-sui-accent focus:ring-0 focus-visible:sui-ring-field'
     ]"
     :disabled="disabled"
     :value="model ?? ''"

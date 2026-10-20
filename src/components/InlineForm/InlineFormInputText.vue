@@ -71,7 +71,7 @@ function onEnter(event: KeyboardEvent) {
   <div
     v-bind="rootAttrs"
     ref="wrapper"
-    class="relative w-full max-w-[16rem] rounded-lg px-3 py-1.5 transition-colors [&_textarea]:relative [&_textarea]:z-10 [&_textarea]:bg-sui-surface [&_textarea]:placeholder:text-sm [&_textarea]:placeholder:leading-5 [&_textarea]:placeholder:text-sui-ink-muted"
+    class="relative w-full max-w-[16rem] rounded-lg px-3 py-1.5 transition-colors focus-visible:sui-ring-field [&_textarea]:relative [&_textarea]:z-10 [&_textarea]:bg-sui-surface [&_textarea]:placeholder:text-sm [&_textarea]:placeholder:leading-5 [&_textarea]:placeholder:text-sui-ink-muted"
     :class="[disabled ? 'cursor-auto' : 'cursor-pointer hover:bg-sui-sunken', $attrs.class]"
     tabindex="0"
     @click="edit"

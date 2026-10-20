@@ -25,12 +25,12 @@ const inputAttrs = computed(() => {
 
 const box = computed(() => [
   checked.value && !props.disabled && 'border-sui-accent-solid bg-sui-accent-solid',
-  !checked.value && (props.invalid ? 'border-sui-danger-mid' : 'border-sui-line-strong'),
+  !checked.value && (props.invalid ? 'border-sui-danger-mid' : 'border-sui-line-control'),
   props.disabled
     ? 'pointer-events-none cursor-default border-sui-accent-line bg-sui-surface select-none [&>*:first-child]:bg-sui-accent-soft'
     : [
         !checked.value && 'peer-hover:border-sui-accent-bright peer-hover:[&>*:first-child]:bg-sui-accent-bright',
-        'peer-focus-visible:ring-1 peer-focus-visible:ring-sui-accent-solid'
+        'peer-focus-visible:sui-ring'
       ]
 ])
 </script>
@@ -52,7 +52,7 @@ const box = computed(() => [
       @change="model = value"
     />
     <div
-      class="flex h-4 w-4 items-center justify-center rounded-full border outline-transparent transition duration-200 ease-in-out"
+      class="flex h-4 w-4 items-center justify-center rounded-full border transition duration-200 ease-in-out"
       :class="box"
     >
       <div

@@ -15,7 +15,7 @@ const companies: SelectInputItem[] = ['Acme Inc', 'Globex', 'Initech', 'Umbrella
 const field = `
   <template #trigger="{ onClick }">
     <button
-      class="flex h-9 w-full cursor-pointer items-center gap-2 rounded-lg border border-sui-line bg-sui-surface px-3 text-left text-sm text-sui-ink"
+      class="flex h-9 w-full cursor-pointer items-center gap-2 rounded-lg border border-sui-line-control bg-sui-surface px-3 text-left text-sm text-sui-ink hover:border-sui-ink-muted"
       type="button"
       @click="onClick"
     >

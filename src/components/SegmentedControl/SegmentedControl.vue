@@ -23,7 +23,7 @@ const model = defineModel<T>({ required: true })
     <RadioGroupItem
       v-for="option in options"
       :key="option.value"
-      class="inline-flex h-7 items-center gap-1.5 rounded-md pr-3 pl-2.5 text-13 font-medium transition-colors [&_svg]:[stroke-linecap:round] [&_svg]:[stroke-linejoin:round]"
+      class="inline-flex h-7 items-center gap-1.5 rounded-md pr-3 pl-2.5 text-13 font-medium transition-colors focus-visible:sui-ring-inset [&_svg]:[stroke-linecap:round] [&_svg]:[stroke-linejoin:round]"
       :class="
         option.value === model
           ? 'bg-sui-surface text-sui-ink shadow-(--sui-shadow-raised)'

@@ -108,7 +108,7 @@ const cells = computed(() => {
         <Tooltip :text="previousLabel">
           <button
             :aria-label="previousLabel"
-            class="flex h-7 w-7 items-center justify-center rounded-lg transition-colors hover:bg-sui-sunken"
+            class="flex h-7 w-7 items-center justify-center rounded-lg transition-colors hover:bg-sui-sunken focus-visible:sui-ring"
             type="button"
             @click="shiftMonth(-1)"
           >
@@ -118,7 +118,7 @@ const cells = computed(() => {
         <Tooltip :text="nextLabel">
           <button
             :aria-label="nextLabel"
-            class="flex h-7 w-7 items-center justify-center rounded-lg transition-colors hover:bg-sui-sunken"
+            class="flex h-7 w-7 items-center justify-center rounded-lg transition-colors hover:bg-sui-sunken focus-visible:sui-ring"
             type="button"
             @click="shiftMonth(1)"
           >
@@ -139,12 +139,12 @@ const cells = computed(() => {
         :aria-current="cell.isToday ? 'date' : undefined"
         :aria-label="cell.date.toLocaleDateString(locale, { dateStyle: 'full' })"
         :aria-pressed="cell.selected"
-        :class="['flex h-9 items-center justify-center', cell.band]"
+        :class="['group flex h-9 items-center justify-center outline-hidden', cell.band]"
         type="button"
         @click="emit('pick', cell.date)"
       >
         <span
-          class="relative flex h-8.5 w-9 items-center justify-center rounded-lg text-13 tabular-nums transition-colors"
+          class="relative flex h-8.5 w-9 items-center justify-center rounded-lg text-13 tabular-nums transition-colors group-focus-visible:sui-ring"
           :class="cell.classes"
         >
           {{ cell.label }}

@@ -24,13 +24,10 @@ const box = computed(() => [
     ? 'border-sui-accent-solid bg-sui-accent-solid'
     : props.invalid
       ? 'border-sui-danger-mid'
-      : 'border-sui-line-strong bg-sui-surface',
+      : 'border-sui-line-control bg-sui-surface',
   props.disabled
     ? 'cursor-default opacity-60'
-    : [
-        !model.value && !props.invalid && 'peer-hover:border-sui-accent-solid',
-        'peer-focus-visible:border-sui-accent-solid peer-focus-visible:ring-2 peer-focus-visible:ring-sui-accent-solid/20'
-      ]
+    : [!model.value && !props.invalid && 'peer-hover:border-sui-accent-solid', 'peer-focus-visible:sui-ring']
 ])
 </script>
 

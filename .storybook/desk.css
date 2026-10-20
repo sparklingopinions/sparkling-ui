@@ -13,13 +13,16 @@
   --sui-line: 222 222 218;
   --sui-line-strong: 201 201 197;
 
+  /* Control boundary: inputs, checkboxes, radios and select triggers, at 3:1 on canvas, surface and sunken */
+  --sui-line-control: 138 138 143;
+
   /* Ink: text, darkest first. ink-faint (placeholders) shares ink-muted's grey; mark-faint is for non-text marks */
   --sui-ink: 24 24 27;
   --sui-ink-emphasis: 54 54 58;
   --sui-ink-body: 69 69 75;
-  --sui-ink-subtle: 102 102 108;
-  --sui-ink-muted: 124 124 130;
-  --sui-ink-faint: 124 124 130;
+  --sui-ink-subtle: 88 88 94;
+  --sui-ink-muted: 108 108 114;
+  --sui-ink-faint: 108 108 114;
   --sui-mark-faint: 156 156 162;
 
   /* Contrast */
@@ -44,20 +47,20 @@
   --sui-success-soft: 234 243 239;
   --sui-success-line: 213 231 222;
   --sui-success-mid: 68 145 107;
-  --sui-success: 47 133 90;
+  --sui-success: 35 123 81;
 
   --sui-warning-soft: 248 242 233;
   --sui-warning-line: 241 228 210;
   --sui-warning-mid: 190 134 53;
-  --sui-warning: 183 121 31;
+  --sui-warning: 152 98 13;
   --sui-warning-bright: 205 161 98;
 
   --sui-danger-soft: 249 236 234;
   --sui-danger-line: 243 217 213;
   --sui-danger-mid: 200 83 68;
-  --sui-danger: 194 64 47;
+  --sui-danger: 191 61 45;
   --sui-danger-solid: 194 64 47;
-  --sui-danger-hover: 200 83 68;
+  --sui-danger-hover: 177 47 31;
   --sui-on-danger: 255 255 255;
 
   --sui-info-soft: 237 241 244;
@@ -68,16 +71,16 @@
   /* Categorical hues, for avatars and tags: a soft fill, its line and its ink */
   --sui-hue-blue-soft: 235 240 251;
   --sui-hue-blue-line: 215 225 247;
-  --sui-hue-blue-ink: 58 103 216;
+  --sui-hue-blue-ink: 56 101 213;
   --sui-hue-green-soft: 234 243 239;
   --sui-hue-green-line: 213 231 222;
-  --sui-hue-green-ink: 47 133 90;
-  --sui-hue-orange-soft: 255 239 238;
-  --sui-hue-orange-line: 255 223 221;
-  --sui-hue-orange-ink: 254 95 85;
+  --sui-hue-green-ink: 35 123 81;
+  --sui-hue-orange-soft: 255 239 229;
+  --sui-hue-orange-line: 254 217 195;
+  --sui-hue-orange-ink: 174 83 15;
   --sui-hue-pink-soft: 253 245 253;
   --sui-hue-pink-line: 251 235 251;
-  --sui-hue-pink-ink: 235 159 239;
+  --sui-hue-pink-ink: 156 85 160;
   --sui-hue-purple-soft: 234 237 250;
   --sui-hue-purple-line: 220 227 251;
   --sui-hue-purple-ink: 47 79 201;
@@ -86,10 +89,10 @@
   --sui-hue-slate-ink: 71 96 122;
   --sui-hue-red-soft: 249 236 234;
   --sui-hue-red-line: 243 217 213;
-  --sui-hue-red-ink: 194 64 47;
+  --sui-hue-red-ink: 191 61 45;
   --sui-hue-amber-soft: 248 242 233;
   --sui-hue-amber-line: 241 228 210;
-  --sui-hue-amber-ink: 183 121 31;
+  --sui-hue-amber-ink: 152 98 13;
 
   /* Inverse */
   --sui-inverse: 24 24 27;
@@ -111,13 +114,16 @@
   --sui-line: 47 50 55;
   --sui-line-strong: 60 64 70;
 
+  /* Control boundary: inputs, checkboxes, radios and select triggers, at 3:1 on canvas, surface and sunken */
+  --sui-line-control: 104 104 109;
+
   /* Ink: text, darkest first. ink-faint (placeholders) shares ink-muted's grey; mark-faint is for non-text marks */
   --sui-ink: 236 237 238;
   --sui-ink-emphasis: 197 199 204;
   --sui-ink-body: 180 183 189;
-  --sui-ink-subtle: 139 143 152;
-  --sui-ink-muted: 120 124 133;
-  --sui-ink-faint: 120 124 133;
+  --sui-ink-subtle: 155 158 166;
+  --sui-ink-muted: 129 133 142;
+  --sui-ink-faint: 129 133 142;
   --sui-mark-faint: 95 99 107;
 
   /* Contrast */
@@ -128,8 +134,8 @@
   /* Accent: accent is for text, accent-solid for fills (one step can't hold contrast as both in dark mode),
      accent-bright for hover borders */
   --sui-accent: 143 168 255;
-  --sui-accent-solid: 130 153 231;
-  --sui-accent-hover: 166 185 255;
+  --sui-accent-solid: 93 113 188;
+  --sui-accent-hover: 82 101 175;
   --sui-accent-bright: 117 137 207;
   --sui-on-accent: 255 255 255;
   --sui-accent-wash: 22 27 43;
@@ -154,8 +160,8 @@
   --sui-danger-line: 62 36 35;
   --sui-danger-mid: 231 111 98;
   --sui-danger: 255 122 107;
-  --sui-danger-solid: 255 122 107;
-  --sui-danger-hover: 231 111 98;
+  --sui-danger-solid: 202 74 63;
+  --sui-danger-hover: 188 61 51;
   --sui-on-danger: 255 255 255;
 
   --sui-info-soft: 52 57 64;
@@ -170,9 +176,9 @@
   --sui-hue-green-soft: 22 33 29;
   --sui-hue-green-line: 29 51 41;
   --sui-hue-green-ink: 91 196 137;
-  --sui-hue-orange-soft: 75 53 53;
-  --sui-hue-orange-line: 97 64 63;
-  --sui-hue-orange-ink: 254 143 136;
+  --sui-hue-orange-soft: 61 40 26;
+  --sui-hue-orange-line: 85 52 28;
+  --sui-hue-orange-ink: 240 144 60;
   --sui-hue-pink-soft: 72 60 74;
   --sui-hue-pink-line: 93 74 95;
   --sui-hue-pink-ink: 239 178 242;

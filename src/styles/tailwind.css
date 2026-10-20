@@ -20,13 +20,16 @@
   --sui-line: 226 226 223;
   --sui-line-strong: 207 207 204;
 
+  /* Control boundary: inputs, checkboxes, radios and select triggers, at 3:1 on canvas, surface and sunken */
+  --sui-line-control: 140 140 145;
+
   /* Ink: text, darkest first. ink-faint (placeholders) shares ink-muted's grey; mark-faint is for non-text marks */
   --sui-ink: 35 35 38;
   --sui-ink-emphasis: 69 68 74;
-  --sui-ink-body: 98 98 106;
-  --sui-ink-subtle: 107 106 113;
-  --sui-ink-muted: 115 115 121;
-  --sui-ink-faint: 115 115 121;
+  --sui-ink-body: 83 83 90;
+  --sui-ink-subtle: 97 97 104;
+  --sui-ink-muted: 111 111 117;
+  --sui-ink-faint: 111 111 117;
   --sui-mark-faint: 185 185 191;
 
   /* Contrast */
@@ -79,9 +82,9 @@
   --sui-hue-green-soft: 234 245 239;
   --sui-hue-green-line: 210 234 221;
   --sui-hue-green-ink: 45 124 87;
-  --sui-hue-orange-soft: 255 239 238;
-  --sui-hue-orange-line: 255 223 221;
-  --sui-hue-orange-ink: 207 49 46;
+  --sui-hue-orange-soft: 255 239 227;
+  --sui-hue-orange-line: 254 217 191;
+  --sui-hue-orange-ink: 174 83 15;
   --sui-hue-pink-soft: 253 245 253;
   --sui-hue-pink-line: 251 235 251;
   --sui-hue-pink-ink: 157 87 162;
@@ -116,6 +119,9 @@
   --sui-line-subtle: 39 39 42;
   --sui-line: 50 50 53;
   --sui-line-strong: 67 67 71;
+
+  /* Control boundary: inputs, checkboxes, radios and select triggers, at 3:1 on canvas, surface and sunken */
+  --sui-line-control: 106 106 111;
 
   /* Ink: text, darkest first. ink-faint (placeholders) shares ink-muted's grey; mark-faint is for non-text marks */
   --sui-ink: 228 228 231;
@@ -176,9 +182,9 @@
   --sui-hue-green-soft: 42 61 54;
   --sui-hue-green-line: 49 77 64;
   --sui-hue-green-ink: 92 185 140;
-  --sui-hue-orange-soft: 75 53 53;
-  --sui-hue-orange-line: 97 64 63;
-  --sui-hue-orange-ink: 254 143 136;
+  --sui-hue-orange-soft: 64 43 28;
+  --sui-hue-orange-line: 88 55 31;
+  --sui-hue-orange-ink: 240 144 60;
   --sui-hue-pink-soft: 72 60 74;
   --sui-hue-pink-line: 93 74 95;
   --sui-hue-pink-ink: 239 178 242;
@@ -213,6 +219,7 @@
   --color-sui-line-subtle: rgb(var(--sui-line-subtle) / 1);
   --color-sui-line: rgb(var(--sui-line) / 1);
   --color-sui-line-strong: rgb(var(--sui-line-strong) / 1);
+  --color-sui-line-control: rgb(var(--sui-line-control) / 1);
   --color-sui-ink: rgb(var(--sui-ink) / 1);
   --color-sui-ink-emphasis: rgb(var(--sui-ink-emphasis) / 1);
   --color-sui-ink-body: rgb(var(--sui-ink-body) / 1);
@@ -288,6 +295,33 @@
   --sui-button-text: 0.875rem;
   --sui-radius-button: 0.5rem;
   --sui-shadow-raised: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --sui-focus-width: 2px;
+  --sui-focus-offset: 2px;
+  --sui-focus-offset-field: -1px;
+  --sui-focus-offset-inset: -2px;
+}
+
+/* The keyboard focus ring, one treatment everywhere, applied with a variant (focus-visible:sui-ring). Outside by
+   default, so it reads around filled buttons; on the edge of fields; inset in menus, lists and tight groups. */
+@utility sui-ring {
+  outline: var(--sui-focus-width) solid rgb(var(--sui-accent));
+  outline-offset: var(--sui-focus-offset);
+}
+
+@utility sui-ring-field {
+  outline: var(--sui-focus-width) solid rgb(var(--sui-accent));
+  outline-offset: var(--sui-focus-offset-field);
+}
+
+@utility sui-ring-inset {
+  outline: var(--sui-focus-width) solid rgb(var(--sui-accent));
+  outline-offset: var(--sui-focus-offset-inset);
+}
+
+/* On inverse surfaces (toasts), where the accent can't hold contrast. */
+@utility sui-ring-inverse {
+  outline: var(--sui-focus-width) solid rgb(var(--sui-on-inverse));
+  outline-offset: var(--sui-focus-offset);
 }
 
 /* MustLoop's off-scale sizes, named by px, with no line height of their own. */

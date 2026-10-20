@@ -37,7 +37,7 @@ const dots: Record<Hue, string> = {
     <button
       v-if="removable"
       :aria-label="removeLabel"
-      class="-mr-0.5 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full transition-colors hover:bg-sui-line"
+      class="-mr-0.5 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full transition-colors hover:bg-sui-line focus-visible:sui-ring"
       type="button"
       @click="$emit('remove')"
     >

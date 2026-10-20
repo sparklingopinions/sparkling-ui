@@ -6,14 +6,15 @@ import * as Contrast from './Contrast.stories'
 
 # Contrast
 
-Every text pair the components use meets WCAG AA, 4.5:1, in both modes. The story tests hold it: axe checks contrast in every story, light and dark, with no exceptions.
+Every text pair the components use meets WCAG AA, 4.5:1, in both modes, and every control boundary and focus ring 3:1. The story tests hold it: axe checks contrast in every story, light and dark, with no exceptions.
 
-The ratios below are computed from the current theme. Switch the toolbar's theme to check another app's values; a pair under 4.5 is marked.
+The ratios below are computed from the current theme. Switch the toolbar's theme to check another app's values; a pair under its minimum is marked.
 
 Two rules keep it that way:
 
 - **Text roles and fill roles are separate.** `accent` and `danger` are for text; white text sits on `accent-solid` and `danger-solid`, and their hovers deepen in both modes.
 - **`ink-faint` is text** (placeholders) and as dark as `ink-muted`. For a faint mark that isn't text, a dot or a scrollbar, use `mark-faint`.
+- **Control borders use `line-control`**, which holds 3:1 on canvas, surface and sunken. `line`, `line-subtle` and `line-strong` are for dividers and containers, which need no contrast.
 
 When a component brings a new text pair, add it to `ContrastPairs.vue`.
 
