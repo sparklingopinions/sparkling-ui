@@ -2,6 +2,7 @@ import { defineComponent, h, nextTick } from 'vue'
 
 import { mount } from '@vue/test-utils'
 
+import { iconSet } from '../../components/Icon/iconSet'
 import { Icon, iconNames, setIconResolver } from '../../index'
 import { expectAccessible } from '../support/axe'
 
@@ -57,6 +58,14 @@ describe('Icon', () => {
     expect(wrapper.attributes()).toMatchObject({ viewBox: '0 0 16 16', 'stroke-width': '1.5', style: 'fill: none;' })
     expect(wrapper.find('path').exists()).toBe(true)
     expect(iconNames).toHaveLength(78)
+  })
+
+  it('draws every icon on the 16 grid, or the 8 or 24 one', () => {
+    const offGrid = Object.entries(iconSet)
+      .filter(([, icon]) => !['0 0 16 16', '0 0 8 8', '0 0 24 24'].includes(icon.viewBox))
+      .map(([name, icon]) => `${name} (${icon.viewBox})`)
+
+    expect(offGrid).toEqual([])
   })
 
   it('resolves older names, and fills the filled icons', () => {
