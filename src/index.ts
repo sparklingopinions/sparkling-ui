@@ -1,5 +1,6 @@
 export * from './components/Avatar'
 export * from './components/Banner'
+export * from './components/Board'
 export * from './components/Button'
 export * from './components/CalendarMonth'
 export * from './components/Checkbox'
