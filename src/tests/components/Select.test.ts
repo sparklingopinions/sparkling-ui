@@ -1,6 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils'
 
-import { Field, Select } from '../../index'
+import { FormField, Select } from '../../index'
 import { expectAccessible } from '../support/axe'
 
 const rows = [
@@ -111,12 +111,12 @@ describe('Select', () => {
     expect(document.querySelector('[role="progressbar"]')).not.toBeNull()
   })
 
-  it('takes its id, description and invalid state from a Field', async () => {
+  it('takes its id, description and invalid state from a FormField', async () => {
     const wrapper = mount(
       {
-        components: { Field, Select },
+        components: { FormField, Select },
         data: () => ({ rows }),
-        template: '<Field label="Rows" error="Pick one"><Select :options="rows" /></Field>'
+        template: '<FormField label="Rows" error="Pick one"><Select :options="rows" /></FormField>'
       },
       { attachTo: document.body }
     )

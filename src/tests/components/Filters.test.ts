@@ -2,7 +2,7 @@ import { nextTick } from 'vue'
 
 import { flushPromises, mount } from '@vue/test-utils'
 
-import { FilterChip, FilterFieldPicker, SortControl, describeFilter } from '../../index'
+import { FilterChip, FilterMenu, SortMenu, describeFilter } from '../../index'
 import { expectAccessible } from '../support/axe'
 
 const stages = [
@@ -141,9 +141,9 @@ describe('FilterChip', () => {
   })
 })
 
-describe('FilterFieldPicker', () => {
+describe('FilterMenu', () => {
   it('lists fields by group, marks those in use, and picks one', async () => {
-    const wrapper = mount(FilterFieldPicker, { props: { fields, inUse: ['stage'] }, attachTo: document.body })
+    const wrapper = mount(FilterMenu, { props: { fields, inUse: ['stage'] }, attachTo: document.body })
 
     await wrapper.find('button').trigger('click')
     await flushPromises()
@@ -161,16 +161,16 @@ describe('FilterFieldPicker', () => {
   })
 
   it('is the Filters button, tinted while filters are in use', () => {
-    const wrapper = mount(FilterFieldPicker, { props: { fields, as: 'button', inUse: ['stage'] } })
+    const wrapper = mount(FilterMenu, { props: { fields, as: 'button', inUse: ['stage'] } })
 
     expect(wrapper.find('button').text()).toBe('Filters')
     expect(wrapper.find('button').classes()).toContain('bg-sui-accent-wash')
   })
 })
 
-describe('SortControl', () => {
+describe('SortMenu', () => {
   it('reads as a chip worded for the type, and only while sorted', async () => {
-    const wrapper = mount(SortControl, { props: { options: fields, modelValue: { name: 'lastContact', dir: 'desc' } } })
+    const wrapper = mount(SortMenu, { props: { options: fields, modelValue: { name: 'lastContact', dir: 'desc' } } })
 
     expect(wrapper.find('button').text()).toBe('Last contact, Newest first')
     await wrapper.setProps({ modelValue: null })
@@ -178,7 +178,7 @@ describe('SortControl', () => {
   })
 
   it('picks a field, keeps its direction, switches it and clears', async () => {
-    const wrapper = mount(SortControl, {
+    const wrapper = mount(SortMenu, {
       props: {
         options: fields,
         as: 'button' as const,

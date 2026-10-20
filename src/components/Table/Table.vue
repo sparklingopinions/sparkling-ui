@@ -42,7 +42,7 @@ const slots = defineSlots<
   {
     /** Shown in place of the body when there are no rows, e.g. an EmptyState. */
     empty?: () => unknown
-    /** Replaces the body when given, e.g. an inset danger Banner with a retry. */
+    /** Replaces the body when given, e.g. an inset danger Alert with a retry. */
     error?: () => unknown
     /** A canvas strip under the rows: a rows-per-page Select, the range, Pagination. */
     footer?: () => unknown

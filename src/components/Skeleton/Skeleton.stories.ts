@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import Skeleton from './Skeleton.vue'
 
 const meta: Meta<typeof Skeleton> = {
-  title: 'Components/Skeleton',
+  title: 'Components/Feedback/Skeleton',
   component: Skeleton,
   args: { shape: 'rectangle', width: '100%', height: '1rem' },
   argTypes: { shape: { control: 'inline-radio', options: ['rectangle', 'circle'] } }

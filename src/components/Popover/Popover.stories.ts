@@ -4,11 +4,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import Button from '../Button/Button.vue'
-import TextInput from '../TextInput/TextInput.vue'
+import Input from '../Input/Input.vue'
 import Popover from './Popover.vue'
 
 const meta: Meta<typeof Popover> = {
-  title: 'Components/Popover',
+  title: 'Components/Overlays/Popover',
   component: Popover,
   args: { offset: 4, closeOnEscape: true },
   parameters: {
@@ -50,12 +50,12 @@ export const Default: Story = {
 
 export const WithAutofocus: Story = {
   render: (args) => ({
-    components: { Button, Popover, TextInput },
+    components: { Button, Popover, Input },
     setup: () => ({ args, popover: ref(), name: ref('') }),
     template: `
       <Button size="sm" @click="popover.toggle($event)">Rename</Button>
       <Popover ref="popover" v-bind="args" aria-label="Rename" class="p-3">
-        <TextInput v-model="name" aria-label="New name" autofocus placeholder="New name" />
+        <Input v-model="name" aria-label="New name" autofocus placeholder="New name" />
       </Popover>
     `
   })

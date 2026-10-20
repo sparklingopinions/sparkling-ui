@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue'
 
-import { useFieldControl } from '../Field/context'
+import { useFieldControl } from '../FormField/context'
 
 export interface TextareaProps {
   /** Grows with its content instead of scrolling. */

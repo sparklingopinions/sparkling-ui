@@ -93,7 +93,7 @@ The package is published privately to GitHub Packages as `@sparklingopinions/spa
 
 8. For toasts, mount one `<Toaster />` near the app root, then call `toast.info('Draft saved')`, `toast.success(...)` or `toast.error(...)` anywhere, with `{ detail, life, closable }` as options.
 
-9. To use `useConfirm`, mount one `<ConfirmDialog />` near the app root (it takes default `confirm-label` and `cancel-label` for translation). Then anywhere:
+9. To use `useConfirm`, mount one `<AlertDialog />` near the app root (it takes default `confirm-label` and `cancel-label` for translation). Then anywhere:
 
    ```ts
    const confirm = useConfirm()

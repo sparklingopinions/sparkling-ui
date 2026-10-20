@@ -5,7 +5,7 @@ import { iconColors } from './colors'
 import { iconNames } from './resolver'
 
 const meta: Meta<typeof Icon> = {
-  title: 'Components/Icon',
+  title: 'Components/Data display/Icon',
   component: Icon,
   args: { name: 'plus' },
   argTypes: {

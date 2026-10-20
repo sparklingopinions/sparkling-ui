@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import Spinner from './Spinner.vue'
 
 const meta: Meta<typeof Spinner> = {
-  title: 'Components/Spinner',
+  title: 'Components/Feedback/Spinner',
   component: Spinner,
   args: { size: 'lg', label: 'Loading' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } }

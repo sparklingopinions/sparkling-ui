@@ -3,13 +3,13 @@ import { type Component, ref } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 import { people, stageLabels, stageTones } from '../../stories/people'
+import Alert from '../Alert/Alert.vue'
 import Avatar from '../Avatar/Avatar.vue'
-import Banner from '../Banner/Banner.vue'
+import Badge from '../Badge/Badge.vue'
 import Button from '../Button/Button.vue'
+import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 import EmptyState from '../EmptyState/EmptyState.vue'
-import OptionsMenu from '../OptionsMenu/OptionsMenu.vue'
 import Pagination from '../Pagination/Pagination.vue'
-import Pill from '../Pill/Pill.vue'
 import Select from '../Select/Select.vue'
 import Table from './Table.vue'
 import type { TableColumn, TableSort } from './types'
@@ -28,17 +28,17 @@ const menu = [
 
 // No `component`: Table is generic over its rows, which Storybook's component typing can't take.
 const meta: Meta = {
-  title: 'Components/Table',
+  title: 'Components/Collections/Table',
   args: { columns, rows: people.slice(0, 6), caption: 'People', size: 'md', loading: false, selectable: false },
   render: (args, { parameters }) => ({
     components: {
       Avatar,
-      Banner,
+      Alert,
       Button,
       EmptyState,
-      OptionsMenu,
+      DropdownMenu,
       Pagination,
-      Pill,
+      Badge,
       Select,
       Table: Table as Component
     },
@@ -58,10 +58,10 @@ const meta: Meta = {
           <span class="flex items-center gap-3"><Avatar :name="row.name" size="md" />{{ row.name }}</span>
         </template>
         <template #cell-stage="{ row }">
-          <Pill :label="stageLabels[row.stage]" :tone="stageTones[row.stage]" dot variant="text" />
+          <Badge :label="stageLabels[row.stage]" :tone="stageTones[row.stage]" dot variant="text" />
         </template>
         <template #cell-menu>
-          <OptionsMenu align="end" :items="menu" />
+          <DropdownMenu align="end" :items="menu" />
         </template>
         ${parameters.slots ?? ''}
       </Table>
@@ -98,10 +98,10 @@ export const Failed: Story = {
     slots: `
       <template #error>
         <div class="p-4">
-          <Banner inset tone="danger">
+          <Alert inset tone="danger">
             Couldn’t load people.
             <template #action><Button size="sm">Try again</Button></template>
-          </Banner>
+          </Alert>
         </div>
       </template>
     `

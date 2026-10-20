@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import Textarea from './Textarea.vue'
 
 const meta: Meta<typeof Textarea> = {
-  title: 'Components/Textarea',
+  title: 'Components/Forms/Textarea',
   component: Textarea,
   args: { modelValue: '', autoResize: false, invalid: false, disabled: false },
   render: (args) => ({

@@ -6,7 +6,45 @@ const preview: Preview = {
   parameters: {
     // Story tests fail on any axe violation, colour contrast included.
     a11y: { test: 'error' },
-    controls: { expanded: true }
+    controls: { expanded: true },
+    // The design system's groups, in its order.
+    options: {
+      storySort: {
+        order: [
+          'Introduction',
+          'Foundations',
+          ['Color', 'Typography', 'Layout', 'Interaction', 'Content', 'Iconography'],
+          'Components',
+          [
+            'Actions',
+            ['Button', 'DropdownMenu'],
+            'Forms',
+            [
+              'Input',
+              'Textarea',
+              'FormField',
+              'Checkbox',
+              'Radio',
+              'SegmentedControl',
+              'Select',
+              'Calendar',
+              'ImageUpload',
+              'ErrorSummary',
+              'Editable',
+              'PropertyList'
+            ],
+            'Data display',
+            ['Avatar', 'Badge', 'Tag', 'Kbd', 'Icon', 'PropertyRow', 'Collapsible'],
+            'Collections',
+            ['Table', 'DataList', 'Board', 'FilterChip', 'FilterMenu', 'SortMenu', 'ActionBar', 'Pagination'],
+            'Feedback',
+            ['Alert', 'EmptyState', 'Toaster', 'Tooltip', 'Spinner', 'Skeleton', 'TypingIndicator'],
+            'Overlays',
+            ['Dialog', 'AlertDialog', 'Popover']
+          ]
+        ]
+      }
+    }
   },
   globalTypes: {
     mode: {

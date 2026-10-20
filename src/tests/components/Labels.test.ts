@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 
-import { Avatar, Chip, Kbd, Pill, Tag, hueFor } from '../../index'
+import { Avatar, Badge, Chip, Kbd, Tag, hueFor } from '../../index'
 import { expectAccessible } from '../support/axe'
 
 describe('Avatar', () => {
@@ -44,9 +44,9 @@ describe('Avatar', () => {
   })
 })
 
-describe('Chip', () => {
+describe('Tag outline', () => {
   it('labels a value, or a quieter muted one', async () => {
-    const wrapper = mount(Chip, { props: { label: 'Customer' }, attachTo: document.body })
+    const wrapper = mount(Tag, { props: { name: 'Customer', variant: 'outline' }, attachTo: document.body })
 
     expect(wrapper.text()).toBe('Customer')
     expect(wrapper.classes()).toContain('bg-sui-sunken')
@@ -57,9 +57,18 @@ describe('Chip', () => {
   })
 })
 
-describe('Pill', () => {
+describe('Chip, the former name', () => {
+  it('is an outline Tag', () => {
+    const wrapper = mount(Chip, { props: { label: 'Lead', muted: true } })
+
+    expect(wrapper.text()).toBe('Lead')
+    expect(wrapper.classes()).toContain('border-sui-line-subtle')
+  })
+})
+
+describe('Badge', () => {
   it('is a tinted chip with a dot by default', async () => {
-    const wrapper = mount(Pill, { props: { tone: 'success', label: 'Warm' }, attachTo: document.body })
+    const wrapper = mount(Badge, { props: { tone: 'success', label: 'Warm' }, attachTo: document.body })
 
     expect(wrapper.classes()).toEqual(expect.arrayContaining(['bg-sui-success-soft', 'h-6']))
     expect(wrapper.find('span.bg-sui-success-mid').exists()).toBe(true)
@@ -68,7 +77,10 @@ describe('Pill', () => {
   })
 
   it('can be a dot and coloured text only, or have no dot', () => {
-    const wrapper = mount(Pill, { props: { tone: 'warning', variant: 'text', dot: false }, slots: { default: 'Cool' } })
+    const wrapper = mount(Badge, {
+      props: { tone: 'warning', variant: 'text', dot: false },
+      slots: { default: 'Cool' }
+    })
 
     expect(wrapper.classes()).toContain('text-sui-warning')
     expect(wrapper.classes()).not.toContain('h-6')
