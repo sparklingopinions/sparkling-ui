@@ -17,7 +17,7 @@ export const WithAction: Story = {
   args: {
     icon: 'building',
     title: 'No companies yet',
-    description: 'Companies associated with your contacts and loops.',
+    description: 'Companies are the organisations your contacts work for.',
     actionLabel: 'New company'
   }
 }

@@ -91,7 +91,7 @@ function onOpenChange(value: boolean) {
 
 <template>
   <div>
-    <!-- Not modal, as MustLoop's: the page stays live (hover, scroll) while it's open. -->
+    <!-- Not modal: the page stays live (hover, scroll) while it's open. -->
     <DropdownMenuRoot :modal="false" :open="open" @update:open="onOpenChange">
       <!-- The tooltip inside the menu's trigger: Reka's anchors attach to the nearest popper, which must be the menu's. -->
       <DropdownMenuTrigger as-child>

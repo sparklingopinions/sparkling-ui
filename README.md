@@ -1,8 +1,8 @@
 # sparkling-ui
 
-The shared Vue 3 component library for MustLoop, Tamable and every Vue project after them. Components ship styled by semantic tokens, and each app themes them. Accessibility, focus, keyboard and positioning come from Reka UI underneath, but apps only ever import from sparkling-ui.
+A product-agnostic Vue 3 component library for calm, dense, work-focused software: lists, records, inboxes, settings. Components ship styled by semantic tokens, and each product themes them; the library brings no logo or product vocabulary. Accessibility, focus, keyboard and positioning come from Reka UI underneath, but apps only ever import from sparkling-ui.
 
-Its look and API follow the Sparkling UI design system in Claude Design, which started from MustLoop's look and keeps its identity.
+Its look and API follow the Sparkling UI design system in Claude Design.
 
 For architecture and conventions, see [`CLAUDE.md`](CLAUDE.md).
 

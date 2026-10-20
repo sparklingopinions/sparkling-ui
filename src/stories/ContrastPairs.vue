@@ -94,7 +94,7 @@ const rgb = (mode: Mode, role: string) => `rgb(${channels.value[mode][role]?.joi
           <th class="py-2 pr-4 font-medium" scope="col">Colour on background</th>
           <th class="py-2 pr-4 font-medium" colspan="2" scope="colgroup">Light</th>
           <th class="py-2 pr-4 font-medium" colspan="2" scope="colgroup">Dark</th>
-          <th class="py-2 font-medium" scope="col">Where MustLoop uses it</th>
+          <th class="py-2 font-medium" scope="col">Where it's used</th>
         </tr>
       </thead>
       <tbody>

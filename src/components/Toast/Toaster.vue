@@ -26,7 +26,7 @@ withDefaults(defineProps<ToasterProps>(), {
 })
 </script>
 
-<!-- Mount once near the app root; `toast.info(...)` and friends show here. Swiping is off, as in MustLoop. -->
+<!-- Mount once near the app root; `toast.info(...)` and friends show here. Swiping is off. -->
 <template>
   <div v-if="preview" class="flex w-full max-w-96 flex-col">
     <ToastMessage

@@ -22,7 +22,7 @@ const { attrs: fieldAttrs, invalid: isInvalid } = useFieldControl(
   () => props.invalid
 )
 
-// As PrimeVue's: grows straight to the content's height, and only drops to `auto` to measure when shrinking.
+// Grows straight to the content's height, and only drops to `auto` to measure when shrinking.
 function resize() {
   const el = textarea.value
   if (!props.autoResize || !el?.offsetParent) return
