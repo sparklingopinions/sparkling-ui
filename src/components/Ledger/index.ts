@@ -1,4 +1,0 @@
-export { default as LedgerMore } from './LedgerMore.vue'
-export type { LedgerMoreProps } from './LedgerMore.vue'
-export { default as LedgerRow } from './LedgerRow.vue'
-export type { LedgerRowProps } from './LedgerRow.vue'

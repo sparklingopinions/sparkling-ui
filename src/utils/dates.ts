@@ -1,4 +1,4 @@
-// The few calendar sums CalendarMonth needs, on local dates.
+// The few calendar sums Calendar needs, on local dates.
 
 export const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate())
 

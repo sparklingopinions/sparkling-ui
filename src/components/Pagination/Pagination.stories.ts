@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import Pagination from './Pagination.vue'
 
 const meta: Meta<typeof Pagination> = {
-  title: 'Components/Pagination',
+  title: 'Components/Collections/Pagination',
   component: Pagination,
   args: { pageCount: 40 },
   render: (args, { parameters }) => ({

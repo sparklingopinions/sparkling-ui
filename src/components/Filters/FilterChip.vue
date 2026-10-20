@@ -18,8 +18,8 @@ import {
 
 import Checkbox from '../Checkbox/Checkbox.vue'
 import Icon from '../Icon/Icon.vue'
+import Input from '../Input/Input.vue'
 import SegmentedControl from '../SegmentedControl/SegmentedControl.vue'
-import TextInput from '../TextInput/TextInput.vue'
 import CheckIcon from '../internal/CheckIcon.vue'
 import FilterFrame from './FilterFrame.vue'
 import FilterGlyph from './FilterGlyph.vue'
@@ -27,7 +27,7 @@ import { datePresets as defaultDatePresets, describeFilter, filterOperators } fr
 import type { FilterFieldType, FilterOperator, FilterOption, FilterValue } from './types'
 
 export interface FilterChipProps {
-  /** A filter, read as a sentence; `add` is the quiet "+ Filter" that starts one (FilterFieldPicker includes it). */
+  /** A filter, read as a sentence; `add` is the quiet "+ Filter" that starts one (FilterMenu includes it). */
   kind?: 'filter' | 'add'
   field?: string
   /** Picks the editor: a checklist for enum, person and company, an input for text and number, presets for date, Yes / No for boolean. */
@@ -271,7 +271,7 @@ const hueDots: Record<string, string> = {
               </div>
             </template>
             <div v-else-if="type === 'text' || type === 'number'" class="px-2 pt-1 pb-2">
-              <TextInput
+              <Input
                 :aria-label="field"
                 autofocus
                 :model-value="value == null ? '' : String(value)"

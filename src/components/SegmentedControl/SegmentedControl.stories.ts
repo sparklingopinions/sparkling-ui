@@ -16,7 +16,7 @@ const options = [
 
 // No `component`: SegmentedControl is generic over its values, which Storybook's component typing can't take.
 const meta: Meta = {
-  title: 'Components/SegmentedControl',
+  title: 'Components/Forms/SegmentedControl',
   render: () => ({
     components: { SegmentedControl: SegmentedControl as Component },
     setup: () => ({ options, value: ref('call') }),

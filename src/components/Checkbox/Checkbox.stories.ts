@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import Checkbox from './Checkbox.vue'
 
 const meta: Meta<typeof Checkbox> = {
-  title: 'Components/Checkbox',
+  title: 'Components/Forms/Checkbox',
   component: Checkbox,
   args: { modelValue: false, invalid: false, disabled: false },
   render: (args) => ({

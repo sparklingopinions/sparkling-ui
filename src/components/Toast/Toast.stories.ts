@@ -6,7 +6,7 @@ import Button from '../Button/Button.vue'
 import Toaster from './Toaster.vue'
 
 const meta: Meta<typeof Toaster> = {
-  title: 'Components/Toast',
+  title: 'Components/Feedback/Toaster',
   component: Toaster,
   parameters: {
     docs: {

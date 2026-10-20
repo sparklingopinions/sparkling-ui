@@ -3,15 +3,26 @@ import type { Hue } from '../../utils/hues'
 import CloseSmallIcon from '../internal/CloseSmallIcon.vue'
 
 export interface TagProps {
-  name: string
-  /** A dot of the tag's own hue, on a neutral chip. */
+  /** The text; or use the default slot. */
+  name?: string
+  /** soft: a label people create, with an optional hue dot, removable. outline: a value from a fixed set (a stage, a status). */
+  variant?: 'soft' | 'outline'
+  /** soft only: a dot of the tag's own hue, on a neutral chip. */
   color?: Hue
+  /** outline only: the quieter, superseded side, e.g. the "from" of a stage change. */
+  muted?: boolean
+  /** soft only. */
   removable?: boolean
   /** The remove button's accessible name. */
   removeLabel?: string
 }
 
-withDefaults(defineProps<TagProps>(), { color: undefined, removeLabel: 'Remove tag' })
+withDefaults(defineProps<TagProps>(), {
+  name: undefined,
+  variant: 'soft',
+  color: undefined,
+  removeLabel: 'Remove tag'
+})
 
 defineEmits<{ remove: [] }>()
 
@@ -28,12 +39,25 @@ const dots: Record<Hue, string> = {
 }
 </script>
 
+<!-- A label: soft for the ones people create, outline for a value from a fixed set. -->
 <template>
+  <span
+    v-if="variant === 'outline'"
+    class="inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs whitespace-nowrap"
+    :class="
+      muted ? 'border-sui-line-subtle text-sui-ink-muted' : 'border-sui-line bg-sui-sunken font-medium text-sui-ink'
+    "
+  >
+    <slot>{{ name }}</slot>
+  </span>
   <div
+    v-else
     class="inline-flex items-center gap-1.5 rounded-md bg-sui-sunken px-2 py-0.5 text-xs font-medium text-sui-ink-body"
   >
     <span v-if="color" class="h-1.5 w-1.5 shrink-0 rounded-full" :class="dots[color]" />
-    <span class="truncate">{{ name }}</span>
+    <span class="truncate"
+      ><slot>{{ name }}</slot></span
+    >
     <button
       v-if="removable"
       :aria-label="removeLabel"

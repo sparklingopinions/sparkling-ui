@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import ContrastPairs from './ContrastPairs.vue'
 
 const meta: Meta<typeof ContrastPairs> = {
-  title: 'Foundations/Contrast',
+  title: 'Foundations/Color/Contrast',
   component: ContrastPairs,
   parameters: { layout: 'fullscreen' }
 }

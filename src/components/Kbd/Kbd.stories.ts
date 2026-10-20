@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import Kbd from './Kbd.vue'
 
 const meta: Meta<typeof Kbd> = {
-  title: 'Components/Kbd',
+  title: 'Components/Data display/Kbd',
   component: Kbd,
   render: () => ({
     components: { Kbd },

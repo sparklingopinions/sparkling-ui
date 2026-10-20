@@ -10,7 +10,7 @@ const stages = ['lead', 'contacted', 'customer'] as const
 
 // No `component`: Board is generic over its items, which Storybook's component typing can't take.
 const meta: Meta = {
-  title: 'Components/Board',
+  title: 'Components/Collections/Board',
   args: { loading: false, sortable: true, fill: false },
   render: (args, { parameters }) => ({
     components: { Avatar, Board: Board as Component },

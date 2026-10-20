@@ -14,7 +14,7 @@ import {
 } from 'reka-ui'
 
 import type { Hue } from '../../utils/hues'
-import { useFieldControl } from '../Field/context'
+import { useFieldControl } from '../FormField/context'
 import Spinner from '../Spinner/Spinner.vue'
 import Tag from '../Tag/Tag.vue'
 import CheckIcon from '../internal/CheckIcon.vue'

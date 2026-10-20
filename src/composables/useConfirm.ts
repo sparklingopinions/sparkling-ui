@@ -16,7 +16,7 @@ export interface ConfirmRequest extends ConfirmOptions {
   resolve: (confirmed: boolean) => void
 }
 
-// One app-wide confirm dialog, mounted once as <ConfirmDialog />, shows whatever useConfirm asked last.
+// One app-wide confirm dialog, mounted once as <AlertDialog />, shows whatever useConfirm asked last.
 export const confirmRequest = shallowRef<ConfirmRequest | null>(null)
 
 /** Asks for confirmation; resolves true when confirmed, false when cancelled or dismissed. */

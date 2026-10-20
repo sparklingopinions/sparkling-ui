@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import EmptyState from './EmptyState.vue'
 
 const meta: Meta<typeof EmptyState> = {
-  title: 'Components/EmptyState',
+  title: 'Components/Feedback/EmptyState',
   component: EmptyState,
   args: { icon: 'users', title: 'No people yet', description: 'People are individual contacts you interact with.' }
 }

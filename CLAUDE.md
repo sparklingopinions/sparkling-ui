@@ -10,7 +10,7 @@ sparkling-ui is a product-agnostic Vue 3 component library for calm, dense, work
 - **Vue 3 only.** No multi-framework abstractions.
 - **Reka UI is an implementation detail.** It provides accessibility, focus, keyboard and positioning. Apps never import from `reka-ui`: they import only from `sparkling-ui`, whose components, props, slots and events are ours. If Reka ever has to go, only this repo changes.
 - **Styled, not headless.** Components ship styled by our semantic tokens, and each app themes them.
-- **The design system is the reference.** v1 was extracted from MustLoop's design system. Its look and API now follow the Sparkling UI design system in Claude Design (project `a1bbe50f-7b71-41bd-b8ec-13b2cb78f1be`: `components/sui.css`, each component's `.jsx`, `.d.ts` and `.prompt.md`, and `tokens/`). It fixes the original's gaps (focus, contrast, an undesigned paginator) and consolidates components: one Modal, one Select, one Toaster, one InlineField. A change the design system doesn't show is agreed first. Tamable's "Desk" look is a theming fixture that proves the token model, never a reason to change a component.
+- **The design system is the reference.** v1 was extracted from MustLoop's design system. Its look and API now follow the Sparkling UI design system in Claude Design (project `a1bbe50f-7b71-41bd-b8ec-13b2cb78f1be`: `components/sui.css`, each component's `.jsx`, `.d.ts` and `.prompt.md`, and `tokens/`). It fixes the original's gaps (focus, contrast, an undesigned paginator) and consolidates components: one Dialog, one Select, one Toaster, one Editable. Names follow common UI-library conventions (Radix, shadcn, MUI); former names stay exported from `src/aliases.ts`, marked deprecated. A change the design system doesn't show is agreed first. Tamable's "Desk" look is a theming fixture that proves the token model, never a reason to change a component.
 
 ## Commands
 
@@ -78,7 +78,7 @@ src/
 Every component gets three things in the same commit:
 
 - **A unit test** in `src/tests/` (Vitest + Vue Test Utils, jsdom) that ends with `await expectAccessible(wrapper.element)` from `tests/support/axe.ts`. Mount with `attachTo: document.body`. Colour contrast is off there: jsdom can't compute it. `tests/support/setup.ts` fills in what jsdom lacks (`scrollIntoView`).
-- **Stories** in `<Name>.stories.ts`, covering each variant and state. Story tests run every story in Chromium, once in light and once in dark (the `stories-light` and `stories-dark` projects), and fail on any axe violation, contrast included.
+- **Stories** in `<Name>.stories.ts`, covering each variant and state, titled by the design system's group: `Components/<Actions | Forms | Data display | Collections | Feedback | Overlays>/<Name>`, with the order in `.storybook/preview.ts`'s `storySort`; foundation pages go under `Foundations/<Color | Typography | Layout | Interaction | Content | Iconography>`. Story tests run every story in Chromium, once in light and once in dark (the `stories-light` and `stories-dark` projects), and fail on any axe violation, contrast included.
   - Every text pair meets WCAG AA in both modes, and no story turns the contrast rule off. Foundations/Contrast (`src/stories/ContrastPairs.vue`) lists every text pair the components use with live ratios; add a pair there when a component introduces one. axe doesn't check every text (it skipped single-letter avatar initials), so a new pair's ratio is checked there too.
 - **An export** from `src/index.ts`, with its prop types.
 

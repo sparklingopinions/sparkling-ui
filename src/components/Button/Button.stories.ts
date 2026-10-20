@@ -4,7 +4,7 @@ import Icon from '../Icon/Icon.vue'
 import Button from './Button.vue'
 
 const meta: Meta<typeof Button> = {
-  title: 'Components/Button',
+  title: 'Components/Actions/Button',
   component: Button,
   args: { variant: 'secondary', size: 'md', pill: false, iconOnly: false, iconPosition: 'start', disabled: false },
   argTypes: {
@@ -81,7 +81,7 @@ export const IconOnly: Story = {
   })
 }
 
-export const Pill: Story = { args: { variant: 'primary', pill: true } }
+export const Badge: Story = { args: { variant: 'primary', pill: true } }
 
 export const Disabled: Story = { args: { variant: 'primary', disabled: true } }
 

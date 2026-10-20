@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils'
 
-import { Checkbox, FormErrors, Radio, TextInput, Textarea } from '../../index'
+import { Checkbox, ErrorSummary, Input, Radio, Textarea } from '../../index'
 import { expectAccessible } from '../support/axe'
 
-describe('TextInput', () => {
+describe('Input', () => {
   it('binds v-model and passes attributes to the input', async () => {
-    const wrapper = mount(TextInput, {
+    const wrapper = mount(Input, {
       props: { modelValue: 'Acme' },
       attrs: { id: 'name', type: 'email', placeholder: 'Your name', 'aria-label': 'Name' },
       attachTo: document.body
@@ -22,7 +22,7 @@ describe('TextInput', () => {
   })
 
   it('marks an invalid value and disables', () => {
-    const wrapper = mount(TextInput, { props: { invalid: true, disabled: true } })
+    const wrapper = mount(Input, { props: { invalid: true, disabled: true } })
 
     expect(wrapper.attributes()).toMatchObject({ 'aria-invalid': 'true', disabled: '' })
     expect(wrapper.classes()).toEqual(expect.arrayContaining(['border-sui-danger-mid', 'opacity-60']))
@@ -99,9 +99,9 @@ describe('Radio', () => {
   })
 })
 
-describe('FormErrors', () => {
+describe('ErrorSummary', () => {
   it('announces a list of errors under a translatable title', async () => {
-    const wrapper = mount(FormErrors, {
+    const wrapper = mount(ErrorSummary, {
       props: { errors: ['Name is required'], title: 'Please fix' },
       attachTo: document.body
     })

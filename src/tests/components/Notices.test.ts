@@ -2,14 +2,14 @@ import { h } from 'vue'
 
 import { mount } from '@vue/test-utils'
 
-import { Banner, EmptyState, setIconResolver } from '../../index'
+import { Alert, EmptyState, setIconResolver } from '../../index'
 import { expectAccessible } from '../support/axe'
 
 beforeAll(() => setIconResolver((name) => () => h('svg', { 'data-icon': name })))
 
-describe('Banner', () => {
+describe('Alert', () => {
   it('is a warning bar with a dot by default', async () => {
-    const wrapper = mount(Banner, { slots: { default: 'Sync paused' }, attachTo: document.body })
+    const wrapper = mount(Alert, { slots: { default: 'Sync paused' }, attachTo: document.body })
 
     expect(wrapper.text()).toBe('Sync paused')
     expect(wrapper.classes()).toEqual(expect.arrayContaining(['bg-sui-warning-soft', 'border-b']))
@@ -19,7 +19,7 @@ describe('Banner', () => {
   })
 
   it('shows an icon tile, and rounds into a notice when inset', () => {
-    const wrapper = mount(Banner, {
+    const wrapper = mount(Alert, {
       props: { tone: 'danger', icon: 'link', inset: true },
       slots: { default: 'Failed' }
     })
@@ -31,7 +31,7 @@ describe('Banner', () => {
   })
 
   it('takes a leading slot and an action', () => {
-    const wrapper = mount(Banner, {
+    const wrapper = mount(Alert, {
       slots: { default: 'Text', leading: '<b class="lead">!</b>', action: '<button>Retry</button>' }
     })
 
@@ -41,7 +41,7 @@ describe('Banner', () => {
   })
 
   it('has a named dismiss button', async () => {
-    const wrapper = mount(Banner, {
+    const wrapper = mount(Alert, {
       props: { dismissible: true, dismissLabel: 'Hide' },
       slots: { default: 'Sync paused' },
       attachTo: document.body

@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 
-import { Skeleton, Spinner, TypingDots } from '../../index'
+import { Skeleton, Spinner, TypingIndicator } from '../../index'
 import { expectAccessible } from '../support/axe'
 
 describe('Spinner', () => {
@@ -40,9 +40,9 @@ describe('Skeleton', () => {
   })
 })
 
-describe('TypingDots', () => {
+describe('TypingIndicator', () => {
   it('pulses three staggered dots, hidden from assistive tech', async () => {
-    const wrapper = mount(TypingDots, { attachTo: document.body })
+    const wrapper = mount(TypingIndicator, { attachTo: document.body })
     const dots = wrapper.findAll('span > span')
 
     expect(wrapper.attributes('aria-hidden')).toBe('true')

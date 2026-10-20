@@ -6,7 +6,7 @@ import Radio from './Radio.vue'
 
 // No `component`: Radio is generic over its value, which Storybook's component typing can't take.
 const meta: Meta = {
-  title: 'Components/Radio',
+  title: 'Components/Forms/Radio',
   render: (args) => ({
     components: { Radio },
     setup: () => ({ args, keep: ref('ada') }),

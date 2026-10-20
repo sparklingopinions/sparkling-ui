@@ -5,7 +5,7 @@ import Tag from './Tag.vue'
 const colors = ['gray', 'purple', 'red', 'green', 'orange', 'pink', 'blue', 'slate', 'amber']
 
 const meta: Meta<typeof Tag> = {
-  title: 'Components/Tag',
+  title: 'Components/Data display/Tag',
   component: Tag,
   args: { name: 'Investors', color: 'green', removable: false },
   argTypes: { color: { control: 'select', options: colors } }
@@ -28,3 +28,13 @@ export const Colours: Story = {
 export const Plain: Story = { args: { color: undefined } }
 
 export const Removable: Story = { args: { removable: true } }
+
+export const Outline: Story = { args: { name: 'Customer', variant: 'outline', color: undefined } }
+
+export const OutlineChange: Story = {
+  render: () => ({
+    components: { Tag },
+    template:
+      '<div class="flex items-center gap-2 text-sm text-sui-ink-body"><Tag muted name="Lead" variant="outline" /> to <Tag name="Customer" variant="outline" /></div>'
+  })
+}

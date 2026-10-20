@@ -3,7 +3,7 @@ import { type Component, ref } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, userEvent, within } from 'storybook/test'
 
-import Chip from '../Chip/Chip.vue'
+import Tag from '../Tag/Tag.vue'
 import Select from './Select.vue'
 
 const rows = [
@@ -38,10 +38,10 @@ const openOnPlay = async ({ canvasElement }: { canvasElement: HTMLElement }) => 
 
 // No `component`: Select is generic over its values, which Storybook's component typing can't take.
 const meta: Meta = {
-  title: 'Components/Select',
+  title: 'Components/Forms/Select',
   render: (args, { parameters }) => ({
     components: { Select: Select as Component },
-    setup: () => ({ args, value: ref(parameters.value ?? null), options: parameters.options ?? rows }),
+    setup: () => ({ args, value: ref(parameters.value ?? null), options: parameters.choices ?? rows }),
     template: '<Select v-bind="args" v-model="value" :options="options" />'
   })
 }
@@ -65,25 +65,25 @@ export const Open: Story = {
 
 export const Searchable: Story = {
   args: { 'aria-label': 'Company', class: 'w-56', placeholder: 'Pick a company' },
-  parameters: { options: companies, value: 4 },
+  parameters: { choices: companies, value: 4 },
   play: openOnPlay
 }
 
 export const MultipleTags: Story = {
   args: { 'aria-label': 'Tags', class: 'w-72', multiple: true, canCreate: true },
-  parameters: { options: tags, value: ['vip'] },
+  parameters: { choices: tags, value: ['vip'] },
   play: openOnPlay
 }
 
 export const CustomTrigger: Story = {
   render: () => ({
-    components: { Chip, Select: Select as Component },
+    components: { Select: Select as Component, Tag },
     setup: () => ({ options: rows, value: ref(50) }),
     template: `
       <Select v-model="value" aria-label="Rows per page" :options="options">
         <template #trigger="{ open, toggle, selected }">
           <button type="button" aria-haspopup="listbox" :aria-expanded="open" @click="toggle">
-            <Chip>{{ selected[0]?.label ?? 'Rows' }}</Chip>
+            <Tag :name="selected[0]?.label ?? 'Rows'" variant="outline" />
           </button>
         </template>
       </Select>

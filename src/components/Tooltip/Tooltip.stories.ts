@@ -5,7 +5,7 @@ import Button from '../Button/Button.vue'
 import Tooltip from './Tooltip.vue'
 
 const meta: Meta<typeof Tooltip> = {
-  title: 'Components/Tooltip',
+  title: 'Components/Feedback/Tooltip',
   component: Tooltip,
   args: { text: 'Archive this conversation', side: 'top', disabled: false },
   argTypes: { side: { control: 'inline-radio', options: ['top', 'right', 'bottom', 'left'] } },

@@ -9,7 +9,7 @@ const photo =
   )
 
 const meta: Meta<typeof Avatar> = {
-  title: 'Components/Avatar',
+  title: 'Components/Data display/Avatar',
   component: Avatar,
   args: { name: 'Ada Lovelace', size: 'md', shape: 'circle', badge: false },
   argTypes: {
