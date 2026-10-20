@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "description": "A product-agnostic Vue 3 component library, themed by semantic tokens",
   "type": "module",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sparklingopinions/sparkling-ui.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public",
+    "provenance": true
   },
   "files": [
     "dist",
