@@ -85,9 +85,11 @@ The package is published privately to GitHub Packages as `@sparklingopinions/spa
 
    Then `<Icon name="mail" color="ink-muted" />`.
 
-7. For toasts, mount one `<Toaster />` near the app root, then call `toast.info('Draft saved')`, `toast.success(...)` or `toast.error(...)` anywhere, with `{ detail, life, closable }` as options.
+7. For light and dark, call `initColorMode()` once before mounting (it sets `data-mode` on `<html>` from the saved choice or the system's); then `useColorMode()` gives `mode`, `resolved`, `isDark`, `setMode` and `toggle`, and `useForceLightMode()` keeps a page light while it's mounted.
 
-8. To use `useConfirm`, mount one `<ConfirmDialog />` near the app root (it takes default `confirm-label` and `cancel-label` for translation). Then anywhere:
+8. For toasts, mount one `<Toaster />` near the app root, then call `toast.info('Draft saved')`, `toast.success(...)` or `toast.error(...)` anywhere, with `{ detail, life, closable }` as options.
+
+9. To use `useConfirm`, mount one `<ConfirmDialog />` near the app root (it takes default `confirm-label` and `cancel-label` for translation). Then anywhere:
 
    ````ts
    const confirm = useConfirm()
