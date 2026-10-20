@@ -17,6 +17,8 @@ const pairs: { text: string; background: string; usage: string; min?: number }[]
   { text: 'accent', background: 'surface', usage: 'Active tabs, the selected calendar day' },
   { text: 'accent', background: 'accent-wash', usage: 'Tinted buttons, sorted table headers' },
   { text: 'ink-body', background: 'accent-wash', usage: 'Selected table rows' },
+  { text: 'ink-muted', background: 'accent-wash', usage: 'Meta on selected list rows' },
+  { text: 'ink-muted', background: 'sunken', usage: 'List group counts' },
   { text: 'accent', background: 'accent-soft', usage: 'Tinted buttons on hover' },
   { text: 'on-accent', background: 'accent-solid', usage: 'Primary buttons' },
   { text: 'on-accent', background: 'accent-hover', usage: 'Primary buttons on hover' },
