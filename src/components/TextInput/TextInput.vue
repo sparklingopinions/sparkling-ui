@@ -1,22 +1,30 @@
 <script setup lang="ts">
+import { useFieldControl } from '../Field/context'
+
 export interface TextInputProps {
   /** Marks the field as failing validation: a danger border and `aria-invalid`. */
   invalid?: boolean
   disabled?: boolean
 }
 
-defineProps<TextInputProps>()
+const props = defineProps<TextInputProps>()
 
 const model = defineModel<string | null>()
+
+const { attrs: fieldAttrs, invalid: isInvalid } = useFieldControl(
+  () => model.value,
+  () => props.invalid
+)
 </script>
 
 <!-- Attributes (id, type, placeholder, readonly, autocomplete...) land on the input itself. -->
 <template>
   <input
-    :aria-invalid="invalid ? 'true' : undefined"
+    v-bind="fieldAttrs"
+    :aria-invalid="isInvalid ? 'true' : undefined"
     class="m-0 h-9 w-full appearance-none rounded-lg border bg-sui-surface px-3 font-sans text-sm leading-none text-sui-ink transition-colors duration-200 placeholder:text-sui-ink-faint"
     :class="[
-      invalid ? 'border-sui-danger-mid' : 'border-sui-line-control hover:border-sui-ink-muted',
+      isInvalid ? 'border-sui-danger-mid' : 'border-sui-line-control hover:border-sui-ink-muted',
       disabled
         ? 'pointer-events-none cursor-default opacity-60 select-none'
         : 'focus:border-sui-accent focus:ring-0 focus-visible:sui-ring-field'
