@@ -20,9 +20,7 @@ const meta: Meta = {
   render: () => ({
     components: { SegmentedControl: SegmentedControl as Component },
     setup: () => ({ options, value: ref('call') }),
-    // On the tinted band it sits on in MustLoop's ledger modals.
-    template:
-      '<div class="w-fit bg-sui-sunken p-2"><SegmentedControl v-model="value" aria-label="Activity type" :options="options" /></div>'
+    template: '<SegmentedControl v-model="value" aria-label="Activity type" :options="options" />'
   })
 }
 

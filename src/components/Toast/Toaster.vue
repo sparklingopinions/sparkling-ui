@@ -1,21 +1,45 @@
 <script setup lang="ts">
 import { ToastProvider, ToastRoot, ToastViewport } from 'reka-ui'
 
-import { removeToast, toasts } from '../../composables/toast'
+import { type ToastSeverity, removeToast, toasts } from '../../composables/toast'
 import ToastMessage from './ToastMessage.vue'
+
+export interface ToastPreview {
+  summary: string
+  detail?: string
+  severity?: ToastSeverity
+  closable?: boolean
+}
 
 export interface ToasterProps {
   /** The toast region's name for assistive tech; `{hotkey}` is F8, which focuses it. */
   label?: string
   closeLabel?: string
+  /** Toasts drawn in place, for docs and designs, instead of the live ones fixed to the viewport. */
+  preview?: ToastPreview[]
 }
 
-withDefaults(defineProps<ToasterProps>(), { label: 'Notifications ({hotkey})', closeLabel: 'Close' })
+withDefaults(defineProps<ToasterProps>(), {
+  label: 'Notifications ({hotkey})',
+  closeLabel: 'Close',
+  preview: undefined
+})
 </script>
 
 <!-- Mount once near the app root; `toast.info(...)` and friends show here. Swiping is off, as in MustLoop. -->
 <template>
-  <ToastProvider :swipe-threshold="Number.POSITIVE_INFINITY">
+  <div v-if="preview" class="flex w-full max-w-96 flex-col">
+    <ToastMessage
+      v-for="(item, index) in preview"
+      :key="index"
+      :closable="item.closable"
+      :close-label="closeLabel"
+      :detail="item.detail"
+      :severity="item.severity"
+      :summary="item.summary"
+    />
+  </div>
+  <ToastProvider v-else :swipe-threshold="Number.POSITIVE_INFINITY">
     <ToastRoot
       v-for="item in toasts"
       :key="item.id"
@@ -38,7 +62,7 @@ withDefaults(defineProps<ToasterProps>(), { label: 'Notifications ({hotkey})', c
     <!-- A div, not Reka's default ol: the toasts are divs, so a page can draw one alone. -->
     <ToastViewport
       as="div"
-      class="pointer-events-none fixed bottom-5 left-1/2 z-[1200] flex w-96 -translate-x-1/2 flex-col rounded-md outline-hidden"
+      class="pointer-events-none fixed bottom-5 left-1/2 z-[1200] flex w-96 max-w-[calc(100vw-2.5rem)] -translate-x-1/2 flex-col rounded-md outline-hidden"
       data-sui-toasts
       :label="label"
     />
