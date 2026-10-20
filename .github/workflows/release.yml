@@ -22,6 +22,10 @@ jobs:
       # Trusted publishing (OIDC) needs npm 11.5.1 or later; Node 22 ships 10.
       - run: npm install -g npm@^11.5.1
       - run: npm ci
+      # Temporary: changesets hides npm's logs, so this shows why the trusted publishing token exchange fails.
+      # A dry run still exchanges the token but publishes nothing.
+      - run: npm publish --dry-run --loglevel silly 2>&1 | grep -iE 'oidc|token|ENEEDAUTH|fetch'
+        continue-on-error: true
       # Opens or updates the "Version packages" PR; once that PR is merged, publishes and tags the release.
       # Pinned to a commit: this step holds a token that can push to the repo, and publishes to npm through the
       # package's trusted publisher (id-token: write), with no npm token.
@@ -32,5 +36,3 @@ jobs:
           commit-message: Version packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # npm only logs why a trusted publishing token exchange failed at verbose level.
-          NPM_CONFIG_LOGLEVEL: verbose
