@@ -1,5 +1,12 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.2.1
+
+### Patch Changes
+
+- 1247c18: `arrow-right`, `arrow-up`, `arrow-down` and `arrows-up-down` are redrawn on the 16px grid with the set's 1.5px stroke, matching `arrow-left`; drawn on 24 and scaled down, their lines read about 1px.
+- ea28716: `chevron-down`, `arrow-left`, `download`, `refresh`, `table`, `inbox` and the four `align-*` icons are redrawn on the 16px grid, so they keep their drawn size instead of being stretched to fill 16px; `space-width` moves onto the 24px grid.
+
 ## 0.2.0
 
 ### Minor Changes
