@@ -11,13 +11,16 @@ export interface EmptyStateProps {
   /** Shows a primary button with this label, which emits `action`. Or put your own in the `action` slot. */
   actionLabel?: string
   actionIcon?: string
+  /** The title's heading level, to fit the page's outline. */
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6
 }
 
 withDefaults(defineProps<EmptyStateProps>(), {
   description: undefined,
   emoji: undefined,
   actionLabel: undefined,
-  actionIcon: 'plus'
+  actionIcon: 'plus',
+  headingLevel: 2
 })
 
 defineEmits<{ action: [] }>()
@@ -32,7 +35,7 @@ defineEmits<{ action: [] }>()
     >
       {{ emoji }}
     </div>
-    <div class="mb-1.5 text-base font-semibold text-sui-ink">{{ title }}</div>
+    <component :is="`h${headingLevel}`" class="m-0 mb-1.5 text-base font-semibold text-sui-ink">{{ title }}</component>
     <div class="max-w-xs text-sm leading-relaxed text-sui-ink-muted">
       <slot name="description">{{ description }}</slot>
     </div>

@@ -311,6 +311,7 @@
 
   /* Emitted only where a component uses them. */
   --animate-sui-spinner-dash: sui-spinner-dash 1.5s ease-in-out infinite;
+  --animate-sui-spinner-rotate: sui-spinner-rotate 2s linear infinite;
   --animate-sui-typing: sui-typing 1.2s infinite;
   --animate-sui-fade-in: sui-fade-in 250ms linear;
   --animate-sui-menu-in: sui-fade-in 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -324,6 +325,12 @@
   --animate-sui-toast-out:
     sui-toast-collapse 450ms cubic-bezier(0, 1, 0, 1) forwards,
     sui-toast-fade 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+  @keyframes sui-spinner-rotate {
+    to {
+      transform: rotate(360deg);
+    }
+  }
 
   @keyframes sui-spinner-dash {
     0% {
