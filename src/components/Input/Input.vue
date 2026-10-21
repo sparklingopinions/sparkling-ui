@@ -22,7 +22,7 @@ const { attrs: fieldAttrs, invalid: isInvalid } = useFieldControl(
   <input
     v-bind="fieldAttrs"
     :aria-invalid="isInvalid ? 'true' : undefined"
-    class="m-0 h-9 w-full appearance-none rounded-lg border bg-sui-surface px-3 font-sans text-sm leading-none text-sui-ink transition-colors duration-200 placeholder:text-sui-ink-faint"
+    class="m-0 h-9 w-full appearance-none rounded-lg border bg-sui-surface px-3 font-sans text-sm leading-none text-sui-ink transition-[border-color,box-shadow] duration-200 placeholder:text-sui-ink-faint"
     :class="[
       isInvalid ? 'border-sui-danger-mid' : 'border-sui-line-strong hover:border-sui-ink-muted',
       disabled

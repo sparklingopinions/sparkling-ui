@@ -54,7 +54,7 @@ watch(model, () => nextTick(resize))
     ref="textarea"
     v-bind="fieldAttrs"
     :aria-invalid="isInvalid ? 'true' : undefined"
-    class="m-0 w-full appearance-none rounded-md border bg-sui-surface px-3 py-1.5 font-sans text-sm leading-5 text-sui-ink transition-colors duration-200 placeholder:text-sui-ink-faint"
+    class="m-0 w-full appearance-none rounded-md border bg-sui-surface px-3 py-1.5 font-sans text-sm leading-5 text-sui-ink transition-[border-color,box-shadow] duration-200 placeholder:text-sui-ink-faint"
     :class="[
       isInvalid ? 'border-sui-danger-mid' : 'border-sui-line-strong hover:border-sui-ink-muted',
       disabled
