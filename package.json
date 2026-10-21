@@ -1,6 +1,6 @@
 {
   "name": "@sparklingopinions/sparkling-ui",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "A product-agnostic Vue 3 component library, themed by semantic tokens",
   "type": "module",
   "license": "MIT",
