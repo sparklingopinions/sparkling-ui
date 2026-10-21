@@ -1,7 +1,7 @@
 import { type Component, ref } from 'vue'
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import Tag from '../Tag/Tag.vue'
 import Select from './Select.vue'
@@ -89,4 +89,51 @@ export const CustomTrigger: Story = {
       </Select>
     `
   })
+}
+
+export const ServerSearch: Story = {
+  render: () => ({
+    components: { Select: Select as Component },
+    setup: () => {
+      const results = ref(companies.slice(0, 5))
+      // Stands in for a request: matches anywhere in the name, as a server might, which a label filter wouldn't.
+      const search = (query: string) =>
+        (results.value = companies.filter((company) =>
+          company.label
+            .toLowerCase()
+            .replace(/[^a-z]/g, '')
+            .includes(query.toLowerCase().replace(/[^a-z]/g, ''))
+        ))
+      return {
+        results,
+        search,
+        value: ref(9),
+        saved: [{ value: 9, label: 'Menabrea Studio' }]
+      }
+    },
+    template: `
+      <Select v-model="value" aria-label="Company" class="w-56" clearable :filter="false" :options="results"
+        :selected-options="saved" @query-change="search" />
+    `
+  }),
+  play: async ({ canvasElement }) => {
+    const trigger = within(canvasElement).getByRole('button', { name: /Company/ })
+    await expect(trigger).toHaveTextContent('Menabrea Studio')
+    await userEvent.click(trigger)
+    await userEvent.keyboard('babbageco')
+    await userEvent.click(await within(document.body).findByRole('option', { name: 'Babbage & Co' }))
+    await expect(trigger).toHaveTextContent('Babbage & Co')
+  }
+}
+
+export const ClosesOnSecondClick: Story = {
+  args: { 'aria-label': 'Rows per page', class: 'w-40' },
+  play: async ({ canvasElement }) => {
+    const trigger = within(canvasElement).getByRole('button')
+    await userEvent.click(trigger)
+    await within(document.body).findByRole('listbox')
+    await userEvent.click(trigger)
+    await waitFor(() => expect(within(document.body).queryByRole('listbox')).toBeNull())
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
+  }
 }

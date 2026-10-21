@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends SelectValue">
-import { computed, nextTick, ref, useAttrs } from 'vue'
+import { computed, nextTick, ref, shallowRef, useAttrs } from 'vue'
 
 import {
   ListboxContent,
@@ -22,9 +22,17 @@ import type { SelectOption, SelectValue } from './types'
 
 export interface SelectProps<T extends SelectValue> {
   options: SelectOption<T>[]
+  /** The options for chosen values that aren't in `options`, such as a saved choice while `options` holds search
+   *  results. Options picked from the list are remembered without it. */
+  selectedOptions?: SelectOption<T>[]
   multiple?: boolean
+  /** Lets a single choice be removed, as a tag in the filter row or with Backspace there. */
+  clearable?: boolean
   /** A filter row at the top of the list; on by default for `multiple`, `canCreate` or more than 8 options. */
   searchable?: boolean
+  /** Narrows `options` to what's typed: by label, or by your function. `false` when `options` are already the results
+   *  for the query, such as from a server search through `query-change`. */
+  filter?: boolean | ((option: SelectOption<T>, query: string) => boolean)
   /** Offers to create what was typed, through `createOption`. */
   canCreate?: boolean
   /** Makes the created option; by default its value is its label. */
@@ -52,7 +60,9 @@ export interface SelectProps<T extends SelectValue> {
 defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<SelectProps<T>>(), {
+  selectedOptions: () => [],
   searchable: undefined,
+  filter: true,
   createOption: undefined,
   createColored: true,
   size: 'md',
@@ -66,7 +76,7 @@ const props = withDefaults(defineProps<SelectProps<T>>(), {
   panelWidth: undefined
 })
 
-const emit = defineEmits<{ 'query-change': [query: string] }>()
+const emit = defineEmits<{ 'query-change': [query: string]; 'create-error': [error: unknown] }>()
 
 // An aria-label would hide the trigger's visible value from its name; it's said before the value instead.
 const attrs = useAttrs()
@@ -82,15 +92,32 @@ const keyboard = ref(false)
 const values = computed<T[]>(() =>
   Array.isArray(model.value) ? model.value : model.value === null || model.value === undefined ? [] : [model.value]
 )
+// Options picked from earlier results, which `options` may no longer hold.
+const picked = shallowRef<SelectOption<T>[]>([])
 const selected = computed(() =>
-  values.value.map((value) => props.options.find((option) => option.value === value)).filter((option) => !!option)
+  values.value
+    .map((value) =>
+      [props.options, props.selectedOptions, picked.value]
+        .map((list) => list.find((option) => option.value === value))
+        .find((option) => !!option)
+    )
+    .filter((option) => !!option)
 )
-const search = computed(() => props.searchable ?? (props.multiple || props.canCreate || props.options.length > 8))
+const search = computed(
+  () =>
+    props.searchable ??
+    (props.multiple || props.canCreate || props.clearable || props.filter === false || props.options.length > 8)
+)
+const removable = computed(() => props.multiple || props.clearable)
+const matches = (option: SelectOption<T>, text: string) =>
+  typeof props.filter === 'function'
+    ? props.filter(option, text)
+    : option.label.toLowerCase().includes(text.toLowerCase())
 const listed = computed(() => {
-  const text = query.value.trim().toLowerCase()
+  const text = query.value.trim()
   return props.options
     .filter((option) => !(props.multiple && search.value && values.value.includes(option.value)))
-    .filter((option) => !text || option.label.toLowerCase().includes(text))
+    .filter((option) => !text || props.filter === false || matches(option, text))
 })
 const showCreate = computed(() => {
   const text = query.value.trim().toLowerCase()
@@ -131,6 +158,7 @@ function toggle(event?: Event) {
 }
 
 function choose(option: SelectOption<T>) {
+  picked.value = [option, ...picked.value.filter((known) => known.value !== option.value)]
   if (props.multiple) {
     model.value = values.value.includes(option.value)
       ? values.value.filter((value) => value !== option.value)
@@ -142,13 +170,24 @@ function choose(option: SelectOption<T>) {
   }
 }
 
+const creating = ref(false)
+
+// A failed createOption keeps what was typed, so it can be tried again.
 async function create() {
+  if (creating.value) return
   const label = query.value.trim()
   const draft = props.createColored ? { label, color: newHue.value } : { label }
-  const option = props.createOption
-    ? await props.createOption(draft)
-    : ({ value: label as T, label, color: draft.color } as SelectOption<T>)
-  choose(option)
+  creating.value = true
+  try {
+    const option = props.createOption
+      ? await props.createOption(draft)
+      : ({ value: label as T, label, color: draft.color } as SelectOption<T>)
+    choose(option)
+  } catch (error) {
+    emit('create-error', error)
+  } finally {
+    creating.value = false
+  }
 }
 
 function onSelect(event: CustomEvent, row: SelectOption<T> | typeof CREATE) {
@@ -159,12 +198,12 @@ function onSelect(event: CustomEvent, row: SelectOption<T> | typeof CREATE) {
 }
 
 function remove(value: T) {
-  model.value = values.value.filter((chosen) => chosen !== value)
+  model.value = props.multiple ? values.value.filter((chosen) => chosen !== value) : null
 }
 
 function onKeydown(event: KeyboardEvent) {
   if (['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) keyboard.value = true
-  if (event.key === 'Backspace' && props.multiple && !query.value && values.value.length)
+  if (event.key === 'Backspace' && removable.value && !query.value && values.value.length)
     remove(values.value[values.value.length - 1]!)
 }
 
@@ -185,6 +224,12 @@ function onOpenAutoFocus(event: Event) {
 
 // Back to the trigger, which Reka can't find: it's our anchor, not its trigger.
 const anchor = ref<{ $el: HTMLElement }>()
+
+// Nor does Reka know a press on it isn't outside: closing there would let the click reopen the list.
+function onPointerDownOutside(event: CustomEvent<{ originalEvent: PointerEvent }>) {
+  const target = event.detail.originalEvent.target
+  if (target instanceof Node && anchor.value?.$el?.contains(target)) event.preventDefault()
+}
 function returnFocus(event: Event) {
   event.preventDefault()
   anchor.value?.$el?.focus()
@@ -204,7 +249,7 @@ const optionClass =
 </script>
 
 <!-- One select for every choice: a short fixed list, a searchable one, several values as tags (`multiple`), or creating
-     what was typed (`canCreate`). The `trigger` slot draws your own trigger and gets `open`, `toggle` and `selected`. -->
+     what was typed (`canCreate`). For a server search, set `:filter="false"` and replace `options` on `query-change`. The `trigger` slot draws your own trigger and gets `open`, `toggle` and `selected`. -->
 <template>
   <PopoverRoot :open="open" @update:open="(value) => (value ? show(false) : close())">
     <PopoverAnchor ref="anchor" as-child>
@@ -262,6 +307,7 @@ const optionClass =
         :style="panelWidth ? { width: panelWidth } : undefined"
         @close-auto-focus="returnFocus"
         @open-auto-focus="onOpenAutoFocus"
+        @pointer-down-outside="onPointerDownOutside"
       >
         <ListboxRoot
           ref="listbox"
@@ -276,7 +322,7 @@ const optionClass =
             v-if="search"
             class="flex min-h-11 flex-wrap items-center gap-1 border-b border-sui-line-subtle px-3 py-2.5"
           >
-            <template v-if="multiple">
+            <template v-if="removable">
               <Tag
                 v-for="option in selected"
                 :key="option.value"
@@ -293,7 +339,7 @@ const optionClass =
               class="h-5 min-w-16 flex-1 rounded-none border-none bg-transparent p-0 text-13 text-sui-ink shadow-none outline-hidden placeholder:text-sui-ink-faint focus:border-none focus:shadow-none focus:ring-0 focus:outline-hidden"
               data-select-filter
               :model-value="query"
-              :placeholder="multiple && selected.length ? '' : searchPlaceholder"
+              :placeholder="removable && selected.length ? '' : searchPlaceholder"
               @update:model-value="setQuery"
             />
           </div>
