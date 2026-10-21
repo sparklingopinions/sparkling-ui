@@ -28,10 +28,7 @@ const box = computed(() => [
   !checked.value && (props.invalid ? 'border-sui-danger-mid' : 'border-sui-line-control'),
   props.disabled
     ? 'pointer-events-none cursor-default border-sui-accent-line bg-sui-surface select-none [&>*:first-child]:bg-sui-accent-soft'
-    : [
-        !checked.value && 'peer-hover:border-sui-accent-bright peer-hover:[&>*:first-child]:bg-sui-accent-bright',
-        'peer-focus-visible:sui-ring'
-      ]
+    : [!checked.value && !props.invalid && 'peer-hover:border-sui-accent-solid', 'peer-focus-visible:sui-ring']
 ])
 </script>
 
