@@ -25,6 +25,7 @@ describe('Dialog', () => {
 
     expect(dialog()?.getAttribute('aria-labelledby')).toBeTruthy()
     expect(dialog()?.textContent).toContain('Revoke key')
+    expect(dialog()?.querySelectorAll('h2')).toHaveLength(1)
     expect(dialog()?.textContent).toContain('Body text')
     button('Revoke').click()
     expect(wrapper.emitted('confirm')).toHaveLength(1)

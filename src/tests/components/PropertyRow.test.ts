@@ -40,6 +40,10 @@ describe('Collapsible', () => {
     await toggle.trigger('click')
     await wrapper.setProps({ filled: true })
     expect(wrapper.find('p').exists()).toBe(true)
+
+    await toggle.trigger('click')
+    expect(toggle.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.find('p').exists()).toBe(false)
     wrapper.unmount()
   })
 })

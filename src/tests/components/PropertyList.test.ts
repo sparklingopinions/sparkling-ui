@@ -48,6 +48,18 @@ describe('Editable', () => {
     wrapper.unmount()
   })
 
+  it('saves nothing when left untouched, and puts its class on the value', async () => {
+    const wrapper = mountField({ modelValue: '', class: '-ml-3' })
+    expect(wrapper.classes()).toContain('-ml-3')
+    await wrapper.trigger('click')
+    await nextTick()
+    expect(wrapper.get('textarea').classes()).not.toContain('-ml-3')
+    await wrapper.get('textarea').trigger('blur')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(wrapper.emitted('blur')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
   it('takes Shift+Enter as a new line when multiline', async () => {
     const wrapper = mountField({ variant: 'multiline' })
     await wrapper.trigger('click')
@@ -126,6 +138,25 @@ describe('PropertyList', () => {
     await flushPromises()
     expect(wrapper.emitted('change')?.[0]).toEqual(['role', 'VP'])
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([{ role: 'VP', stage: 'customer' }])
+    wrapper.unmount()
+  })
+
+  it('draws a field from its slot, labelled and saved like the others', async () => {
+    const wrapper = mount(PropertyList, {
+      props: { modelValue: { country: 'PT' }, fields: [{ id: 'country', label: 'Country' }] },
+      slots: {
+        'field-country': `<template #field-country="{ id, value, update }">
+          <button :id="id" type="button" @click="update('ES')">Country: {{ value }}</button>
+        </template>`
+      },
+      attachTo: document.body
+    })
+
+    expect(wrapper.find('textarea, [role="button"]').exists()).toBe(false)
+    expect(wrapper.get('#country').text()).toBe('Country: PT')
+    await wrapper.get('#country').trigger('click')
+    expect(wrapper.emitted('change')?.[0]).toEqual(['country', 'ES'])
+    await expectAccessible(wrapper.element)
     wrapper.unmount()
   })
 })

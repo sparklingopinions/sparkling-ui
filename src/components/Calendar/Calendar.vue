@@ -18,9 +18,9 @@ export interface CalendarProps {
   /** Selects a day; with `end`, a range. */
   start?: Date | null
   end?: Date | null
-  /** For the month's name; the browser's language by default. */
+  /** For the month's name and the weekdays; the browser's language by default. */
   locale?: string
-  /** Monday first. */
+  /** Monday first; the locale's narrow names by default. */
   weekdays?: string[]
   previousLabel?: string
   nextLabel?: string
@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<CalendarProps>(), {
   start: null,
   end: null,
   locale: undefined,
-  weekdays: () => ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+  weekdays: undefined,
   previousLabel: 'Previous month',
   nextLabel: 'Next month'
 })
@@ -49,6 +49,15 @@ watch(
 
 const title = computed(() =>
   new Intl.DateTimeFormat(props.locale, { month: 'long', year: 'numeric' }).format(view.value)
+)
+
+// 1 January 2024 was a Monday.
+const dayNames = computed(
+  () =>
+    props.weekdays ??
+    Array.from({ length: 7 }, (_, i) =>
+      new Intl.DateTimeFormat(props.locale, { weekday: 'narrow' }).format(new Date(2024, 0, 1 + i))
+    )
 )
 
 const shiftMonth = (months: number) => (view.value = addMonths(view.value, months))
@@ -128,7 +137,7 @@ const cells = computed(() => {
       </div>
     </div>
     <div aria-hidden="true" class="grid h-5.5 grid-cols-7 items-center">
-      <span v-for="(day, i) in weekdays" :key="i" class="text-center text-11 font-semibold text-sui-ink-muted">
+      <span v-for="(day, i) in dayNames" :key="i" class="text-center text-11 font-semibold text-sui-ink-muted">
         {{ day }}
       </span>
     </div>

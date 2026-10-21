@@ -27,6 +27,15 @@ describe('Calendar', () => {
     wrapper.unmount()
   })
 
+  it('names the weekdays in its locale', () => {
+    const weekdays = (locale: string) =>
+      mount(Calendar, { props: { locale } })
+        .findAll('[aria-hidden="true"] span')
+        .map((day) => day.text())
+    expect(weekdays('en-US')).toEqual(['M', 'T', 'W', 'T', 'F', 'S', 'S'])
+    expect(weekdays('fr-FR')).toEqual(['L', 'M', 'M', 'J', 'V', 'S', 'D'])
+  })
+
   it('emits the day picked', async () => {
     const wrapper = mount(Calendar)
     await days(wrapper)[10]!.trigger('click')
