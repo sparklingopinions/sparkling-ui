@@ -259,7 +259,7 @@ const optionClass =
           :aria-expanded="open"
           aria-haspopup="listbox"
           :aria-invalid="isInvalid ? 'true' : undefined"
-          class="group inline-flex items-center justify-between gap-1.5 rounded-(--sui-radius-button) border bg-sui-surface text-left text-sui-ink transition-colors duration-150 focus-visible:sui-ring-field disabled:pointer-events-none disabled:opacity-60"
+          class="group inline-flex items-center justify-between gap-1.5 rounded-(--sui-radius-button) border bg-sui-surface text-left text-sui-ink transition-[border-color,box-shadow] duration-150 focus-visible:border-sui-accent focus-visible:sui-ring-field disabled:pointer-events-none disabled:opacity-60"
           :class="[
             triggerSizes[size],
             isInvalid ? 'border-sui-danger-mid' : 'border-sui-line-strong hover:border-sui-ink-muted'

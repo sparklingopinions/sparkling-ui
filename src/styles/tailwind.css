@@ -302,15 +302,17 @@
 }
 
 /* The keyboard focus ring, one treatment everywhere, applied with a variant (focus-visible:sui-ring). Outside by
-   default, so it reads around filled buttons; on the edge of fields; inset in menus, lists and tight groups. */
+   default, so it reads around filled buttons; a halo on fields; inset in menus, lists and tight groups. */
 @utility sui-ring {
   outline: var(--sui-focus-width) solid rgb(var(--sui-accent));
   outline-offset: var(--sui-focus-offset);
 }
 
+/* Fields show focus with their accent border and a soft halo; the transparent outline is what forced-colors mode draws. */
 @utility sui-ring-field {
-  outline: var(--sui-focus-width) solid rgb(var(--sui-accent));
+  outline: var(--sui-focus-width) solid transparent;
   outline-offset: var(--sui-focus-offset-field);
+  box-shadow: 0 0 0 3px rgb(var(--sui-focus-ring));
 }
 
 @utility sui-ring-inset {

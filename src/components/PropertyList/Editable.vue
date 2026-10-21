@@ -87,7 +87,7 @@ function onEnter(event: KeyboardEvent) {
 }
 
 const field =
-  'block w-full rounded-lg px-3 py-1.5 text-left text-sui-ink transition-colors outline-hidden focus-visible:sui-ring-field'
+  'block w-full rounded-lg border border-transparent px-[0.6875rem] py-1.25 text-left text-sui-ink transition-[background-color,border-color,box-shadow] outline-hidden focus-visible:border-sui-accent focus-visible:sui-ring-field'
 </script>
 
 <!-- One value shown as plain text and edited where it is: click or Enter to edit, Enter or leaving to save, Escape to
