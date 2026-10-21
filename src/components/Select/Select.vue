@@ -253,7 +253,7 @@ const optionClass =
       <PopoverContent
         :align="align"
         :aria-label="label ?? placeholder"
-        class="z-[1000] overflow-hidden rounded-xl border border-sui-line-subtle bg-sui-surface text-sui-ink shadow-lg data-[state=open]:animate-sui-menu-in"
+        class="z-[1100] overflow-hidden rounded-xl border border-sui-line-subtle bg-sui-surface text-sui-ink shadow-lg data-[state=open]:animate-sui-menu-in"
         :class="
           search ? 'min-w-[max(var(--reka-popover-trigger-width),15rem)]' : 'min-w-(--reka-popover-trigger-width)'
         "

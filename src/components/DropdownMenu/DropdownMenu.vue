@@ -114,7 +114,7 @@ function onOpenChange(value: boolean) {
       <DropdownMenuPortal>
         <DropdownMenuContent
           :align="align"
-          class="z-[1000] min-w-[max(12rem,var(--reka-dropdown-menu-trigger-width))] rounded-xl border border-sui-line-subtle bg-sui-surface p-1 shadow-lg outline-hidden data-[state=open]:animate-sui-menu-in"
+          class="z-[1100] min-w-[max(12rem,var(--reka-dropdown-menu-trigger-width))] rounded-xl border border-sui-line-subtle bg-sui-surface p-1 shadow-lg outline-hidden data-[state=open]:animate-sui-menu-in"
           side="bottom"
         >
           <template v-for="(item, index) in items" :key="index">
