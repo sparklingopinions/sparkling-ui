@@ -60,3 +60,46 @@ export const Set: Story = {
     `
   })
 }
+
+const groups = {
+  Content: [
+    'lightbulb',
+    'square-pen',
+    'message-square',
+    'messages',
+    'message-quote',
+    'reply',
+    'send',
+    'image',
+    'images',
+    'captions',
+    'globe',
+    'webhook',
+    'external-link'
+  ],
+  Scheduling: ['calendar-check', 'calendar-x', 'calendar-clock', 'clock', 'history'],
+  Editing: ['split', 'merge', 'layers', 'undo-2', 'list-checks'],
+  Layout: ['maximize', 'minimize', 'panel-right', 'panel-right-close', 'sun-moon', 'sun', 'moon'],
+  State: ['circle-dashed', 'circle-half', 'circle-check', 'circle-alert', 'triangle-alert', 'key-round']
+}
+
+export const ByJob: Story = {
+  name: 'By job',
+  render: () => ({
+    components: { Icon },
+    setup: () => ({ groups }),
+    template: `
+      <div class="flex flex-col gap-5 text-13 text-sui-ink">
+        <section v-for="(names, group) in groups" :key="group">
+          <h3 class="m-0 mb-2 text-xs font-medium text-sui-ink-muted">{{ group }}</h3>
+          <ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3 p-0">
+            <li v-for="name in names" :key="name" class="flex items-center gap-2">
+              <Icon color="ink-body" :name="name" />
+              <code>{{ name }}</code>
+            </li>
+          </ul>
+        </section>
+      </div>
+    `
+  })
+}

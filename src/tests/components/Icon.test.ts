@@ -57,7 +57,7 @@ describe('Icon', () => {
     expect(wrapper.element.tagName).toBe('svg')
     expect(wrapper.attributes()).toMatchObject({ viewBox: '0 0 16 16', 'stroke-width': '1.5', style: 'fill: none;' })
     expect(wrapper.find('path').exists()).toBe(true)
-    expect(iconNames).toHaveLength(78)
+    expect(iconNames).toHaveLength(114)
   })
 
   it('draws every icon on the 16 grid, or the 8 or 24 one', () => {
@@ -74,6 +74,14 @@ describe('Icon', () => {
     expect(wrapper.findAll('circle')).toHaveLength(3)
     expect(wrapper.attributes('style')).toBe('stroke: none;')
     expect(mount(Icon, { props: { name: 'people' } }).html()).toBe(mount(Icon, { props: { name: 'users' } }).html())
+  })
+
+  it('draws 24px-grid icons at the same visual stroke', () => {
+    const wrapper = mount(Icon, { props: { name: 'thread' } })
+
+    expect(wrapper.attributes('viewBox')).toBe('0 0 24 24')
+    expect(wrapper.attributes('stroke-width')).toBe('2.25')
+    expect(wrapper.html()).toBe(mount(Icon, { props: { name: 'messages' } }).html())
   })
 
   it("lets the app add icons and replace the set's", () => {
