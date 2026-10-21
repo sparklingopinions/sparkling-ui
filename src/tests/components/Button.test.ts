@@ -47,7 +47,7 @@ describe('Button', () => {
     })
 
     expect(wrapper.element.tagName).toBe('A')
-    expect(wrapper.classes()).toContain('bg-sui-accent-solid')
+    expect(wrapper.classes()).toEqual(expect.arrayContaining(['bg-sui-accent-solid', 'no-underline']))
     await expectAccessible(wrapper.element)
     wrapper.unmount()
   })
