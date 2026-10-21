@@ -10,7 +10,7 @@ sparkling-ui is a product-agnostic Vue 3 component library for calm, dense, work
 - **Vue 3 only.** No multi-framework abstractions.
 - **Reka UI is an implementation detail.** It provides accessibility, focus, keyboard and positioning. Apps never import from `reka-ui`: they import only from `sparkling-ui`, whose components, props, slots and events are ours. If Reka ever has to go, only this repo changes.
 - **Styled, not headless.** Components ship styled by our semantic tokens, and each app themes them.
-- **The design system is the reference.** v1 was extracted from MustLoop's design system. Its look and API now follow the Sparkling UI design system in Claude Design (`components/sui.css`, each component's `.jsx`, `.d.ts` and `.prompt.md`, and `tokens/`). It fixes the original's gaps (focus, contrast, an undesigned paginator) and consolidates components: one Dialog, one Select, one Toaster, one Editable. Names follow common UI-library conventions (Radix, shadcn, MUI); former names stay exported from `src/aliases.ts`, marked deprecated. A change the design system doesn't show is agreed first. Tamable's "Desk" look is a theming fixture that proves the token model, never a reason to change a component.
+- **The design system is the reference.** v1 was extracted from MustLoop's design system. Its look and API now follow the Sparkling UI design system, a Design System artifact in Claude (https://claude.ai/artifact/BjVaiu6EYEUKLMwMKaWT66, read with the Artifact tool; the standalone Claude Design project it came from no longer changes). Under `project/`: `components/sui.css`, each component's `components/<Name>/` (`README.md`, `.d.ts`, `preview.html`), the `.jsx` sources in `components/src/`, and `tokens/`. It fixes the original's gaps (focus, contrast, an undesigned paginator) and consolidates components: one Dialog, one Select, one Toaster, one Editable. Names follow common UI-library conventions (Radix, shadcn, MUI); former names stay exported from `src/aliases.ts`, marked deprecated. A change the design system doesn't show is agreed first. Tamable's "Desk" look is a theming fixture that proves the token model, never a reason to change a component.
 
 ## Commands
 
@@ -71,7 +71,7 @@ src/
 
 ### Icons
 
-`Icon` draws the library's set (`components/Icon/iconSet.ts`: the design system's 78 icons with neutral names, plus `iconAliases` for older and common names). An app adds icons or replaces some with `setIconResolver`; its components win. A library component that needs a glyph of its own (close, chevron, check) draws it inline as an internal component, so an app's overrides never change it. Icon colours are a lookup of full class strings per role (`colors.ts`), as with any class.
+`Icon` draws the library's set (`components/Icon/iconSet.ts`: the design system's 114 icons with neutral names, plus `iconAliases` for older and common names). An app adds icons or replaces some with `setIconResolver`; its components win. A library component that needs a glyph of its own (close, chevron, check) draws it inline as an internal component, so an app's overrides never change it. Icon colours are a lookup of full class strings per role (`colors.ts`), as with any class.
 
 ### Tests and stories
 
