@@ -217,7 +217,7 @@ const optionClass =
           class="group inline-flex items-center justify-between gap-1.5 rounded-(--sui-radius-button) border bg-sui-surface text-left text-sui-ink transition-colors duration-150 focus-visible:sui-ring-field disabled:pointer-events-none disabled:opacity-60"
           :class="[
             triggerSizes[size],
-            isInvalid ? 'border-sui-danger-mid' : 'border-sui-line-control hover:border-sui-ink-muted'
+            isInvalid ? 'border-sui-danger-mid' : 'border-sui-line-strong hover:border-sui-ink-muted'
           ]"
           :disabled="disabled"
           type="button"
