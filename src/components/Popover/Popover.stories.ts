@@ -83,6 +83,8 @@ export const KeyboardFocus: Story = {
     await userEvent.click(trigger)
     const panel = await body.findByRole('dialog', { name: 'Share' })
     await waitFor(() => expect(panel).toHaveFocus())
+    // Focused to take Tab and Escape, not to be marked: no browser outline around the panel.
+    await expect(getComputedStyle(panel).outlineStyle).toBe('none')
     await expect(panel.getBoundingClientRect().width).toBe(320)
     await userEvent.tab()
     await expect(body.getByRole('button', { name: 'Copy link' })).toHaveFocus()
