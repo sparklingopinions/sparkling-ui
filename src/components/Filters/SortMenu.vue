@@ -105,7 +105,7 @@ const row =
     <PopoverPortal>
       <PopoverContent
         align="start"
-        class="z-[1000] w-85 max-w-[calc(100vw-2rem)] origin-(--reka-popover-content-transform-origin) rounded-xl border border-sui-line bg-sui-surface text-sui-ink shadow-lg data-[state=open]:animate-sui-overlay-in"
+        class="z-[1100] w-85 max-w-[calc(100vw-2rem)] origin-(--reka-popover-content-transform-origin) rounded-xl border border-sui-line bg-sui-surface text-sui-ink shadow-lg data-[state=open]:animate-sui-overlay-in"
         :side-offset="8"
       >
         <FilterFrame :close-label="closeLabel" :enter-label="doneLabel" :status="status" @enter="open = false">

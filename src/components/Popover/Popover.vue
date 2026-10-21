@@ -100,7 +100,7 @@ onBeforeUnmount(() => {
         align="start"
         :align-offset="alignOffset"
         :aria-label="label"
-        class="z-[1000] block w-64 origin-center rounded-lg border border-sui-line-subtle bg-sui-surface text-sui-ink shadow-xl data-[state=closed]:animate-sui-overlay-out data-[state=open]:animate-sui-overlay-in"
+        class="z-[1100] block w-64 origin-center rounded-lg border border-sui-line-subtle bg-sui-surface text-sui-ink shadow-xl data-[state=closed]:animate-sui-overlay-out data-[state=open]:animate-sui-overlay-in"
         side="bottom"
         :side-offset="offset"
         trap-focus

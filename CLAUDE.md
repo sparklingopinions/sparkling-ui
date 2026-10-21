@@ -69,6 +69,10 @@ src/
 - Apps may load `@tailwindcss/forms` (MustLoop and Tamable do): its `[type='text']:focus` and similar rules outrank plain utilities, so a bare field inside a component also cancels them with `focus:` classes (`focus:border-none focus:shadow-none focus:ring-0`).
 - Never copy a class MustLoop's theme doesn't define (`bg-blue-500`, `text-gray-600`): it renders nothing there, but would render in an app with Tailwind's default palette.
 
+### Layers
+
+Every floating layer (Dialog, AlertDialog, Popover, Select, DropdownMenu, the filter panels, Tooltip) is `z-[1100]`, so the one opened last is on top whichever opened it: a menu inside a dialog, or a dialog from a menu. Only the floating ActionBar (`1150`) and the Toaster (`1200`) sit above them.
+
 ### Icons
 
 `Icon` draws the library's set (`components/Icon/iconSet.ts`: the design system's 114 icons with neutral names, plus `iconAliases` for older and common names). An app adds icons or replaces some with `setIconResolver`; its components win. A library component that needs a glyph of its own (close, chevron, check) draws it inline as an internal component, so an app's overrides never change it. Icon colours are a lookup of full class strings per role (`colors.ts`), as with any class.
