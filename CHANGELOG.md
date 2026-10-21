@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.2.2
+
+### Patch Changes
+
+- 4188e73: Button rendered as a link (`as="a"` or `asChild`) is no longer underlined by the app's link styles.
+
 ## 0.2.1
 
 ### Patch Changes
