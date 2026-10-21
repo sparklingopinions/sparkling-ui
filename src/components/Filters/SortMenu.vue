@@ -53,7 +53,8 @@ const words = (type: FilterFieldType) => props.directionLabels[type] ?? sortDire
 const dirLabel = computed(() => (current.value ? words(current.value.type)[sort.value!.dir === 'desc' ? 1 : 0] : ''))
 
 function pickField(name: string) {
-  sort.value = { name, dir: sort.value?.name === name ? sort.value.dir : 'asc' }
+  const field = props.options.find((o) => o.name === name)
+  sort.value = { name, dir: sort.value?.name === name ? sort.value.dir : (field?.sortDir ?? 'asc') }
 }
 
 function clear() {

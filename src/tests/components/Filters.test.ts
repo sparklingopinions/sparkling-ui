@@ -117,6 +117,32 @@ describe('FilterChip', () => {
     expect(bool.find('button').text()).toBe('VIP is No')
   })
 
+  it('reads your own summary in place of field, operator and value', () => {
+    const wrapper = mount(FilterChip, {
+      props: { field: 'Archived', type: 'boolean', op: 'is', modelValue: false, summary: { field: 'Not archived' } }
+    })
+    expect(wrapper.find('button').text()).toBe('Not archived')
+
+    const date = mount(FilterChip, {
+      props: {
+        field: 'Last message',
+        type: 'date',
+        op: 'is within',
+        summary: { field: 'Last message', op: 'in', value: 'the last 7 days' }
+      }
+    })
+    expect(date.find('button').text()).toBe('Last message in the last 7 days')
+  })
+
+  it('leaves Yes and No unpicked while a boolean has no value', async () => {
+    mount(FilterChip, { props: { field: 'VIP', type: 'boolean', op: 'is', open: true }, attachTo: document.body })
+    await flushPromises()
+    const checked = [...panel().querySelectorAll('[role="radio"]')].filter(
+      (r) => r.getAttribute('aria-checked') === 'true'
+    )
+    expect(checked).toHaveLength(0)
+  })
+
   it('closes on Enter in the panel', async () => {
     const wrapper = mount(FilterChip, {
       props: { field: 'Name', type: 'text', op: 'is', open: true },
@@ -157,6 +183,17 @@ describe('FilterMenu', () => {
     await flushPromises()
     expect(wrapper.emitted('pick')).toEqual([['lastContact']])
     expect(wrapper.emitted('update:open')).toContainEqual([false])
+    wrapper.unmount()
+  })
+
+  it('picks the first field on Enter when none is highlighted', async () => {
+    const wrapper = mount(FilterMenu, { props: { fields, open: true }, attachTo: document.body })
+    await flushPromises()
+    panel()
+      .querySelector('input')!
+      .dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }))
+    await flushPromises()
+    expect(wrapper.emitted('pick')).toEqual([['name']])
     wrapper.unmount()
   })
 
@@ -203,6 +240,19 @@ describe('SortMenu', () => {
     ;[...panel().querySelectorAll('button')].find((b) => b.textContent?.trim() === 'Clear sort')!.click()
     await flushPromises()
     expect(wrapper.props('modelValue')).toBeNull()
+    wrapper.unmount()
+  })
+
+  it('starts a field in its own direction', async () => {
+    const dated = fields.map((f) => (f.type === 'date' ? { ...f, sortDir: 'desc' as const } : f))
+    const wrapper = mount(SortMenu, {
+      props: { options: dated, as: 'button' as const, modelValue: null, open: true },
+      attachTo: document.body
+    })
+    await flushPromises()
+    panel().querySelectorAll<HTMLElement>('[role="radio"]')[2]!.click()
+    await flushPromises()
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([{ name: 'lastContact', dir: 'desc' }])
     wrapper.unmount()
   })
 })

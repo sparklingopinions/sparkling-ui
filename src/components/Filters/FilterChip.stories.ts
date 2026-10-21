@@ -62,6 +62,12 @@ export const TextFilter = chipStory({ field: 'Name', type: 'text' }, 'Ada', 'con
 
 export const EmptyOperator = chipStory({ field: 'Company', type: 'company', options: companies }, null, 'is empty')
 
+export const OwnSummary = chipStory(
+  { field: 'Last contact', type: 'date', summary: { field: 'Last contact', op: 'in', value: 'the last 7 days' } },
+  'Last 7 days',
+  'is within'
+)
+
 const openChip = (story: Story, name: string): Story => ({
   ...story,
   play: async ({ canvasElement }) => {

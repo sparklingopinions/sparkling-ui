@@ -6,6 +6,15 @@ export interface FilterField {
   type: FilterFieldType
   /** A heading the picker lists the field under, e.g. "Activity". */
   group?: string
+  /** The direction SortMenu starts this field in; ascending by default. Newest first suits most dates. */
+  sortDir?: 'asc' | 'desc'
+}
+
+/** How a filter chip reads: the field, the operator and the value, each optional. */
+export interface FilterSummary {
+  field?: string
+  op?: string
+  value?: string
 }
 
 export interface FilterOperator {
