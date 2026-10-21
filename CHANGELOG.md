@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.4.2
+
+### Patch Changes
+
+- 4599a4f: `Popover`'s panel no longer shows the browser's focus outline. Since 0.4.0 the panel takes focus when it opens without an `[autofocus]` field inside, and browsers drew their default outline around it.
+
 ## 0.4.1
 
 ### Patch Changes
