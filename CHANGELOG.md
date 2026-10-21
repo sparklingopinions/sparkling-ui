@@ -1,5 +1,30 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.4.0
+
+### Minor Changes
+
+- ece7e43: - `PropertyList` takes a `field-<id>` slot to draw a field of its own, such as a server-backed picker. It gets `id` (for the label), `value` and `update(value)`, and `update` saves and emits `change` like the built-in fields.
+  - `Editable` puts `class` on the value in the page, which the editing textarea overlays, instead of only on the textarea, so a class like `-ml-3` lines it up. Leaving it untouched no longer saves: an empty value stays as it came instead of becoming `null`.
+  - `Popover` moves focus into the panel when it opens (an `[autofocus]` field inside, or else the panel itself), so Tab and Escape work at once. Focus goes back to the trigger when it closes with focus inside, and stays on what you pressed when you click outside. It no longer traps focus: with a trap, a click on a field outside could lose focus to the page. A new `width` prop (default `16rem`) sets the panel's width.
+  - `Collapsible` can be folded again after `filled` opens it.
+  - `Dialog`'s title is a single heading; it used to be an `h2` inside an `h2`. A `title` slot now goes straight into that heading, so don't wrap it in one.
+  - `Calendar` names the weekdays in its `locale` (L M M J V S D in French), matching the month. Pass `weekdays` to set them yourself.
+- 2a3d519: `Select` handles a search answered by your server:
+  
+  - `:filter="false"` shows `options` as they are, for when you replace them on `query-change`. `filter` also takes a function `(option, query) => boolean`, to match on more than the label.
+  - `selectedOptions` names chosen values that aren't in `options`, such as a saved choice while `options` holds search results. An option picked from the list keeps its name after `options` change, without it.
+  - `clearable` lets a single choice be removed: it shows as a removable tag in the filter row, and Backspace there clears it, as with `multiple`. The model becomes `null`.
+  - When `createOption` rejects, the typed text stays and `create-error` is emitted with the error, instead of an unhandled rejection. A second Enter while it's pending does nothing.
+  - Clicking the trigger of an open list closes it; it used to close and reopen.
+- 984eed6: `Input`, `Textarea` and `Select` rest on a softer border (`line-strong`) and darken to `ink-muted` on hover, so forms look calmer and hovering a field is visible. Focus is unchanged. Checkbox and Radio keep the stronger `line-control` border.
+- 7056835: Fields (`Input`, `Textarea`, `Select` and `Editable`) show keyboard focus as their accent border with a soft 3px halo, instead of a 2px accent outline. Buttons, checkboxes and menu items keep the outline. Apps can tune the halo with `--sui-focus-ring`.
+
+### Patch Changes
+
+- d4fca76: `Radio` hovers like `Checkbox`: its border turns `accent-solid`, and an invalid radio keeps its danger border on hover.
+- f4cb825: `Popover`, `Select`, `DropdownMenu`, `FilterChip`, `FilterMenu` and `SortMenu` open above a `Dialog` they're inside instead of behind it. Every floating layer now shares the Dialog's z-index (1100), so the one opened last is on top. If your app stacks its own overlays against these panels, they were at 1000.
+
 ## 0.3.0
 
 ### Minor Changes
