@@ -97,3 +97,31 @@ export const KeyboardFocus: Story = {
     await expect(canvas.getByRole('textbox', { name: 'Elsewhere' })).toHaveFocus()
   }
 }
+
+// Taller than the room on either side: it stays in the window and scrolls inside.
+export const TallerThanTheWindow: Story = {
+  render: (args) => ({
+    components: { Button, Popover },
+    setup: () => ({ args, popover: ref(), days: Array.from({ length: 60 }, (_, i) => `Day ${i + 1}`) }),
+    template: `
+      <div class="flex h-[60vh] items-center">
+        <Button size="sm" @click="popover.toggle($event)">Pick a day</Button>
+      </div>
+      <Popover ref="popover" v-bind="args" aria-label="Pick a day">
+        <div class="flex flex-col p-1">
+          <Button v-for="day in days" :key="day" size="sm" variant="ghost">{{ day }}</Button>
+        </div>
+      </Popover>
+    `
+  }),
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Pick a day' }))
+    const panel = await within(document.body).findByRole('dialog', { name: 'Pick a day' })
+    await waitFor(() => {
+      const box = panel.getBoundingClientRect()
+      expect(box.top).toBeGreaterThanOrEqual(0)
+      expect(box.bottom).toBeLessThanOrEqual(window.innerHeight)
+    })
+    await expect(panel.scrollHeight).toBeGreaterThan(panel.clientHeight)
+  }
+}

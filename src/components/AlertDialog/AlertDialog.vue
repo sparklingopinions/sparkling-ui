@@ -43,7 +43,7 @@ function answer(confirmed: boolean) {
   <AlertDialogRoot v-model:open="open">
     <AlertDialogPortal>
       <AlertDialogOverlay
-        class="fixed inset-0 z-[1100] flex items-center justify-center bg-sui-scrim/40 backdrop-blur-[4px] data-[state=closed]:animate-sui-scrim-out data-[state=open]:animate-sui-scrim-in"
+        class="fixed inset-0 z-[1160] flex items-center justify-center bg-sui-scrim/40 backdrop-blur-[4px] data-[state=closed]:animate-sui-scrim-out data-[state=open]:animate-sui-scrim-in"
       >
         <AlertDialogContent
           v-if="shown"

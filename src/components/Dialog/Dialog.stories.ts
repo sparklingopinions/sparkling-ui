@@ -3,6 +3,8 @@ import { ref } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 
+import { useConfirm } from '../../composables/useConfirm'
+import AlertDialog from '../AlertDialog/AlertDialog.vue'
 import Avatar from '../Avatar/Avatar.vue'
 import Button from '../Button/Button.vue'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
@@ -162,5 +164,46 @@ export const WithOverlaysInside: Story = {
     await waitFor(() => expectOnTop(menu))
     await user.keyboard('{Escape}')
     await expect(body.getByRole('dialog', { name: 'Edit person' })).toBeVisible()
+  }
+}
+
+// The app-wide AlertDialog mounts before any dialog, as near the app root, and still confirms on top of one.
+export const ConfirmFromInside: Story = {
+  render: () => ({
+    components: { AlertDialog, Button, Dialog },
+    setup() {
+      const confirm = useConfirm()
+      const answer = ref('No answer yet')
+      const ask = async () => {
+        const confirmed = await confirm({
+          title: 'Delete this view?',
+          message: "The records stay; only the view goes. This can't be undone.",
+          confirmLabel: 'Delete',
+          confirmVariant: 'danger'
+        })
+        answer.value = confirmed ? 'Deleted' : 'Kept'
+      }
+      return { open: ref(false), ask, answer }
+    },
+    template: `
+      <AlertDialog />
+      <Button size="sm" @click="open = true">Open</Button>
+      <Dialog v-model:open="open" title="Edit view" confirm-label="Save">
+        <div class="flex items-center gap-3">
+          <Button size="sm" variant="danger-outline" @click="ask">Delete view</Button>
+          <span>{{ answer }}</span>
+        </div>
+      </Dialog>
+    `
+  }),
+  play: async (context) => {
+    await openAndCheck(context)
+    const body = within(document.body)
+    await userEvent.click(body.getByRole('button', { name: 'Delete view' }))
+    const alert = await body.findByRole('alertdialog')
+    await waitFor(() => expect(getComputedStyle(alert).opacity).toBe('1'))
+    await expectOnTop(alert)
+    await userEvent.click(within(alert).getByRole('button', { name: 'Delete' }))
+    await waitFor(() => expect(body.getByText('Deleted')).toBeVisible())
   }
 }
