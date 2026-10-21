@@ -15,7 +15,7 @@ const meta: Meta<typeof Popover> = {
     docs: {
       description: {
         component:
-          'Opened from code: `popover.value.toggle(event)`, `show(event, target?)` and `hide()`. It sits below its trigger (or `target`), closes on Escape, an outside click, a scroll or a resize, and only moves focus to an `[autofocus]` field inside.'
+          'Opened from code: `popover.value.toggle(event)`, `show(event, target?)` and `hide()`. It sits below its trigger (or `target`), closes on Escape, an outside click, a scroll or a resize. Focus moves to an `[autofocus]` field inside, or else the panel, and returns to the trigger when it closes with focus inside. `width` sets how wide the panel is (16rem).'
       }
     }
   },
@@ -59,4 +59,41 @@ export const WithAutofocus: Story = {
       </Popover>
     `
   })
+}
+
+export const KeyboardFocus: Story = {
+  render: (args) => ({
+    components: { Button, Input, Popover },
+    setup: () => ({ args, popover: ref() }),
+    template: `
+      <div class="flex gap-2">
+        <Button size="sm" @click="popover.toggle($event)">Share</Button>
+        <Input aria-label="Elsewhere" placeholder="Elsewhere" />
+      </div>
+      <Popover ref="popover" v-bind="args" aria-label="Share" class="flex gap-2 p-3" width="20rem">
+        <Button size="sm">Copy link</Button>
+        <Button size="sm">Invite</Button>
+      </Popover>
+    `
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const body = within(document.body)
+    const trigger = canvas.getByRole('button', { name: 'Share' })
+    await userEvent.click(trigger)
+    const panel = await body.findByRole('dialog', { name: 'Share' })
+    await waitFor(() => expect(panel).toHaveFocus())
+    await expect(panel.getBoundingClientRect().width).toBe(320)
+    await userEvent.tab()
+    await expect(body.getByRole('button', { name: 'Copy link' })).toHaveFocus()
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(body.queryByRole('dialog')).toBeNull())
+    await expect(trigger).toHaveFocus()
+
+    await userEvent.click(trigger)
+    await body.findByRole('dialog', { name: 'Share' })
+    await userEvent.click(canvas.getByRole('textbox', { name: 'Elsewhere' }))
+    await waitFor(() => expect(body.queryByRole('dialog')).toBeNull())
+    await expect(canvas.getByRole('textbox', { name: 'Elsewhere' })).toHaveFocus()
+  }
 }

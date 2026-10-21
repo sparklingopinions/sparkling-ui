@@ -28,12 +28,14 @@ const emit = defineEmits<{ blur: [] }>()
 
 const model = defineModel<string | SelectValue | null>({ default: null })
 
-// The class also styles the textarea; only the id and data- and aria- attributes go on the root. The name is said
-// before the value, not as an aria-label, which would hide the value from it.
+// Only the id, class and data- and aria- attributes go on the root. The name is said before the value, not as an
+// aria-label, which would hide the value from it.
 const attrs = useAttrs()
 const rootAttrs = computed(() =>
   Object.fromEntries(
-    Object.entries(attrs).filter(([key]) => key !== 'aria-label' && (key === 'id' || /^(data|aria)-/.test(key)))
+    Object.entries(attrs).filter(
+      ([key]) => key !== 'aria-label' && (key === 'id' || key === 'class' || /^(data|aria)-/.test(key))
+    )
   )
 )
 const name = computed(() => (attrs['aria-label'] as string | undefined) ?? props.placeholder)
@@ -64,7 +66,9 @@ async function edit() {
 
 function save() {
   editing.value = false
-  model.value = toRaw(local.value) || null
+  const value = toRaw(local.value) || null
+  // Leaving it untouched isn't a change: an empty value stays as it came, '' or null.
+  if (value !== (toRaw(model.value) || null)) model.value = value
   original.value = local.value
   emit('blur')
 }
@@ -146,7 +150,7 @@ const field =
         :aria-label="name"
         :auto-resize="!title"
         class="resize-none"
-        :class="[$attrs.class, title && 'h-full px-3 py-1.5']"
+        :class="title && 'h-full px-3 py-1.5'"
         :placeholder="placeholder"
         :rows="rows"
         @blur="save"

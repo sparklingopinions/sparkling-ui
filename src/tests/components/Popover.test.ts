@@ -61,9 +61,10 @@ describe('Popover', () => {
     wrapper.unmount()
   })
 
-  it('focuses an [autofocus] field inside, and nothing otherwise', async () => {
+  it('focuses an [autofocus] field inside, or else the panel', async () => {
     const plain = await openHost()
-    expect(document.activeElement?.tagName).not.toBe('INPUT')
+    expect(document.activeElement).toBe(panel())
+    expect(panel()?.getAttribute('style')).toContain('width: 16rem')
     plain.unmount()
 
     const focused = await openHost({ autofocus: true })

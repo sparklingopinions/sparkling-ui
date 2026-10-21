@@ -115,10 +115,8 @@ function confirmFromKeyboard(event: KeyboardEvent) {
             class="flex shrink-0 items-center justify-between gap-3 rounded-t-xl border-b border-sui-line-subtle bg-sui-surface px-5 py-4 text-sui-ink"
             data-modal-header
           >
-            <DialogTitle class="min-w-0">
-              <slot name="title">
-                <h2 v-if="title" class="truncate text-base font-semibold text-sui-ink">{{ title }}</h2>
-              </slot>
+            <DialogTitle class="min-w-0 truncate text-base font-semibold text-sui-ink">
+              <slot name="title">{{ title }}</slot>
             </DialogTitle>
             <Tooltip v-if="closable" :text="closeLabel">
               <Button :aria-label="closeLabel" class="shrink-0" icon-only size="sm" variant="ghost" @click="cancel">
