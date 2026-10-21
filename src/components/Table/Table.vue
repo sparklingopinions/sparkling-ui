@@ -99,7 +99,7 @@ const th = computed(() => [
   sm.value ? 'h-9' : 'h-11'
 ])
 const td = computed(() => [
-  'truncate border-b border-sui-line-subtle align-middle text-sui-ink-body group-last/row:border-b-0',
+  'border-b border-sui-line-subtle align-middle text-sui-ink-body group-last/row:border-b-0',
   sm.value ? 'h-10' : 'h-[3.5625rem]'
 ])
 const pad = computed(() => (sm.value ? 'px-3 py-1.5' : 'px-4 py-3'))
@@ -212,7 +212,16 @@ const checkCell = 'w-12 pl-4'
                   @update:model-value="toggle(idOf(row))"
                 />
               </td>
-              <td v-for="column in columns" :key="column.key" :class="[td, pad, alignClass[column.align ?? 'left']]">
+              <td
+                v-for="column in columns"
+                :key="column.key"
+                :class="[
+                  td,
+                  pad,
+                  alignClass[column.align ?? 'left'],
+                  column.wrap ? 'break-words whitespace-normal' : 'truncate'
+                ]"
+              >
                 <slot :name="`cell-${column.key}`" :row="row" :value="row[column.key]">
                   <template v-if="row[column.key] != null && row[column.key] !== ''">{{ row[column.key] }}</template>
                   <span v-else class="text-sui-ink-muted">–</span>

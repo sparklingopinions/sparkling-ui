@@ -5,6 +5,8 @@ export interface TableColumn {
   width?: number | string
   align?: 'left' | 'center' | 'right'
   sortable?: boolean
+  /** Lets the cell's content wrap onto more lines, e.g. a name over a summary; cells otherwise truncate to one. */
+  wrap?: boolean
 }
 
 export interface TableSort {
