@@ -1,6 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils'
 
-import { FormField, Select } from '../../index'
+import { FormField, Select, type SelectOption } from '../../index'
 import { expectAccessible } from '../support/axe'
 
 const rows = [
@@ -99,6 +99,89 @@ describe('Select', () => {
     await flushPromises()
     expect(createOption).toHaveBeenCalledWith({ label: 'Board', color: expect.any(String) })
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([['board']])
+  })
+
+  it('keeps the names of chosen values that the options no longer hold', async () => {
+    const results = [{ value: 7, label: 'Ada Labs' }]
+    const wrapper = mount(Select, {
+      props: { options: results, modelValue: 3, selectedOptions: [{ value: 3, label: 'Babbage & Co' }] },
+      attrs: { 'aria-label': 'Company' },
+      attachTo: document.body
+    })
+    expect(wrapper.get('button').text()).toBe('Company: Babbage & Co')
+
+    await wrapper.setProps({ selectedOptions: [] })
+    await wrapper.get('button').trigger('click')
+    await flushPromises()
+    option('Ada Labs').click()
+    await flushPromises()
+    await wrapper.setProps({ modelValue: 7, options: [] })
+    expect(wrapper.get('button').text()).toBe('Company: Ada Labs')
+  })
+
+  it('leaves the options to the server without a filter, or filters with a function', async () => {
+    const people = [
+      { value: 1, label: 'Ada Lovelace' },
+      { value: 2, label: 'Charles Babbage' }
+    ]
+    const wrapper = mount(Select, {
+      props: { options: people, filter: false },
+      attrs: { 'aria-label': 'Person' },
+      attachTo: document.body
+    })
+    await wrapper.get('button').trigger('click')
+    await flushPromises()
+    const filter = document.querySelector<HTMLInputElement>('[data-select-filter]')!
+    filter.value = 'ada@example.com'
+    filter.dispatchEvent(new Event('input'))
+    await flushPromises()
+    expect(options()).toHaveLength(2)
+    expect(wrapper.emitted('query-change')?.at(-1)).toEqual(['ada@example.com'])
+
+    await wrapper.setProps({
+      filter: (person: SelectOption, query: string) => query === 'ada@example.com' && person.value === 1
+    })
+    expect(options().map((o) => o.textContent?.trim())).toEqual(['Ada Lovelace'])
+  })
+
+  it('clears a single choice from its tag or with Backspace when clearable', async () => {
+    const wrapper = mount(Select, {
+      props: { options: rows, modelValue: 25, clearable: true },
+      attrs: { 'aria-label': 'Rows' },
+      attachTo: document.body
+    })
+    await wrapper.get('button').trigger('click')
+    await flushPromises()
+    document.querySelector<HTMLButtonElement>('[aria-label="Remove"]')!.click()
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([null])
+
+    await wrapper.setProps({ modelValue: 10 })
+    const filter = document.querySelector<HTMLInputElement>('[data-select-filter]')!
+    filter.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true }))
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([null])
+    await expectAccessible(document.body)
+  })
+
+  it('keeps what was typed and reports it when creating fails', async () => {
+    const failure = new Error('Name taken')
+    const createOption = vi.fn().mockRejectedValue(failure)
+    const wrapper = mount(Select, {
+      props: { options: tags, canCreate: true, createOption },
+      attrs: { 'aria-label': 'Tags' },
+      attachTo: document.body
+    })
+    await wrapper.get('button').trigger('click')
+    await flushPromises()
+    const filter = document.querySelector<HTMLInputElement>('[data-select-filter]')!
+    filter.value = 'Board'
+    filter.dispatchEvent(new Event('input'))
+    await flushPromises()
+    option('Create').click()
+    await flushPromises()
+
+    expect(wrapper.emitted('create-error')).toEqual([[failure]])
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(filter.value).toBe('Board')
   })
 
   it('says when nothing matches, and shows a spinner while loading', async () => {
