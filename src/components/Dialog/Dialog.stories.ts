@@ -48,6 +48,89 @@ type Story = StoryObj<typeof Dialog>
 
 export const Default: Story = {}
 
+const sheetOf = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open' }))
+  const sheet = await within(document.body).findByRole('dialog')
+  // Past its slide-in, so axe checks it as drawn.
+  await waitFor(() => expect(getComputedStyle(sheet).transform).toBe('none'))
+  return sheet
+}
+const openSheet = async (context: { canvasElement: HTMLElement }) => {
+  await sheetOf(context)
+}
+
+const sheetRender: Story['render'] = (args) => ({
+  components: { Button, Dialog, Input, PropertyRow },
+  setup: () => ({ args, open: ref(false), title: ref('Spring launch') }),
+  template: `
+    <Button size="sm" @click="open = true">Open</Button>
+    <Dialog v-bind="args" v-model:open="open" @confirm="open = false">
+      <div class="flex flex-col gap-3">
+        <Input v-model="title" aria-label="Title" />
+        <p v-for="n in args.paragraphs ?? 1" :key="n" class="m-0">
+          The post goes out in the next free slot on each channel, and you can still edit it until then.
+        </p>
+      </div>
+    </Dialog>
+  `
+})
+
+export const Sheet: Story = {
+  args: { presentation: 'sheet', title: 'Schedule post', confirmLabel: 'Schedule', hint: 'Posts at 9:00 tomorrow' },
+  render: sheetRender,
+  play: openSheet
+}
+
+export const SheetScrolling: Story = {
+  args: { ...Sheet.args, paragraphs: 14 } as Story['args'],
+  render: sheetRender,
+  play: openSheet
+}
+
+export const SheetWithoutClose: Story = {
+  args: { ...Sheet.args, closable: false },
+  render: sheetRender,
+  play: async (context) => {
+    const sheet = await sheetOf(context)
+    const close = within(sheet).getByRole('button', { name: 'Close' })
+    await expect(getComputedStyle(close).opacity).toBe('0')
+    await userEvent.tab()
+    await expect(close).toHaveFocus()
+    await waitFor(() => expect(getComputedStyle(close).opacity).toBe('1'))
+    await userEvent.keyboard('{Enter}')
+    await waitFor(() => expect(within(document.body).queryByRole('dialog')).not.toBeInTheDocument())
+  }
+}
+
+export const SheetDragToDismiss: Story = {
+  args: Sheet.args,
+  render: sheetRender,
+  play: async (context) => {
+    const sheet = await sheetOf(context)
+    const handle = sheet.querySelector<HTMLElement>('[data-modal-header]')!
+    const { left, top } = handle.getBoundingClientRect()
+    const at = (y: number) => ({ clientX: left + 40, clientY: top + y, pointerId: 1, button: 0, bubbles: true })
+    handle.dispatchEvent(new PointerEvent('pointerdown', at(4)))
+    handle.dispatchEvent(new PointerEvent('pointermove', at(40)))
+    await waitFor(() => expect(sheet.style.transform).toBe('translateY(36px)'))
+    await new Promise((resolve) => setTimeout(resolve, 200))
+    handle.dispatchEvent(new PointerEvent('pointerup', at(40)))
+    await waitFor(() => expect(sheet.style.transform).toBe(''))
+    handle.dispatchEvent(new PointerEvent('pointerdown', at(4)))
+    handle.dispatchEvent(new PointerEvent('pointerup', at(4 + sheet.offsetHeight / 2)))
+    await waitFor(() => expect(within(document.body).queryByRole('dialog')).not.toBeInTheDocument())
+  }
+}
+
+export const Auto: Story = {
+  args: { ...Sheet.args, presentation: 'auto' },
+  parameters: {
+    docs: { description: { story: 'A sheet on viewports narrower than `sheetBelow` (640px), a dialog above it.' } }
+  },
+  render: sheetRender,
+  play: openAndCheck
+}
+
 export const Danger: Story = { args: { size: 'sm', confirmVariant: 'danger' } }
 
 export const Large: Story = { args: { size: 'lg', confirmLabel: undefined } }
