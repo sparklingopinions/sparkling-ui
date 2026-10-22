@@ -84,6 +84,45 @@ const groups = {
   State: ['circle-dashed', 'circle-half', 'circle-check', 'circle-alert', 'triangle-alert', 'key-round', 'lock']
 }
 
+const statusIcons = [
+  'hourglass',
+  'bell-ring',
+  'snooze',
+  'mail-x',
+  'flag',
+  'sprout',
+  'compass',
+  'flask',
+  'heart',
+  'trophy',
+  'thermometer-low',
+  'heart-crack',
+  'phone',
+  'calendar-users',
+  'sticky-note',
+  'sparkles'
+]
+
+export const StatusIcons: Story = {
+  render: () => ({
+    components: { Icon },
+    setup: () => ({ names: statusIcons }),
+    template: `
+      <div class="flex flex-col gap-5 text-13 text-sui-ink">
+        <section v-for="size in ['size-4', 'size-6']" :key="size">
+          <h3 class="m-0 mb-2 text-xs font-medium text-sui-ink-muted">{{ size === 'size-4' ? '16px' : '24px' }}</h3>
+          <ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3 p-0">
+            <li v-for="name in names" :key="name" class="flex items-center gap-2">
+              <Icon :class="size" color="ink-body" :name="name" />
+              <code>{{ name }}</code>
+            </li>
+          </ul>
+        </section>
+      </div>
+    `
+  })
+}
+
 export const ByJob: Story = {
   name: 'By job',
   render: () => ({
