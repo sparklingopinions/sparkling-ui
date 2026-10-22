@@ -53,6 +53,27 @@ export const GhostInverse: Story = {
   })
 }
 
+// A toggle: `pressed` sets aria-pressed and draws it on, a step past hover. In a row, wrap them in a Toolbar.
+export const Pressed: Story = {
+  render: () => ({
+    components: { Button, Icon },
+    template: `<div class="flex flex-col items-start gap-3">
+      <div class="flex items-center gap-1 rounded-lg bg-sui-inverse p-1">
+        <Button aria-label="Bold" icon-only pressed size="sm" variant="ghost-inverse"><Icon name="bold" /></Button>
+        <Button aria-label="Italic" icon-only :pressed="false" size="sm" variant="ghost-inverse"><Icon name="italic" /></Button>
+        <Button pressed size="xs" variant="ghost-inverse">H2</Button>
+        <Button :pressed="false" size="xs" variant="ghost-inverse">H3</Button>
+      </div>
+      <div class="flex items-center gap-1">
+        <Button aria-label="Bold" icon-only pressed size="sm" variant="ghost"><Icon name="bold" /></Button>
+        <Button aria-label="Italic" icon-only :pressed="false" size="sm" variant="ghost"><Icon name="italic" /></Button>
+        <Button pressed size="sm" variant="secondary">Show archived</Button>
+        <Button :pressed="false" size="sm" variant="secondary">Show drafts</Button>
+      </div>
+    </div>`
+  })
+}
+
 export const Sizes: Story = {
   render: (args) => ({
     components: { Button, Icon },

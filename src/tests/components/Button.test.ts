@@ -93,4 +93,32 @@ describe('Button', () => {
     await expectAccessible(wrapper.element)
     wrapper.unmount()
   })
+
+  it('is a toggle with pressed, drawn on for the toggle variants', async () => {
+    const wrapper = mount(Button, {
+      props: { variant: 'ghost-inverse', pressed: true, iconOnly: true, size: 'xs' },
+      attrs: { 'aria-label': 'Bold' },
+      slots: { default: 'B' },
+      attachTo: document.body
+    })
+
+    expect(wrapper.attributes('aria-pressed')).toBe('true')
+    expect(wrapper.classes()).toEqual(expect.arrayContaining(['bg-sui-on-inverse/[0.18]', 'aspect-square', 'h-6']))
+    await expectAccessible(wrapper.element)
+
+    await wrapper.setProps({ pressed: false })
+    expect(wrapper.attributes('aria-pressed')).toBe('false')
+    expect(wrapper.classes()).not.toContain('bg-sui-on-inverse/[0.18]')
+
+    await wrapper.setProps({ variant: 'ghost', pressed: true })
+    expect(wrapper.classes()).toContain('bg-sui-accent-wash')
+    wrapper.unmount()
+  })
+
+  it('leaves aria-pressed off a plain button', () => {
+    const wrapper = mount(Button, { slots: { default: 'Save' } })
+
+    expect(wrapper.attributes('aria-pressed')).toBeUndefined()
+    wrapper.unmount()
+  })
 })
