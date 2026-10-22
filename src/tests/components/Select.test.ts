@@ -35,6 +35,21 @@ describe('Select', () => {
     await expectAccessible(wrapper.element)
   })
 
+  it('highlights the option under the pointer, not the first one as it opens', async () => {
+    const wrapper = mount(Select, {
+      props: { options: rows, modelValue: 25 },
+      attrs: { 'aria-label': 'Rows per page' },
+      attachTo: document.body
+    })
+    wrapper.get('button').element.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }))
+    await flushPromises()
+    expect(option('10').hasAttribute('data-highlighted')).toBe(false)
+
+    option('10').dispatchEvent(new PointerEvent('pointermove', { bubbles: true }))
+    await flushPromises()
+    expect(options().filter((o) => o.hasAttribute('data-highlighted'))).toEqual([option('10')])
+  })
+
   it('opens a short list without search, ticks the choice and picks another', async () => {
     const wrapper = mount(Select, {
       props: { options: rows, modelValue: 25, size: 'sm' },
