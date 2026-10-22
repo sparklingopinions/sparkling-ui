@@ -89,6 +89,7 @@ const model = defineModel<T | T[] | null>({ default: null })
 const open = ref(false)
 const query = ref('')
 const keyboard = ref(false)
+const pointer = ref(false)
 
 const values = computed<T[]>(() =>
   Array.isArray(model.value) ? model.value : model.value === null || model.value === undefined ? [] : [model.value]
@@ -144,6 +145,7 @@ function setQuery(text: string) {
 function show(viaKeyboard: boolean) {
   if (props.disabled) return
   keyboard.value = viaKeyboard
+  pointer.value = false
   open.value = true
 }
 
@@ -236,12 +238,12 @@ function returnFocus(event: Event) {
   anchor.value?.$el?.focus()
 }
 
-// Reka highlights the first option as the list mounts; only the chosen one, or the keyboard, should be.
+// Reka highlights the first option as the list mounts; only the chosen one, the keyboard or the pointer should.
 const listbox = ref()
 function onHighlight(payload: { value: unknown } | undefined) {
-  if (keyboard.value || !payload) return
+  if (keyboard.value || pointer.value || !payload) return
   if (values.value.includes(payload.value as T)) return
-  nextTick(() => listbox.value && !keyboard.value && (listbox.value.highlightedElement = null))
+  nextTick(() => listbox.value && !keyboard.value && !pointer.value && (listbox.value.highlightedElement = null))
 }
 
 const triggerSizes = { md: 'min-h-9 pr-2.5 pl-3 text-sm', sm: 'h-7 pr-1.5 pl-2 text-13' }
@@ -329,7 +331,7 @@ const optionClass =
           :multiple="multiple"
           @highlight="onHighlight"
           @keydown="onKeydown"
-          @pointermove="keyboard = false"
+          @pointermove.capture="((keyboard = false), (pointer = true))"
         >
           <div
             v-if="search"
