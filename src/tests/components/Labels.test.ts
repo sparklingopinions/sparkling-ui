@@ -13,6 +13,18 @@ describe('Avatar', () => {
     wrapper.unmount()
   })
 
+  it('takes a number of px, 20 with a 10px initial, the initial stepping up with the size', async () => {
+    const wrapper = mount(Avatar, { props: { name: 'Ada', size: 20 }, attachTo: document.body })
+
+    expect(wrapper.attributes('style')).toBe('width: 20px; height: 20px;')
+    expect(wrapper.classes()).toContain('text-10')
+    expect(mount(Avatar, { props: { size: 28 } }).classes()).toContain('text-11')
+    expect(mount(Avatar, { props: { size: 36 } }).classes()).toContain('text-xs')
+    expect(mount(Avatar, { props: { size: 48 } }).classes()).toContain('text-sm')
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
+
   it('falls back to a grey question mark without a name', () => {
     const wrapper = mount(Avatar)
 
