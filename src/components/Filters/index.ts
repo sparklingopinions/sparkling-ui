@@ -4,6 +4,7 @@ export { default as FilterMenu } from './FilterMenu.vue'
 export type { FilterMenuProps } from './FilterMenu.vue'
 export { default as SortMenu } from './SortMenu.vue'
 export type { SortMenuProps } from './SortMenu.vue'
+export type { FilterTriggerProps } from './trigger'
 export { datePresets, describeFilter, filterOperators, sortDirections } from './defaults'
 export type {
   FilterField,
