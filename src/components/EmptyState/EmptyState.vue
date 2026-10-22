@@ -15,6 +15,9 @@ export interface EmptyStateProps {
   actionIcon?: string
   /** The title's heading level, to fit the page's outline. */
   headingLevel?: 1 | 2 | 3 | 4 | 5 | 6
+  /** sm, for an empty card in settings or a tray: an optional 16px icon, the title as one muted line of text (not a
+   *  heading), a small secondary action. No description. */
+  size?: 'md' | 'sm'
 }
 
 withDefaults(defineProps<EmptyStateProps>(), {
@@ -23,14 +26,25 @@ withDefaults(defineProps<EmptyStateProps>(), {
   tone: 'accent',
   actionLabel: undefined,
   actionIcon: 'plus',
-  headingLevel: 2
+  headingLevel: 2,
+  size: 'md'
 })
 
 defineEmits<{ action: [] }>()
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center px-6 py-16 text-center">
+  <div v-if="size === 'sm'" class="flex flex-col items-center justify-center gap-2 px-4 py-5 text-center">
+    <Icon v-if="icon" class="size-4" color="ink-muted" :name="icon" />
+    <p class="m-0 max-w-full text-13 leading-5 text-sui-ink-muted">{{ title }}</p>
+    <slot name="action">
+      <Button v-if="actionLabel" class="mt-1" size="sm" variant="secondary" @click="$emit('action')">
+        <Icon v-if="actionIcon" :name="actionIcon" />
+        {{ actionLabel }}
+      </Button>
+    </slot>
+  </div>
+  <div v-else class="flex flex-col items-center justify-center px-6 py-16 text-center">
     <div
       v-if="icon"
       aria-hidden="true"

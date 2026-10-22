@@ -29,3 +29,18 @@ export const NoMatches: Story = {
 export const WithoutIcon: Story = {
   args: { icon: undefined, title: 'Nothing here', description: 'Items you add show up here.' }
 }
+
+export const Small: Story = {
+  args: { size: 'sm', icon: 'webhook', title: 'No webhooks yet', description: undefined, actionLabel: 'Add webhook' },
+  render: (args) => ({
+    components: { EmptyState },
+    setup: () => ({ args }),
+    template:
+      '<div class="w-80 rounded-xl border border-sui-line-subtle bg-sui-surface"><EmptyState v-bind="args" /></div>'
+  })
+}
+
+export const SmallTextOnly: Story = {
+  args: { size: 'sm', icon: undefined, title: 'Nothing scheduled this week', description: undefined },
+  render: Small.render
+}

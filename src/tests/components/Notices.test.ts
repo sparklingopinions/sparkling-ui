@@ -73,6 +73,32 @@ describe('EmptyState', () => {
     wrapper.unmount()
   })
 
+  it('draws sm as one muted line with a small icon and a small secondary action', async () => {
+    const wrapper = mount(EmptyState, {
+      props: {
+        size: 'sm',
+        icon: 'webhook',
+        title: 'No webhooks yet',
+        description: 'Not shown',
+        actionLabel: 'Add webhook'
+      },
+      attachTo: document.body
+    })
+
+    expect(wrapper.find('h2').exists()).toBe(false)
+    expect(wrapper.find('p').text()).toBe('No webhooks yet')
+    expect(wrapper.find('p').classes()).toEqual(expect.arrayContaining(['text-13', 'text-sui-ink-muted']))
+    expect(wrapper.text()).not.toContain('Not shown')
+    expect(wrapper.find('svg').classes()).toEqual(expect.arrayContaining(['size-4', 'stroke-sui-ink-muted']))
+    const button = wrapper.find('button')
+    expect(button.text()).toBe('Add webhook')
+    expect(button.classes()).toEqual(expect.arrayContaining(['h-7', 'bg-sui-surface']))
+    await button.trigger('click')
+    expect(wrapper.emitted('action')).toHaveLength(1)
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
+
   it('titles itself with an h2, or the heading level given', () => {
     expect(
       mount(EmptyState, { props: { title: 'No people yet' } })
