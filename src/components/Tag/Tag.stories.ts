@@ -74,3 +74,23 @@ export const Pressable: Story = {
     await expect(midday).toHaveAttribute('aria-pressed', 'true')
   }
 }
+
+export const PressableSmall: Story = {
+  render: () => ({
+    components: { Tag },
+    setup: () => ({ on: ref(['Drafts']), options: ['Drafts', 'In review', 'Scheduled', 'Failed'] }),
+    template: `
+      <div role="group" aria-label="Statuses" class="flex flex-wrap items-center gap-1.5">
+        <Tag
+          v-for="option in options"
+          :key="option"
+          pressable
+          :pressed="on.includes(option)"
+          size="sm"
+          @update:pressed="on = $event ? [...on, option] : on.filter((o) => o !== option)"
+        >{{ option }}</Tag>
+        <Tag pressable disabled size="sm">Archived</Tag>
+      </div>
+    `
+  })
+}

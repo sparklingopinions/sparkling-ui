@@ -19,6 +19,8 @@ export interface TableProps<T> {
   size?: 'md' | 'sm'
   /** A row height in px between the sizes, such as 44, for body and header rows; sets `--sui-table-row`. */
   rowHeight?: number
+  /** The header row's height in px, e.g. 36 over 44px rows; sets `--sui-table-header`. Defaults to the row height. */
+  headerHeight?: number
   /** canvas lays the header on the page colour, for a table directly on the canvas. */
   headerTone?: 'sunken' | 'canvas'
   /** The table's name for screen readers. */
@@ -34,6 +36,7 @@ const props = withDefaults(defineProps<TableProps<T>>(), {
   loadingRows: 5,
   size: 'md',
   rowHeight: undefined,
+  headerHeight: undefined,
   headerTone: 'sunken',
   caption: undefined,
   selectAllLabel: 'Select all rows',
@@ -101,10 +104,17 @@ const skeletonWidths = ['60%', '45%', '70%', '35%', '55%']
 
 const sm = computed(() => props.size === 'sm')
 const fixed = computed(() => props.rowHeight !== undefined)
-const rowStyle = computed(() => (fixed.value ? { '--sui-table-row': `${props.rowHeight}px` } : undefined))
+const rowStyle = computed(() => {
+  const style: Record<string, string> = {}
+  if (fixed.value) style['--sui-table-row'] = `${props.rowHeight}px`
+  if (props.headerHeight !== undefined) style['--sui-table-header'] = `${props.headerHeight}px`
+  return Object.keys(style).length ? style : undefined
+})
 const th = computed(() => [
   'border-b border-sui-line-subtle text-13 font-medium whitespace-nowrap',
-  sm.value ? 'h-[var(--sui-table-row,2.25rem)]' : 'h-[var(--sui-table-row,2.75rem)]'
+  sm.value
+    ? 'h-[var(--sui-table-header,var(--sui-table-row,2.25rem))]'
+    : 'h-[var(--sui-table-header,var(--sui-table-row,2.75rem))]'
 ])
 const td = computed(() => [
   'border-b border-sui-line-subtle align-middle text-sui-ink-body group-last/row:border-b-0',

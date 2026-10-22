@@ -298,6 +298,8 @@
   --sui-radius-sheet: 1.25rem;
   /* Table rows and headers at one height, e.g. 44px; unset (initial), each Table's size decides. */
   --sui-table-row: initial;
+  /* The header row's own height, e.g. 36px over 44px rows; unset, it follows the rows. */
+  --sui-table-header: initial;
   --sui-shadow-raised: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --sui-focus-width: 2px;
   --sui-focus-offset: 2px;

@@ -19,13 +19,16 @@ export interface TagProps {
   pressable?: boolean
   /** pressable only. */
   disabled?: boolean
+  /** pressable only: md is 28px, sm 22px for a dense row of filters. */
+  size?: 'sm' | 'md'
 }
 
 withDefaults(defineProps<TagProps>(), {
   name: undefined,
   variant: 'soft',
   color: undefined,
-  removeLabel: 'Remove tag'
+  removeLabel: 'Remove tag',
+  size: 'md'
 })
 
 defineEmits<{ remove: [] }>()
@@ -50,12 +53,13 @@ const dots: Record<Hue, string> = {
   <button
     v-if="pressable"
     :aria-pressed="pressed"
-    class="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-13 leading-none font-medium whitespace-nowrap transition-colors duration-150 outline-hidden focus-visible:sui-ring disabled:cursor-default disabled:opacity-50"
-    :class="
+    class="inline-flex cursor-pointer items-center rounded-md border leading-none font-medium whitespace-nowrap transition-colors duration-150 outline-hidden focus-visible:sui-ring disabled:cursor-default disabled:opacity-50"
+    :class="[
+      size === 'sm' ? 'h-5.5 gap-1 px-2 text-xs' : 'h-7 gap-1.5 px-3 text-13',
       pressed
         ? 'border-sui-accent-line bg-sui-accent-wash text-sui-accent enabled:hover:border-sui-accent-bright enabled:hover:bg-sui-accent-soft enabled:active:border-sui-accent-solid enabled:active:bg-sui-accent-soft'
         : 'border-sui-line bg-sui-surface text-sui-ink-body enabled:hover:border-sui-line-strong enabled:hover:bg-sui-canvas enabled:hover:text-sui-ink enabled:active:bg-sui-sunken'
-    "
+    ]"
     :disabled="disabled"
     type="button"
     @click="pressed = !pressed"

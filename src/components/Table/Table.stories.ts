@@ -82,8 +82,10 @@ export const Small: Story = { args: { size: 'sm' } }
 
 export const RowHeight44: Story = { name: 'Row height 44', args: { rowHeight: 44 } }
 
+export const HeaderHeight36: Story = { name: 'Header height 36', args: { rowHeight: 44, headerHeight: 36 } }
+
 export const CanvasHeader: Story = {
-  args: { rowHeight: 44, headerTone: 'canvas', selectable: true },
+  args: { rowHeight: 44, headerHeight: 36, headerTone: 'canvas', selectable: true },
   parameters: { sort: { key: 'name', dir: 'asc' }, selected: [2] }
 }
 
