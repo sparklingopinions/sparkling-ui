@@ -50,6 +50,34 @@ describe('Select', () => {
     expect(options().filter((o) => o.hasAttribute('data-highlighted'))).toEqual([option('10')])
   })
 
+  it('moves the highlight with the arrow keys, after the pointer too', async () => {
+    const wrapper = mount(Select, {
+      props: { options: tags },
+      attrs: { 'aria-label': 'Tag' },
+      attachTo: document.body
+    })
+    const highlighted = () => options().filter((o) => o.hasAttribute('data-highlighted'))
+    const press = async (key: string) => {
+      document
+        .querySelector('[role="listbox"]')!
+        .dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }))
+      await flushPromises()
+    }
+
+    await wrapper.get('button').trigger('keydown', { key: 'ArrowDown' })
+    await flushPromises()
+    expect(highlighted()).toEqual([option('VIP')])
+    await press('ArrowDown')
+    expect(highlighted()).toEqual([option('Press')])
+
+    option('VIP').dispatchEvent(new PointerEvent('pointermove', { bubbles: true }))
+    await flushPromises()
+    expect(highlighted()).toEqual([option('VIP')])
+    await press('ArrowDown')
+    expect(highlighted()).toEqual([option('Press')])
+    expect(document.querySelector('[data-keyboard]')).not.toBeNull()
+  })
+
   it('opens a short list without search, ticks the choice and picks another', async () => {
     const wrapper = mount(Select, {
       props: { options: rows, modelValue: 25, size: 'sm' },
