@@ -1,5 +1,32 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.8.0
+
+### Minor Changes
+
+- 1ab0be2: Button: `pressed` makes it a toggle. It sets `aria-pressed` and draws the button on: an 18% on-inverse wash for `ghost-inverse` (22% hovered, past hover's 12%, and white text still holds 4.5:1), and the accent wash for `ghost` and `secondary` (accent-soft hovered). It works with `iconOnly` at every size. Leave `pressed` unset on a plain button.
+  
+  New `Toolbar`: a `role="toolbar"` row for your own controls, named by `label`. Tab enters it once; the arrow keys move between its controls (skipping disabled ones, wrapping unless `loop` is false), Home and End jump to the ends. `orientation="vertical"` uses up and down. It draws no surface, so it fits a bubble menu on an inverse ground or a bar on the page.
+- 9554716: Icon: `circle-minus`, a ring with a short bar, for taking something out of a list, such as marking an item not relevant. It pairs with `circle-check`; the set now has 135.
+- aedc494: DataList, for denser cards and richer selection:
+  
+  - `groupHeaderTone` (`sunken`, `surface` or `canvas`; by default sunken when joined, surface as cards) and `groupHeaderHeight` in px (36 by default, sets `--sui-list-header`).
+  - `collapsible`: `false` drops the chevron, for the list or per group through the group's own `collapsible`. A new `group-actions` slot puts controls at the end of a header, such as Show and Hide.
+  - `rowHeight` in px (40 by default, sets `--sui-list-row`), and `dividers` for a hairline between rows.
+  - `checkboxPlacement="leading"`: the checkbox takes the place of the `leading` slot's first mark on hover, on focus, and on every row once anything is selected. While anything is selected, a click on a row toggles it instead of opening it. The `leading` slot now also gets `selected`, `selecting` and `toggle`.
+  - Selecting anywhere: shift-click selects a range from the row last toggled, Cmd or Ctrl-click toggles one row, Shift+↑ ↓ extends the selection, and Shift+Space selects a range.
+  - `contextItems(item)` puts a ContextMenu on each row, named by `contextLabel`, and emits `context-item` with the chosen action and its row. Disabled items work as in ContextMenu.
+  
+  The arrow keys now skip rows in collapsed groups.
+- e25dde6: DropdownMenu and ContextMenu: an item can be `disabled`, with an optional `disabledReason` shown under its label. A disabled item stays in place, dimmed, so the menu keeps its shape. It's announced as disabled (with the reason as its description), the arrow keys still reach it and typeahead skips it. Choosing it does nothing: no `click-item`, no confirm, and the menu stays open. Show actions that don't apply this way instead of leaving them out.
+- 9621271: New `PopoverDialog`, for a small decision such as a date or a link. On the desktop it's a popover under its `anchor`: an element, a component or a ref to one, so a keyboard shortcut or a button elsewhere can open it, with `v-model:open`. Without an `anchor`, it opens under the `trigger` slot's button; spread the slot's `props` on that button. Below `sheetBelow` (640px) it's a Dialog bottom sheet. Without an anchor or a trigger, it's a small dialog on the desktop.
+  
+  The popover has the `title` as its heading and accessible name, your fields, and a footer with Cancel and `confirmLabel`. The confirm button emits `confirm`, as ⌘ or Ctrl Enter does; `confirmDisabled` turns it off and the `footer` slot replaces both buttons. `width` is in px (320) or any CSS width. Escape, Cancel and a click outside emit `cancel` and close it; confirming doesn't, so close it when you're done. Focus moves to an `[autofocus]` field inside, or else the panel, and goes back to what had it when it opened, or else the anchor.
+- 1356ef4: Table: `headerHeight` gives the header row its own height in px, such as 36 over 44px rows (`rowHeight` alone still sets both). It sets the new `--sui-table-header` token, which an app can also set itself.
+  
+  Tag: a pressable Tag takes `size="sm"`, 22px tall with 12px text, for a dense row of filters; `md` (28px) stays the default.
+- 0e56572: Toaster: `position` places live toasts at `bottom-center` (the default), `bottom-left`, `bottom-right`, `top-center`, `top-left` or `top-right`. New tokens keep them clear of your own chrome: `--sui-toaster-inset-top`, `-right`, `-bottom` and `-left` (0px by default) for a sidebar or a tab bar, set on `:root`, under a media query, or on an element around the Toaster, so they can change per route or breakpoint; `--sui-toaster-margin` (1.25rem) is the gap to those edges and `--sui-toaster-width` (24rem) the width. The safe area is now added to the edge they sit on, on top of the inset. From the top, toasts slide in from above, with the newest nearest the edge. With reduced motion, toasts fade in and out instead of sliding and collapsing.
+
 ## 0.7.0
 
 ### Minor Changes
