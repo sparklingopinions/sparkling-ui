@@ -73,14 +73,15 @@ const groups = {
     'image',
     'images',
     'captions',
+    'smile',
     'globe',
     'webhook',
     'external-link'
   ],
   Scheduling: ['calendar-check', 'calendar-x', 'calendar-clock', 'clock', 'history'],
-  Editing: ['split', 'merge', 'layers', 'undo-2', 'list-checks'],
+  Editing: ['split', 'merge', 'layers', 'undo-2', 'redo', 'list-checks', 'keyboard'],
   Layout: ['maximize', 'minimize', 'panel-right', 'panel-right-close', 'sun-moon', 'sun', 'moon'],
-  State: ['circle-dashed', 'circle-half', 'circle-check', 'circle-alert', 'triangle-alert', 'key-round']
+  State: ['circle-dashed', 'circle-half', 'circle-check', 'circle-alert', 'triangle-alert', 'key-round', 'lock']
 }
 
 export const ByJob: Story = {
