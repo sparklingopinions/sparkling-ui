@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.9.2
+
+### Patch Changes
+
+- 8468e5a: Select highlights the option under the pointer again; only the first option Reka highlights as the list opens is cleared.
+
 ## 0.9.1
 
 ### Patch Changes
