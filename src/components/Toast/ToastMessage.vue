@@ -28,7 +28,12 @@ withDefaults(defineProps<ToastMessageProps>(), {
 defineEmits<{ close: []; action: [action: ToastAction]; expire: [] }>()
 
 // Info has no dot; the others lead with one of their colour.
-const dots: Record<ToastSeverity, string> = { info: '', success: 'bg-sui-success-mid', error: 'bg-sui-danger-solid' }
+const dots: Record<ToastSeverity, string> = {
+  info: '',
+  success: 'bg-sui-success-mid',
+  warning: 'bg-sui-warning-mid',
+  error: 'bg-sui-danger-solid'
+}
 </script>
 
 <!-- One toast as drawn: the Toaster shows these, live or as a preview. -->

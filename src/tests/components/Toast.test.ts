@@ -1,5 +1,7 @@
 import { nextTick } from 'vue'
 
+import { ToastRoot } from 'reka-ui'
+
 import { flushPromises, mount } from '@vue/test-utils'
 
 import { toasts } from '../../composables/toast'
@@ -28,6 +30,19 @@ describe('toast', () => {
     ])
     expect(messages()[2]!.firstElementChild!.className).toContain('bg-sui-danger-solid')
     expect(messages()[0]!.firstElementChild!.className).not.toContain('rounded-full')
+    await expectAccessible(document.body)
+    wrapper.unmount()
+  })
+
+  it('shows a warning with a warning dot, announced politely like info', async () => {
+    const wrapper = mount(Toaster, { attachTo: document.body })
+    toast.warning('Sync is slow')
+    await flushPromises()
+
+    expect(messages()[0]!.firstElementChild!.className).toContain('bg-sui-warning-mid')
+    expect(toasts[0]?.severity).toBe('warning')
+    // Reka announces background toasts politely and foreground ones assertively.
+    expect(wrapper.findComponent(ToastRoot).props('type')).toBe('background')
     await expectAccessible(document.body)
     wrapper.unmount()
   })
