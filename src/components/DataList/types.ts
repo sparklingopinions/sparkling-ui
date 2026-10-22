@@ -8,5 +8,7 @@ export interface DataListGroup<T> {
   label?: string
   /** Shown instead of the number of items, e.g. a total beyond the loaded page. */
   count?: number
+  /** Overrides the list's `collapsible` for this group. */
+  collapsible?: boolean
   items: T[]
 }
