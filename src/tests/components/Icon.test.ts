@@ -57,7 +57,7 @@ describe('Icon', () => {
     expect(wrapper.element.tagName).toBe('svg')
     expect(wrapper.attributes()).toMatchObject({ viewBox: '0 0 16 16', 'stroke-width': '1.5', style: 'fill: none;' })
     expect(wrapper.find('path').exists()).toBe(true)
-    expect(iconNames).toHaveLength(114)
+    expect(iconNames).toHaveLength(118)
   })
 
   it('draws every icon on the 16 grid, or the 8 or 24 one', () => {
@@ -82,6 +82,19 @@ describe('Icon', () => {
     expect(wrapper.attributes('viewBox')).toBe('0 0 24 24')
     expect(wrapper.attributes('stroke-width')).toBe('2.25')
     expect(wrapper.html()).toBe(mount(Icon, { props: { name: 'messages' } }).html())
+  })
+
+  it('draws smile, lock, redo and keyboard, and resolves their common names', () => {
+    for (const [name, alias] of [
+      ['smile', 'emoji'],
+      ['lock', 'lock-keyhole'],
+      ['redo', 'redo-2'],
+      ['keyboard', 'keys']
+    ]) {
+      const wrapper = mount(Icon, { props: { name } })
+      expect(wrapper.attributes()).toMatchObject({ viewBox: '0 0 24 24', 'stroke-width': '2.25' })
+      expect(mount(Icon, { props: { name: alias } }).html()).toBe(wrapper.html())
+    }
   })
 
   it("lets the app add icons and replace the set's", () => {
