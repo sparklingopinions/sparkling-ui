@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, useId } from 'vue'
 
 import {
   DropdownMenuContent,
@@ -50,6 +50,7 @@ const props = withDefaults(defineProps<DropdownMenuProps>(), {
 const emit = defineEmits<{ 'click-item': [item: DropdownMenuAction & { id?: string }]; show: []; hide: [] }>()
 
 const open = ref(false)
+const uid = useId()
 const select = useMenuSelect(props, (item) => emit('click-item', item))
 
 function onOpenChange(value: boolean) {
@@ -89,8 +90,14 @@ function onOpenChange(value: boolean) {
         >
           <template v-for="(item, index) in items" :key="index">
             <DropdownMenuSeparator v-if="item.type === 'separator'" :class="menuSeparatorClass" />
-            <DropdownMenuItem v-else :class="menuItemClass" @select="select(item)">
-              <MenuItemContent :item="item" />
+            <DropdownMenuItem
+              v-else
+              as-child
+              :class="menuItemClass"
+              :text-value="item.disabled ? '' : undefined"
+              @select="select(item, $event)"
+            >
+              <MenuItemContent :item="item" :reason-id="`${uid}-${index}`" />
             </DropdownMenuItem>
           </template>
         </DropdownMenuContent>

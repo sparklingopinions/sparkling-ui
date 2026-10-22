@@ -44,6 +44,29 @@ export const Default: Story = {
   }
 }
 
+export const DisabledItems: Story = {
+  args: {
+    items: [
+      { type: 'action', label: 'Rename', action: 'rename', icon: 'edit', shortcut: 'R' },
+      {
+        type: 'action',
+        label: 'Send an email',
+        action: 'email',
+        icon: 'inbox',
+        disabled: true,
+        disabledReason: 'No email address'
+      },
+      { type: 'separator' },
+      { type: 'action', label: 'Delete', action: 'delete', icon: 'trash', variant: 'danger', disabled: true }
+    ]
+  },
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'More actions' }))
+    const menu = await within(document.body).findByRole('menu')
+    await waitFor(() => expect(getComputedStyle(menu).opacity).toBe('1'))
+  }
+}
+
 export const WithLabel: Story = { args: { buttonLabel: 'Actions' } }
 
 export const AlignEnd: Story = {

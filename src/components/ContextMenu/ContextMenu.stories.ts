@@ -103,3 +103,43 @@ export const NearTheEdge: Story = {
 }
 
 export const Disabled: Story = { args: { disabled: true } }
+
+// Items that don't apply stay, dimmed, so the menu keeps its shape. Arrow keys still reach them; typeahead skips them.
+export const DisabledItems: Story = {
+  args: {
+    items: [
+      { type: 'action', label: 'Open', action: 'open', icon: 'external-link' },
+      { type: 'separator' },
+      {
+        type: 'action',
+        label: 'Approve',
+        action: 'approve',
+        icon: 'check',
+        shortcut: 'A',
+        disabled: true,
+        disabledReason: 'Already approved'
+      },
+      { type: 'action', label: 'Schedule…', action: 'schedule', icon: 'calendar-clock', shortcut: 'S' },
+      { type: 'action', label: 'Unschedule', action: 'unschedule', icon: 'calendar-x', shortcut: 'U', disabled: true },
+      { type: 'separator' },
+      { type: 'action', label: 'Delete', action: 'delete', icon: 'trash', variant: 'danger', confirmed: true }
+    ]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    canvas.getByText('Customer story').focus()
+    await userEvent.keyboard('{Shift>}{F10}{/Shift}')
+    const menu = await within(document.body).findByRole('menu', { name: 'Post actions' })
+    await waitFor(() => expect(getComputedStyle(menu).opacity).toBe('1'))
+    await userEvent.keyboard('{ArrowDown}')
+    const approve = within(menu).getByRole('menuitem', { name: /Approve/ })
+    await expect(approve).toHaveFocus()
+    await expect(approve).toHaveAttribute('aria-disabled', 'true')
+    await expect(approve).toHaveAccessibleDescription('Already approved')
+    await userEvent.keyboard('{Enter}')
+    await expect(menu).toBeInTheDocument()
+    await expect(canvas.getByText('Nothing chosen yet')).toBeInTheDocument()
+    await userEvent.keyboard('u')
+    await expect(approve).toHaveFocus()
+  }
+}
