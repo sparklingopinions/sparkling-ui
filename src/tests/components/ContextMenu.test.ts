@@ -13,7 +13,7 @@ const items: DropdownMenuEntry[] = [
 ]
 
 const Host = defineComponent({
-  props: { disabled: Boolean },
+  props: { disabled: Boolean, items: { type: Array as () => DropdownMenuEntry[], default: () => items } },
   emits: ['click-item', 'update:open'],
   setup(props, { emit }) {
     return () =>
@@ -22,7 +22,7 @@ const Host = defineComponent({
           ContextMenu,
           {
             id: 'p1',
-            items,
+            items: props.items,
             label: 'Post actions',
             disabled: props.disabled,
             onClickItem: (item: unknown) => emit('click-item', item),
@@ -106,5 +106,60 @@ describe('ContextMenu', () => {
     await flushPromises()
     expect(wrapper.emitted('click-item')?.[1]).toEqual([expect.objectContaining({ action: 'delete' })])
     wrapper.unmount()
+  })
+
+  describe('with a disabled item', () => {
+    const withDisabled: DropdownMenuEntry[] = [
+      { type: 'action', label: 'Open', action: 'open' },
+      { type: 'action', label: 'Approve', action: 'approve', disabled: true, disabledReason: 'Already approved' },
+      { type: 'action', label: 'Archive', action: 'archive', disabled: true, confirmed: true },
+      { type: 'action', label: 'Assign', action: 'assign' }
+    ]
+    const open = async () => {
+      const wrapper = mount(Host, { props: { items: withDisabled }, attachTo: document.body })
+      await wrapper.get('[data-target]').trigger('contextmenu')
+      await flushPromises()
+      return wrapper
+    }
+    const key = async (key: string) => {
+      document.activeElement!.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }))
+      await flushPromises()
+    }
+
+    it('announces it as disabled, with its reason, and keeps it in place', async () => {
+      const wrapper = await open()
+      const approve = menuitems()[1]!
+
+      expect(menuitems()).toHaveLength(4)
+      expect(approve.getAttribute('aria-disabled')).toBe('true')
+      expect(document.getElementById(approve.getAttribute('aria-describedby')!)?.textContent).toBe('Already approved')
+      expect(menuitems()[2]!.hasAttribute('aria-describedby')).toBe(false)
+      await expectAccessible(document.body)
+      wrapper.unmount()
+    })
+
+    it('reaches it with the arrow keys but not by typeahead', async () => {
+      const wrapper = await open()
+      menuitems()[0]!.focus()
+      await key('ArrowDown')
+      expect(document.activeElement).toBe(menuitems()[1])
+
+      menuitems()[0]!.focus()
+      await key('a')
+      expect(document.activeElement).toBe(menuitems()[3])
+      wrapper.unmount()
+    })
+
+    it("doesn't emit it, confirm it or close the menu", async () => {
+      const wrapper = await open()
+      menuitems()[1]!.click()
+      menuitems()[2]!.click()
+      await flushPromises()
+
+      expect(wrapper.emitted('click-item')).toBeUndefined()
+      expect(document.body.querySelector('[role="alertdialog"]')).toBeNull()
+      expect(menu()).not.toBeNull()
+      wrapper.unmount()
+    })
   })
 })

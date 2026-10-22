@@ -10,6 +10,10 @@ export interface DropdownMenuAction {
   /** Asks first, with this wording; `confirmed: true` asks with the generic wording. */
   confirm?: { message: string; title?: string; acceptLabel?: string }
   confirmed?: boolean
+  /** Dimmed and inert, but still reached with the arrow keys and announced as unavailable. */
+  disabled?: boolean
+  /** Why it's disabled, shown under its label. */
+  disabledReason?: string
   [key: string]: unknown
 }
 
@@ -48,7 +52,12 @@ export function useMenuSelect(
 ) {
   const confirm = useConfirm()
 
-  return async function select(item: DropdownMenuAction) {
+  return async function select(item: DropdownMenuAction, event?: Event) {
+    if (item.disabled) {
+      // Keeps the menu open.
+      event?.preventDefault()
+      return
+    }
     if (item.confirm || item.confirmed) {
       const destructive = item.variant === 'danger' || item.action === 'delete'
       const confirmed = await confirm({

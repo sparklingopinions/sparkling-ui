@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useId } from 'vue'
+
 import {
   ContextMenuContent,
   ContextMenuItem,
@@ -41,6 +43,7 @@ const emit = defineEmits<{
   hide: []
 }>()
 
+const uid = useId()
 const select = useMenuSelect(props, (item) => emit('click-item', item))
 
 function onOpenChange(open: boolean) {
@@ -77,8 +80,14 @@ function onKeydown(event: KeyboardEvent) {
       <ContextMenuContent :aria-label="label" :class="[menuContentClass, 'min-w-48']" :collision-padding="8">
         <template v-for="(item, index) in items" :key="index">
           <ContextMenuSeparator v-if="item.type === 'separator'" :class="menuSeparatorClass" />
-          <ContextMenuItem v-else :class="menuItemClass" @select="select(item)">
-            <MenuItemContent :item="item" />
+          <ContextMenuItem
+            v-else
+            as-child
+            :class="menuItemClass"
+            :text-value="item.disabled ? '' : undefined"
+            @select="select(item, $event)"
+          >
+            <MenuItemContent :item="item" :reason-id="`${uid}-${index}`" />
           </ContextMenuItem>
         </template>
       </ContextMenuContent>
