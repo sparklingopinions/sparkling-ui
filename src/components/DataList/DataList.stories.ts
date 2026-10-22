@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 import { people, stageLabels } from '../../stories/people'
 import Avatar from '../Avatar/Avatar.vue'
+import Badge from '../Badge/Badge.vue'
 import EmptyState from '../EmptyState/EmptyState.vue'
 import Tag from '../Tag/Tag.vue'
 import DataList from './DataList.vue'
@@ -19,10 +20,11 @@ const meta: Meta = {
   title: 'Components/Collections/DataList',
   args: { groups, selectable: true, loading: false },
   render: (args, { parameters }) => ({
-    components: { Avatar, EmptyState, DataList: DataList as Component, Tag },
+    components: { Avatar, Badge, EmptyState, DataList: DataList as Component, Tag },
     setup: () => ({
       args,
       selected: ref<unknown[]>(parameters.selected ?? []),
+      tones: parameters.tones,
       collapsed: ref<string[]>(parameters.collapsed ?? []),
       open: () => {},
       add: () => {}
@@ -37,6 +39,7 @@ const meta: Meta = {
           <Tag v-if="item.company" :name="item.company" />
           <span v-if="item.lastContact" class="w-12 text-right">{{ item.lastContact }}</span>
         </template>
+        ${parameters.slots ?? ''}
         <template #empty>
           <EmptyState icon="users" title="No people yet" description="People are individual contacts you interact with." />
         </template>
@@ -77,3 +80,27 @@ export const Ungrouped: Story = { args: { groups: [{ id: 'all', items: people.sl
 export const Loading: Story = { args: { loading: true } }
 
 export const Empty: Story = { args: { groups: groups.map((group) => ({ ...group, items: [] })) } }
+
+export const Cards: Story = { args: { variant: 'cards' } }
+
+const tones = { contacted: 'warning', lead: 'neutral', customer: 'success' } as const
+
+const labelledGroups = groups.map((group) => ({ ...group, name: undefined, label: group.name }))
+
+export const StatusHeaders: Story = {
+  args: { variant: 'cards', groups: labelledGroups },
+  parameters: {
+    tones,
+    slots: `
+      <template #group-header="{ group, count }">
+        <Badge :label="group.label" :tone="tones[group.id]" dot />
+        <span class="font-normal text-sui-ink-muted tabular-nums">{{ count }}</span>
+      </template>
+    `
+  }
+}
+
+export const JoinedWithStatusHeaders: Story = {
+  args: { groups: labelledGroups },
+  parameters: StatusHeaders.parameters
+}
