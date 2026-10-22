@@ -80,6 +80,13 @@ export const Selectable: Story = { args: { selectable: true }, parameters: { sel
 
 export const Small: Story = { args: { size: 'sm' } }
 
+export const RowHeight44: Story = { name: 'Row height 44', args: { rowHeight: 44 } }
+
+export const CanvasHeader: Story = {
+  args: { rowHeight: 44, headerTone: 'canvas', selectable: true },
+  parameters: { sort: { key: 'name', dir: 'asc' }, selected: [2] }
+}
+
 export const Loading: Story = { args: { loading: true, selectable: true } }
 
 export const Empty: Story = {
