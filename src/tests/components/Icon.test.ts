@@ -9,6 +9,25 @@ import { expectAccessible } from '../support/axe'
 const svg = (id: string) => defineComponent(() => () => h('svg', { 'data-icon': id, viewBox: '0 0 16 16' }))
 const icons: Record<string, ReturnType<typeof svg>> = { plus: svg('plus'), close: svg('close'), mail: svg('mail') }
 
+describe('Icon from the set', () => {
+  beforeEach(() => setIconResolver(() => undefined))
+
+  it('is hidden from assistive tech, or named with a label', async () => {
+    const hidden = mount(Icon, { props: { name: 'bell-ring', color: 'warning' } })
+    expect(hidden.attributes()).toMatchObject({
+      'aria-hidden': 'true',
+      width: '16',
+      class: 'stroke-sui-warning fill-sui-warning'
+    })
+
+    const named = mount(Icon, { props: { name: 'bell-ring', label: 'Follow-up' }, attachTo: document.body })
+    expect(named.attributes()).toMatchObject({ role: 'img', 'aria-label': 'Follow-up' })
+    expect(named.attributes('aria-hidden')).toBeUndefined()
+    await expectAccessible(named.element)
+    named.unmount()
+  })
+})
+
 describe('Icon', () => {
   beforeEach(() => setIconResolver((name) => icons[name]))
 

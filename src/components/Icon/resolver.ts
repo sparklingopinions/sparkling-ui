@@ -17,11 +17,14 @@ export const iconNames = Object.keys(iconSet)
 
 const builtins = new Map<string, FunctionalComponent>()
 
-// Inline styles, so a colour class (stroke-* fill-*) only paints the half the icon is drawn with.
+// Inline styles, so a colour class (stroke-* fill-*) only paints the half the icon is drawn with. Attributes are passed
+// on by hand: a functional component without props only inherits class and style, so Icon's aria-hidden, role and
+// aria-label would be lost.
 function draw(icon: IconDefinition): FunctionalComponent {
   const small = icon.viewBox.endsWith(' 8 8')
-  return () =>
+  const svg: FunctionalComponent = (_, { attrs }) =>
     h('svg', {
+      ...attrs,
       width: small ? 8 : 16,
       height: small ? 8 : 16,
       viewBox: icon.viewBox,
@@ -33,6 +36,8 @@ function draw(icon: IconDefinition): FunctionalComponent {
       'stroke-linejoin': icon.join,
       innerHTML: icon.body
     })
+  svg.inheritAttrs = false
+  return svg
 }
 
 export function resolveIcon(name: string): Component | undefined {
