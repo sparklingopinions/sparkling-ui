@@ -17,6 +17,10 @@ export interface TableProps<T> {
   loadingRows?: number
   /** md: 57px rows. sm: 40px, for dense lists. */
   size?: 'md' | 'sm'
+  /** A row height in px between the sizes, such as 44, for body and header rows; sets `--sui-table-row`. */
+  rowHeight?: number
+  /** canvas lays the header on the page colour, for a table directly on the canvas. */
+  headerTone?: 'sunken' | 'canvas'
   /** The table's name for screen readers. */
   caption?: string
   selectAllLabel?: string
@@ -29,6 +33,8 @@ const props = withDefaults(defineProps<TableProps<T>>(), {
   rowKey: 'id' as never,
   loadingRows: 5,
   size: 'md',
+  rowHeight: undefined,
+  headerTone: 'sunken',
   caption: undefined,
   selectAllLabel: 'Select all rows',
   selectRowLabel: 'Select row',
@@ -94,22 +100,29 @@ const alignClass = { left: 'text-left', center: 'text-center', right: 'text-righ
 const skeletonWidths = ['60%', '45%', '70%', '35%', '55%']
 
 const sm = computed(() => props.size === 'sm')
+const fixed = computed(() => props.rowHeight !== undefined)
+const rowStyle = computed(() => (fixed.value ? { '--sui-table-row': `${props.rowHeight}px` } : undefined))
 const th = computed(() => [
   'border-b border-sui-line-subtle text-13 font-medium whitespace-nowrap',
-  sm.value ? 'h-9' : 'h-11'
+  sm.value ? 'h-[var(--sui-table-row,2.25rem)]' : 'h-[var(--sui-table-row,2.75rem)]'
 ])
 const td = computed(() => [
   'border-b border-sui-line-subtle align-middle text-sui-ink-body group-last/row:border-b-0',
-  sm.value ? 'h-10' : 'h-[3.5625rem]'
+  sm.value ? 'h-[var(--sui-table-row,2.5rem)]' : 'h-[var(--sui-table-row,3.5625rem)]'
 ])
-const pad = computed(() => (sm.value ? 'px-3 py-1.5' : 'px-4 py-3'))
+// A set row height takes the cells' vertical padding with it.
+const pad = computed(() => [sm.value ? 'px-3' : 'px-4', !fixed.value && (sm.value ? 'py-1.5' : 'py-3')])
+const headTone = computed(() => (props.headerTone === 'canvas' ? 'bg-sui-canvas' : 'bg-sui-sunken'))
 const headPad = computed(() => (sm.value ? 'px-3' : 'px-4'))
 const checkCell = 'w-12 pl-4'
 </script>
 
 <!-- A data table: sunken header strip, sortable headers, selection, loading, empty and error states, a footer. -->
 <template>
-  <div class="overflow-hidden rounded-xl border border-sui-line-subtle bg-sui-surface text-sm text-sui-ink">
+  <div
+    class="overflow-hidden rounded-xl border border-sui-line-subtle bg-sui-surface text-sm text-sui-ink"
+    :style="rowStyle"
+  >
     <div class="overflow-x-auto">
       <table class="w-full min-w-[var(--sui-table-min,720px)] table-fixed border-collapse">
         <caption v-if="caption" class="sr-only">
@@ -127,7 +140,7 @@ const checkCell = 'w-12 pl-4'
         </colgroup>
         <thead>
           <tr>
-            <th v-if="selectable" class="bg-sui-sunken" :class="[th, checkCell]">
+            <th v-if="selectable" :class="[th, checkCell, headTone]">
               <Checkbox
                 :aria-label="selectAllLabel"
                 :disabled="loading || rows.length === 0"
@@ -145,7 +158,7 @@ const checkCell = 'w-12 pl-4'
                 th,
                 headPad,
                 alignClass[column.align ?? 'left'],
-                dirOf(column.key) ? 'bg-sui-accent-wash text-sui-accent' : 'bg-sui-sunken text-sui-ink-subtle'
+                dirOf(column.key) ? 'bg-sui-accent-wash text-sui-accent' : [headTone, 'text-sui-ink-subtle']
               ]"
               :scope="column.label ? 'col' : undefined"
             >

@@ -112,6 +112,44 @@ describe('Table', () => {
     expect(failed.find('tbody').text()).toBe('Couldn’t load')
   })
 
+  it("sets rows and the header to rowHeight, dropping the cells' vertical padding", async () => {
+    const wrapper = mount(Table, {
+      props: { columns, rows, rowHeight: 44, caption: 'People' },
+      attachTo: document.body
+    })
+    const cell = wrapper.find('tbody td')
+
+    expect(wrapper.attributes('style')).toContain('--sui-table-row: 44px')
+    expect(cell.classes()).toEqual(expect.arrayContaining(['h-[var(--sui-table-row,3.5625rem)]', 'px-4']))
+    expect(cell.classes()).not.toContain('py-3')
+    expect(wrapper.find('th').classes()).toContain('h-[var(--sui-table-row,2.75rem)]')
+    expect(mount(Table, { props: { columns, rows } }).find('tbody td').classes()).toContain('py-3')
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
+
+  it('lays the header on canvas, a sorted header staying accent-wash', async () => {
+    const wrapper = mount(Table, {
+      props: {
+        columns,
+        rows,
+        headerTone: 'canvas',
+        selectable: true,
+        sort: { key: 'name', dir: 'asc' },
+        caption: 'People'
+      },
+      attachTo: document.body
+    })
+    const [check, name, email] = wrapper.findAll('thead th')
+
+    expect(check!.classes()).toContain('bg-sui-canvas')
+    expect(name!.classes()).toContain('bg-sui-accent-wash')
+    expect(email!.classes()).toEqual(expect.arrayContaining(['bg-sui-canvas', 'text-sui-ink-subtle']))
+    expect(email!.classes()).not.toContain('bg-sui-sunken')
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
+
   it('has a footer strip', () => {
     const wrapper = mount(Table, { props: { columns, rows }, slots: { footer: '<span>1–3 of 3</span>' } })
 
