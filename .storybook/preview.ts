@@ -40,7 +40,7 @@ const preview: Preview = {
             'Feedback',
             ['Alert', 'EmptyState', 'Toaster', 'Tooltip', 'Spinner', 'Skeleton', 'TypingIndicator'],
             'Overlays',
-            ['Dialog', 'AlertDialog', 'Popover']
+            ['Dialog', 'AlertDialog', 'Popover', 'PopoverDialog']
           ]
         ]
       }
