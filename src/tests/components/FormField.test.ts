@@ -69,6 +69,55 @@ describe('FormField', () => {
     wrapper.unmount()
   })
 
+  it('counts against a soft limit: past it the count warns, the control stays valid', async () => {
+    const wrapper = mount(
+      {
+        components: { FormField, Input },
+        data: () => ({ title: 'Spring launch' }),
+        template: '<FormField label="Title" :soft-limit="20"><Input v-model="title" /></FormField>'
+      },
+      { attachTo: document.body }
+    )
+    const count = () => wrapper.find('[aria-live="polite"]')
+    await nextTick()
+
+    expect(count().text()).toBe('13/20')
+    expect(count().attributes('aria-label')).toBe('13 of 20 recommended characters')
+    expect(count().classes()).toContain('text-sui-ink-muted')
+
+    await wrapper.find('input').setValue('Spring launch, part two')
+    expect(count().text()).toBe('23/20')
+    expect(count().attributes('aria-label')).toBe('23 of 20 recommended characters. Longer than recommended')
+    expect(count().classes()).toEqual(expect.arrayContaining(['text-sui-warning', 'font-medium']))
+    expect(count().find('svg').attributes('aria-hidden')).toBe('true')
+    expect(wrapper.find('input').attributes('aria-invalid')).toBeUndefined()
+    expect(wrapper.find('input').classes()).not.toContain('border-sui-danger-mid')
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
+
+  it('hands the counter to a hard maxLength once it is passed', async () => {
+    const wrapper = mount(
+      {
+        components: { FormField, Input },
+        data: () => ({ title: 'Spring launch, part two' }),
+        template: '<FormField label="Title" :soft-limit="20" :max-length="25"><Input v-model="title" /></FormField>'
+      },
+      { attachTo: document.body }
+    )
+    const count = () => wrapper.find('[aria-live="polite"]')
+    await nextTick()
+
+    expect(count().text()).toBe('23/20')
+    await wrapper.find('input').setValue('Spring launch, part two of three')
+    expect(count().text()).toBe('32/25')
+    expect(count().attributes('aria-label')).toBe('32 of 25 characters')
+    expect(count().classes()).toContain('text-sui-danger')
+    expect(count().find('svg').exists()).toBe(false)
+    expect(wrapper.find('input').attributes('aria-invalid')).toBe('true')
+    wrapper.unmount()
+  })
+
   it('takes its id, and gives other controls slot props', () => {
     const wrapper = mount({
       components: { FormField },

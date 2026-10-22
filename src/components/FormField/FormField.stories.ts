@@ -44,6 +44,21 @@ export const OverTheLimit: Story = {
   parameters: { textarea: true, value: 'Mathematician and writer.' }
 }
 
+export const SoftLimit: Story = {
+  args: { label: 'SEO title', softLimit: 60, hint: 'Search engines show about 60 characters.' },
+  parameters: { value: 'Spring launch: what changed and why' }
+}
+
+export const PastTheSoftLimit: Story = {
+  args: { label: 'SEO title', softLimit: 60, hint: 'Search engines show about 60 characters.' },
+  parameters: { value: 'Spring launch: everything that changed, why it changed, and what comes next' }
+}
+
+export const SoftAndHardLimit: Story = {
+  args: { label: 'Description', softLimit: 40, maxLength: 60 },
+  parameters: { textarea: true, value: 'A short summary of the spring launch, and a little more besides' }
+}
+
 export const Inline: Story = { args: { label: 'Email', layout: 'inline', hint: 'We only use it for replies.' } }
 
 export const AnyControl: Story = {

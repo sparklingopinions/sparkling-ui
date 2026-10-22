@@ -13,6 +13,9 @@ export interface FormFieldProps {
   optional?: boolean
   /** Shows a count; over the limit it and the control turn danger. */
   maxLength?: number
+  /** A recommended length (a title's 60, a description's 160): past it the count turns warning, but the control stays
+   *  valid and the value saves. A `maxLength` set too stays the hard limit, and takes the counter once passed. */
+  softLimit?: number
   /** Label above the control, or `inline` in an 88px column like PropertyRow. */
   layout?: 'stacked' | 'inline'
   /** The control's id, which the label points to. Set it here, not on the control. */
@@ -21,6 +24,10 @@ export interface FormFieldProps {
   requiredLabel?: string
   /** The counter's name for assistive tech; `{count}` and `{max}` are replaced. */
   counterLabel?: string
+  /** The same, while counting against `softLimit`. */
+  softCounterLabel?: string
+  /** Added to the counter's name past `softLimit`. */
+  overSoftLabel?: string
 }
 
 const props = withDefaults(defineProps<FormFieldProps>(), {
@@ -28,11 +35,14 @@ const props = withDefaults(defineProps<FormFieldProps>(), {
   hint: undefined,
   error: undefined,
   maxLength: undefined,
+  softLimit: undefined,
   layout: 'stacked',
   id: undefined,
   optionalLabel: 'Optional',
   requiredLabel: 'required',
-  counterLabel: '{count} of {max} characters'
+  counterLabel: '{count} of {max} characters',
+  softCounterLabel: '{count} of {max} recommended characters',
+  overSoftLabel: 'Longer than recommended'
 })
 
 const autoId = useId()
@@ -43,11 +53,21 @@ const countId = computed(() => `${controlId.value}-count`)
 const text = ref<string>()
 const count = computed(() => text.value?.length ?? 0)
 const over = computed(() => props.maxLength !== undefined && count.value > props.maxLength)
+// The soft limit counts until the hard one is passed.
+const soft = computed(() => props.softLimit !== undefined && !over.value)
+const limit = computed(() => (soft.value ? props.softLimit : props.maxLength))
+const pastSoft = computed(() => soft.value && count.value > props.softLimit!)
+const counterName = computed(
+  () =>
+    (soft.value ? props.softCounterLabel : props.counterLabel)
+      .replace('{count}', String(count.value))
+      .replace('{max}', String(limit.value)) + (pastSoft.value ? `. ${props.overSoftLabel}` : '')
+)
 const message = computed(() => props.error || props.hint)
 const invalid = computed(() => !!props.error || over.value)
 const describedBy = computed(
   () =>
-    [message.value && messageId.value, props.maxLength !== undefined && countId.value].filter(Boolean).join(' ') ||
+    [message.value && messageId.value, limit.value !== undefined && countId.value].filter(Boolean).join(' ') ||
     undefined
 )
 
@@ -85,7 +105,7 @@ provide(fieldKey, {
     </label>
     <div class="flex min-w-0 flex-col gap-1.5">
       <slot :id="controlId" :described-by="describedBy" :invalid="invalid" />
-      <div v-if="message || maxLength !== undefined" class="flex items-start justify-between gap-3">
+      <div v-if="message || limit !== undefined" class="flex items-start justify-between gap-3">
         <p
           v-if="message"
           :id="messageId"
@@ -107,14 +127,33 @@ provide(fieldKey, {
           {{ message }}
         </p>
         <span
-          v-if="maxLength !== undefined"
+          v-if="limit !== undefined"
           :id="countId"
-          :aria-label="counterLabel.replace('{count}', String(count)).replace('{max}', String(maxLength))"
+          :aria-label="counterName"
           aria-live="polite"
           class="ml-auto text-xs leading-4 tabular-nums"
-          :class="over ? 'font-medium text-sui-danger' : 'text-sui-ink-muted'"
-          >{{ count }}/{{ maxLength }}</span
+          :class="
+            over
+              ? 'font-medium text-sui-danger'
+              : pastSoft
+                ? 'inline-flex items-center gap-1 font-medium text-sui-warning'
+                : 'text-sui-ink-muted'
+          "
         >
+          <svg
+            v-if="pastSoft"
+            aria-hidden="true"
+            class="size-3 shrink-0 fill-none stroke-current"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            viewBox="0 0 16 16"
+          >
+            <path d="M7.13 2.6a1 1 0 0 1 1.74 0l5.4 9.4a1 1 0 0 1-.87 1.5H2.6a1 1 0 0 1-.87-1.5Z" />
+            <path d="M8 6.5v2.5M8 11.25h.01" />
+          </svg>
+          {{ count }}/{{ limit }}
+        </span>
       </div>
     </div>
   </div>
