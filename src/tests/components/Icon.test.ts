@@ -57,7 +57,7 @@ describe('Icon', () => {
     expect(wrapper.element.tagName).toBe('svg')
     expect(wrapper.attributes()).toMatchObject({ viewBox: '0 0 16 16', 'stroke-width': '1.5', style: 'fill: none;' })
     expect(wrapper.find('path').exists()).toBe(true)
-    expect(iconNames).toHaveLength(118)
+    expect(iconNames).toHaveLength(134)
   })
 
   it('draws every icon on the 16 grid, or the 8 or 24 one', () => {
@@ -95,6 +95,33 @@ describe('Icon', () => {
       expect(wrapper.attributes()).toMatchObject({ viewBox: '0 0 24 24', 'stroke-width': '2.25' })
       expect(mount(Icon, { props: { name: alias } }).html()).toBe(wrapper.html())
     }
+  })
+
+  it.each([
+    'hourglass',
+    'bell-ring',
+    'snooze',
+    'mail-x',
+    'flag',
+    'sprout',
+    'compass',
+    'flask',
+    'heart',
+    'trophy',
+    'thermometer-low',
+    'heart-crack',
+    'phone',
+    'calendar-users',
+    'sticky-note',
+    'sparkles'
+  ])('draws %s on the 24 grid at a 2.25 stroke', async (name) => {
+    const wrapper = mount(Icon, { props: { name }, attachTo: document.body })
+
+    expect(wrapper.element.tagName).toBe('svg')
+    expect(wrapper.attributes()).toMatchObject({ viewBox: '0 0 24 24', 'stroke-width': '2.25' })
+    expect(iconNames).toContain(name)
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
   })
 
   it("lets the app add icons and replace the set's", () => {
