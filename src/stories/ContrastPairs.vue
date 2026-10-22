@@ -3,8 +3,9 @@ import { onMounted, ref } from 'vue'
 
 type Mode = 'light' | 'dark'
 
-// `min: 3` marks a boundary or a focus ring, not text: WCAG 1.4.11 asks 3:1 of those.
-const pairs: { text: string; background: string; usage: string; min?: number }[] = [
+// `min: 3` marks a boundary or a focus ring, not text: WCAG 1.4.11 asks 3:1 of those. `wash` lays the text's colour
+// over the background at that alpha, as a hover or pressed state does.
+const pairs: { text: string; background: string; usage: string; min?: number; wash?: number }[] = [
   { text: 'ink', background: 'surface', usage: 'Headings, primary text' },
   { text: 'ink-emphasis', background: 'surface', usage: 'Secondary buttons, dialog titles' },
   { text: 'ink-body', background: 'surface', usage: 'Body text' },
@@ -30,7 +31,9 @@ const pairs: { text: string; background: string; usage: string; min?: number }[]
   { text: 'success', background: 'success-soft', usage: 'Pills' },
   { text: 'warning', background: 'warning-soft', usage: 'Pills' },
   { text: 'info', background: 'info-soft', usage: 'Pills' },
-  { text: 'on-inverse', background: 'inverse', usage: 'Tooltips, toasts' },
+  { text: 'on-inverse', background: 'inverse', usage: 'Tooltips, toasts, ghost-inverse buttons' },
+  { text: 'on-inverse', background: 'inverse', wash: 0.12, usage: 'Ghost-inverse buttons on hover' },
+  { text: 'on-inverse', background: 'inverse', wash: 0.2, usage: 'Ghost-inverse buttons pressed' },
   { text: 'ink-body', background: 'sunken', usage: 'Tags, grey avatars' },
   { text: 'ink-body', background: 'danger-soft', usage: 'Danger banners' },
   { text: 'ink-body', background: 'warning-soft', usage: 'Warning banners' },
@@ -74,15 +77,22 @@ const luminance = (rgb: number[]) =>
     .map((c) => (c / 255 <= 0.03928 ? c / 255 / 12.92 : ((c / 255 + 0.055) / 1.055) ** 2.4))
     .reduce((sum, c, i) => sum + c * [0.2126, 0.7152, 0.0722][i]!, 0)
 
-function ratio(mode: Mode, text: string, background: string) {
-  const a = channels.value[mode][text]
-  const b = channels.value[mode][background]
+function ground(mode: Mode, pair: (typeof pairs)[number]) {
+  const base = channels.value[mode][pair.background]
+  const over = channels.value[mode][pair.text]
+  if (!pair.wash || !base || !over) return base
+  return base.map((c, i) => c + (over[i]! - c) * pair.wash!)
+}
+
+function ratio(mode: Mode, pair: (typeof pairs)[number]) {
+  const a = channels.value[mode][pair.text]
+  const b = ground(mode, pair)
   if (!a || !b) return 0
   const [high, low] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [number, number]
   return (high + 0.05) / (low + 0.05)
 }
 
-const rgb = (mode: Mode, role: string) => `rgb(${channels.value[mode][role]?.join(' ')})`
+const rgb = (channels?: number[]) => `rgb(${channels?.join(' ')})`
 </script>
 
 <template>
@@ -99,35 +109,37 @@ const rgb = (mode: Mode, role: string) => `rgb(${channels.value[mode][role]?.joi
         </tr>
       </thead>
       <tbody>
-        <tr v-for="pair in pairs" :key="`${pair.text}/${pair.background}`" class="border-b border-sui-line-subtle">
+        <tr
+          v-for="pair in pairs"
+          :key="`${pair.text}/${pair.background}/${pair.wash ?? 0}`"
+          class="border-b border-sui-line-subtle"
+        >
           <th class="py-2 pr-4 font-normal whitespace-nowrap" scope="row">
             <code class="text-13">{{ pair.text }}</code>
             <span class="text-sui-ink-body"> on </span>
             <code class="text-13">{{ pair.background }}</code>
+            <span v-if="pair.wash" class="text-sui-ink-body"> + {{ pair.wash * 100 }}% wash</span>
           </th>
           <template v-for="mode in ['light', 'dark'] as const" :key="mode">
             <td class="py-2 pr-2">
               <span
                 v-if="pair.min"
                 class="flex h-7 w-24 items-center justify-center rounded-md border border-sui-line-subtle"
-                :style="{ backgroundColor: rgb(mode, pair.background) }"
+                :style="{ backgroundColor: rgb(ground(mode, pair)) }"
               >
-                <span class="h-4 w-14 rounded-sm border-2" :style="{ borderColor: rgb(mode, pair.text) }" />
+                <span class="h-4 w-14 rounded-sm border-2" :style="{ borderColor: rgb(channels[mode][pair.text]) }" />
               </span>
               <span
                 v-else
                 class="inline-flex h-7 items-center rounded-md border border-sui-line-subtle px-2.5 font-medium whitespace-nowrap"
-                :style="{ backgroundColor: rgb(mode, pair.background), color: rgb(mode, pair.text) }"
+                :style="{ backgroundColor: rgb(ground(mode, pair)), color: rgb(channels[mode][pair.text]) }"
               >
                 Add contact
               </span>
             </td>
             <td class="py-2 pr-4 whitespace-nowrap tabular-nums">
-              {{ ratio(mode, pair.text, pair.background).toFixed(2) }}
-              <span
-                v-if="ratio(mode, pair.text, pair.background) < (pair.min ?? 4.5)"
-                class="ml-1 font-medium text-sui-danger"
-              >
+              {{ ratio(mode, pair).toFixed(2) }}
+              <span v-if="ratio(mode, pair) < (pair.min ?? 4.5)" class="ml-1 font-medium text-sui-danger">
                 Below AA
               </span>
             </td>

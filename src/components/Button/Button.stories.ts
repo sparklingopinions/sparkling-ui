@@ -10,7 +10,7 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'tinted', 'ghost', 'contrast', 'danger', 'danger-outline']
+      options: ['primary', 'secondary', 'tinted', 'ghost', 'contrast', 'danger', 'danger-outline', 'ghost-inverse']
     },
     size: { control: 'inline-radio', options: ['xs', 'sm', 'md', 'lg'] },
     iconPosition: { control: 'inline-radio', options: ['start', 'end'] }
@@ -38,6 +38,20 @@ export const Tinted: Story = { args: { variant: 'tinted' } }
 export const Ghost: Story = { args: { variant: 'ghost' } }
 
 export const Danger: Story = { args: { variant: 'danger' } }
+
+export const GhostInverse: Story = {
+  args: { variant: 'ghost-inverse', size: 'sm' },
+  render: (args) => ({
+    components: { Button, Icon },
+    setup: () => ({ args }),
+    template: `<div class="flex items-center gap-2 rounded-lg bg-sui-inverse p-3 text-sui-on-inverse">
+      <Button v-bind="args">Undo</Button>
+      <Button v-bind="args"><Icon name="refresh" />Retry</Button>
+      <Button v-bind="args" disabled>View</Button>
+      <Button v-bind="args" aria-label="Close" icon-only><Icon name="close" /></Button>
+    </div>`
+  })
+}
 
 export const Sizes: Story = {
   render: (args) => ({
