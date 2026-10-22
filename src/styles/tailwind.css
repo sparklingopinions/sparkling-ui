@@ -300,6 +300,9 @@
   --sui-table-row: initial;
   /* The header row's own height, e.g. 36px over 44px rows; unset, it follows the rows. */
   --sui-table-header: initial;
+  /* DataList rows and group headers at set heights, e.g. 44px and 40px; unset, 40px and 36px. */
+  --sui-list-row: initial;
+  --sui-list-header: initial;
   /* Live toasts: their width, their gap to the viewport's edges, and insets an app sets to keep them clear of its own
      chrome (a sidebar, a tab bar), per route or breakpoint. The safe area is added on top. */
   --sui-toaster-width: 24rem;

@@ -1,6 +1,8 @@
-import { mount } from '@vue/test-utils'
+import { h } from 'vue'
 
-import { DataList } from '../../index'
+import { flushPromises, mount } from '@vue/test-utils'
+
+import { DataList, type DropdownMenuEntry } from '../../index'
 import { expectAccessible } from '../support/axe'
 
 const groups = [
@@ -156,5 +158,140 @@ describe('DataList', () => {
     expect(wrapper.find('[aria-busy="true"]').exists()).toBe(true)
     await wrapper.setProps({ loading: false, groups: [{ id: 'a', items: [] }] })
     expect(wrapper.text()).toBe('Nothing here')
+  })
+
+  describe('drawn denser, as cards', () => {
+    const mountSelectable = (props: Record<string, unknown> = {}) => {
+      const wrapper = mount(DataList, {
+        props: {
+          groups,
+          selectable: true,
+          checkboxPlacement: 'leading' as const,
+          selected: [],
+          'onUpdate:selected': (selected: unknown[]) => wrapper.setProps({ selected }),
+          onRowClick: vi.fn(),
+          ...props
+        },
+        slots: {
+          leading: ({ selected, selecting }: { selected: boolean; selecting: boolean }) =>
+            h('span', { 'data-mark': '', 'data-selected': selected, 'data-selecting': selecting }, '•')
+        },
+        attachTo: document.body
+      })
+      return wrapper
+    }
+    const rows = (wrapper: ReturnType<typeof mount>) => wrapper.findAll('[data-list-row]')
+
+    it('sets header tone, header and row heights, and drops the chevron when not collapsible', async () => {
+      const wrapper = mount(DataList, {
+        props: {
+          groups: [groups[0]!, { ...groups[1]!, collapsible: true }],
+          variant: 'cards',
+          groupHeaderTone: 'canvas',
+          groupHeaderHeight: 40,
+          rowHeight: 44,
+          collapsible: false,
+          dividers: true
+        },
+        slots: { 'group-actions': () => h('button', 'Hide') },
+        attachTo: document.body
+      })
+      const headers = wrapper.findAll('header')
+
+      expect(wrapper.attributes('style')).toBe('--sui-list-row: 44px; --sui-list-header: 40px;')
+      expect(headers[0]!.classes()).toEqual(expect.arrayContaining(['bg-sui-canvas', 'pl-4']))
+      expect(headers[0]!.find('[aria-expanded]').exists()).toBe(false)
+      expect(headers[1]!.find('[aria-expanded]').exists()).toBe(true)
+      expect(headers[0]!.text()).toContain('Hide')
+      expect(wrapper.find('li').classes()).toEqual(
+        expect.arrayContaining(['h-[var(--sui-list-row,2.5rem)]', '[&+&]:border-t'])
+      )
+      expect(mount(DataList, { props: { groups } }).attributes('style')).toBeUndefined()
+      await expectAccessible(wrapper.element)
+      wrapper.unmount()
+    })
+
+    it('puts the checkbox over the leading mark, outside the row, and tells the slot', async () => {
+      const wrapper = mountSelectable()
+      const check = () => wrapper.find('[data-list-check]')
+
+      expect(check().element.closest('[data-list-row]')).toBeNull()
+      expect(check().classes()).toContain('hidden')
+      expect(wrapper.find('[data-mark]').attributes('data-selecting')).toBe('false')
+      await rows(wrapper)[0]!.trigger('click', { metaKey: true })
+      expect(wrapper.props('selected')).toEqual([1])
+      expect(check().classes()).not.toContain('hidden')
+      expect(wrapper.find('[data-mark]').attributes()).toMatchObject({
+        'data-selected': 'true',
+        'data-selecting': 'true'
+      })
+      await expectAccessible(wrapper.element)
+      wrapper.unmount()
+    })
+
+    it('selects a range with shift-click, toggles with Cmd or Ctrl, and toggles with a plain click while selecting', async () => {
+      const wrapper = mountSelectable()
+
+      await rows(wrapper)[0]!.trigger('click', { ctrlKey: true })
+      await rows(wrapper)[2]!.trigger('click', { shiftKey: true })
+      expect(wrapper.props('selected')).toEqual([1, 2, 3])
+      await rows(wrapper)[1]!.trigger('click', { metaKey: true })
+      expect(wrapper.props('selected')).toEqual([1, 3])
+      await rows(wrapper)[1]!.trigger('click')
+      expect(wrapper.props('selected')).toEqual([1, 3, 2])
+      expect(wrapper.props('onRowClick')).not.toHaveBeenCalled()
+
+      await wrapper.setProps({ selected: [] })
+      await rows(wrapper)[1]!.trigger('click')
+      expect(wrapper.props('onRowClick')).toHaveBeenCalledWith(groups[0]!.items[1])
+      wrapper.unmount()
+    })
+
+    it('extends with Shift and the arrow keys, and selects a range with Shift+Space', async () => {
+      const wrapper = mountSelectable({ checkboxPlacement: 'gutter' })
+
+      await rows(wrapper)[0]!.trigger('keydown', { key: 'ArrowDown', shiftKey: true })
+      expect(wrapper.props('selected')).toEqual([1, 2])
+      expect(document.activeElement).toBe(rows(wrapper)[1]!.element)
+
+      await wrapper.setProps({ selected: [] })
+      await rows(wrapper)[0]!.trigger('keydown', { key: 'x' })
+      await rows(wrapper)[2]!.trigger('keydown', { key: ' ', shiftKey: true })
+      expect(wrapper.props('selected')).toEqual([1, 2, 3])
+      wrapper.unmount()
+    })
+
+    it('opens a context menu per row and emits the chosen action with its row', async () => {
+      const contextItems = (item: Record<string, unknown>): DropdownMenuEntry[] => [
+        { type: 'action', label: `Open ${String(item.name)}`, action: 'open' },
+        { type: 'action', label: 'Archive', action: 'archive', disabled: true }
+      ]
+      const wrapper = mount(DataList, {
+        props: { groups, contextItems, contextLabel: 'Row actions' },
+        attachTo: document.body
+      })
+
+      await wrapper.findAll('li')[1]!.trigger('contextmenu')
+      await flushPromises()
+      const menu = document.body.querySelector('[role="menu"]')!
+      expect(menu.getAttribute('aria-label')).toBe('Row actions')
+      ;(menu.querySelector('[role="menuitem"]') as HTMLElement).click()
+      await flushPromises()
+
+      expect(wrapper.emitted('context-item')?.[0]).toEqual([
+        expect.objectContaining({ action: 'open', label: 'Open Pricing' }),
+        groups[0]!.items[1]
+      ])
+      wrapper.unmount()
+    })
+
+    it("leaves the browser's menu alone without contextItems", async () => {
+      const wrapper = mount(DataList, { props: { groups }, attachTo: document.body })
+      const event = new MouseEvent('contextmenu', { bubbles: true, cancelable: true })
+      wrapper.find('li').element.dispatchEvent(event)
+
+      expect(event.defaultPrevented).toBe(false)
+      wrapper.unmount()
+    })
   })
 })
