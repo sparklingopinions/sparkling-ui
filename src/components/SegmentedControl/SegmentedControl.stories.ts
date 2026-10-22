@@ -27,3 +27,27 @@ const meta: Meta = {
 export default meta
 
 export const Default: StoryObj = {}
+
+const views = [
+  { value: 'queue', label: 'Queue' },
+  { value: 'scheduled', label: 'Scheduled' },
+  { value: 'published', label: 'Published and archived' }
+]
+
+export const Block: StoryObj = {
+  render: () => ({
+    components: { SegmentedControl: SegmentedControl as Component },
+    setup: () => ({ views, value: ref('scheduled') }),
+    template:
+      '<div class="w-[22rem] max-w-full"><SegmentedControl v-model="value" aria-label="View" block :options="views" /></div>'
+  })
+}
+
+export const BlockWithIcons: StoryObj = {
+  render: () => ({
+    components: { SegmentedControl: SegmentedControl as Component },
+    setup: () => ({ options, value: ref('note') }),
+    template:
+      '<div class="w-[20rem] max-w-full"><SegmentedControl v-model="value" aria-label="Activity type" block :options="options" /></div>'
+  })
+}

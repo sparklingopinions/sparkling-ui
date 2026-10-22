@@ -31,4 +31,18 @@ describe('SegmentedControl', () => {
 
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['meeting'])
   })
+
+  it('fills its row with block, the segments sharing it and their labels truncating', async () => {
+    const wrapper = mount(SegmentedControl, {
+      props: { options, modelValue: 'call', block: true, 'aria-label': 'Activity type' },
+      attachTo: document.body
+    })
+    const radios = wrapper.findAll('[role="radio"]')
+
+    expect(wrapper.classes()).toContain('w-full')
+    expect(radios.every((r) => r.classes().includes('flex-1') && r.classes().includes('min-w-0'))).toBe(true)
+    expect(radios[2]!.find('span').classes()).toContain('truncate')
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
 })
