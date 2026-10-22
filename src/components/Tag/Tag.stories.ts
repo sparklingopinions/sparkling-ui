@@ -1,4 +1,7 @@
+import { ref } from 'vue'
+
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, userEvent, within } from 'storybook/test'
 
 import Tag from './Tag.vue'
 
@@ -37,4 +40,37 @@ export const OutlineChange: Story = {
     template:
       '<div class="flex items-center gap-2 text-sm text-sui-ink-body"><Tag muted name="Lead" variant="outline" /> to <Tag name="Customer" variant="outline" /></div>'
   })
+}
+
+export const Pressable: Story = {
+  render: () => ({
+    components: { Tag },
+    setup: () => {
+      const slots = ref(['Morning'])
+      const options = ['Morning', 'Midday', 'Evening', 'Weekend']
+      const toggle = (slot: string, on: boolean) =>
+        (slots.value = on ? [...slots.value, slot] : slots.value.filter((s) => s !== slot))
+      return { slots, options, toggle }
+    },
+    template: `
+      <div role="group" aria-label="Posting times" class="flex flex-wrap gap-2">
+        <Tag
+          v-for="option in options"
+          :key="option"
+          pressable
+          :pressed="slots.includes(option)"
+          @update:pressed="toggle(option, $event)"
+        >{{ option }}</Tag>
+        <Tag pressable disabled>Overnight</Tag>
+        <Tag pressable disabled pressed>Always</Tag>
+      </div>
+    `
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const midday = canvas.getByRole('button', { name: 'Midday' })
+    await expect(midday).toHaveAttribute('aria-pressed', 'false')
+    await userEvent.click(midday)
+    await expect(midday).toHaveAttribute('aria-pressed', 'true')
+  }
 }
