@@ -24,7 +24,7 @@ import CheckIcon from '../internal/CheckIcon.vue'
 import FilterFrame from './FilterFrame.vue'
 import FilterGlyph from './FilterGlyph.vue'
 import { datePresets as defaultDatePresets, describeFilter, filterOperators } from './defaults'
-import type { FilterFieldType, FilterOperator, FilterOption, FilterValue } from './types'
+import type { FilterFieldType, FilterOperator, FilterOption, FilterSummary, FilterValue } from './types'
 
 export interface FilterChipProps {
   /** A filter, read as a sentence; `add` is the quiet "+ Filter" that starts one (FilterMenu includes it). */
@@ -38,6 +38,8 @@ export interface FilterChipProps {
   operators?: FilterOperator[]
   /** The choices for enum, person and company. */
   options?: FilterOption[]
+  /** Your own wording for the chip, in place of field, operator and value: "Not archived", "Created in the last 7 days". */
+  summary?: FilterSummary
   /** The live result count in the panel's footer, e.g. "120 people". */
   status?: string
   /** The plural noun once more than two values are picked: "3 stages". */
@@ -66,6 +68,7 @@ const props = withDefaults(defineProps<FilterChipProps>(), {
   icon: undefined,
   operators: undefined,
   options: () => [],
+  summary: undefined,
   status: undefined,
   valueLabel: 'values',
   datePresets: () => defaultDatePresets,
@@ -104,6 +107,11 @@ const text = computed(() =>
       })
     : ''
 )
+const words = computed(() => ({
+  field: props.summary?.field ?? props.field,
+  op: props.summary ? props.summary.op : current.value?.label,
+  value: props.summary ? props.summary.value : text.value
+}))
 const isChecklist = computed(() => ['enum', 'person', 'company'].includes(props.type))
 
 const query = ref('')
@@ -163,10 +171,10 @@ const hueDots: Record<string, string> = {
       <FilterGlyph v-else class="opacity-80" :name="type" />
       <!-- Real spaces between the words, so the chip's name reads as a sentence. -->
       <span
-        ><span class="font-medium">{{ field }}</span
-        ><template v-if="current">{{ ' ' }}{{ current.label }}</template
-        ><template v-if="text"
-          >{{ ' ' }}<span class="font-semibold">{{ text }}</span></template
+        ><span class="font-medium">{{ words.field }}</span
+        ><template v-if="words.op">{{ ' ' }}{{ words.op }}</template
+        ><template v-if="words.value"
+          >{{ ' ' }}<span class="font-semibold">{{ words.value }}</span></template
         ></span
       >
       <svg
@@ -305,7 +313,7 @@ const hueDots: Record<string, string> = {
             <div v-else-if="type === 'boolean'" class="px-2.5 pt-1 pb-2.5">
               <SegmentedControl
                 :aria-label="field"
-                :model-value="value ? 'yes' : 'no'"
+                :model-value="value === null ? '' : value ? 'yes' : 'no'"
                 :options="[
                   { value: 'yes', label: yesLabel },
                   { value: 'no', label: noLabel }

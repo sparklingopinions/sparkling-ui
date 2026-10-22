@@ -43,3 +43,20 @@ export const Open: Story = {
     await waitFor(() => expect(within(document.body).getByRole('option', { name: /Last contact/ })).toBeVisible())
   }
 }
+
+export const EnterPicksFirst: Story = {
+  ...Default,
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getAllByRole('button', { name: 'Filter' })[0]!)
+    await within(document.body).findByRole('textbox', { name: 'Filter by…' })
+    await userEvent.keyboard('{Enter}')
+    await waitFor(() => expect(within(canvasElement).getByText('name')).toBeVisible())
+
+    // Typed and arrowed to a field: Enter takes that one, once.
+    await userEvent.click(within(canvasElement).getAllByRole('button', { name: 'Filter' })[0]!)
+    await userEvent.type(await within(document.body).findByRole('textbox', { name: 'Filter by…' }), 'a')
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}{Enter}')
+    await waitFor(() => expect(within(document.body).queryByRole('listbox')).toBeNull())
+    await expect(within(canvasElement).queryByText('name')).toBeNull()
+  }
+}
