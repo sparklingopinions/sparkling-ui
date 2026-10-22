@@ -120,6 +120,19 @@ describe('Tag', () => {
     wrapper.unmount()
   })
 
+  it('comes in a 22px size', async () => {
+    const wrapper = mount(Tag, {
+      props: { pressable: true, pressed: true, size: 'sm' },
+      slots: { default: 'Drafts' },
+      attachTo: document.body
+    })
+
+    expect(wrapper.classes()).toEqual(expect.arrayContaining(['h-5.5', 'text-xs', 'px-2']))
+    expect(wrapper.classes()).not.toContain('h-7')
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
+
   it('does not toggle when disabled', async () => {
     const wrapper = mount(Tag, { props: { pressable: true, disabled: true }, slots: { default: 'Morning' } })
 

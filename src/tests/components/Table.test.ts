@@ -122,10 +122,17 @@ describe('Table', () => {
     expect(wrapper.attributes('style')).toContain('--sui-table-row: 44px')
     expect(cell.classes()).toEqual(expect.arrayContaining(['h-[var(--sui-table-row,3.5625rem)]', 'px-4']))
     expect(cell.classes()).not.toContain('py-3')
-    expect(wrapper.find('th').classes()).toContain('h-[var(--sui-table-row,2.75rem)]')
+    expect(wrapper.find('th').classes()).toContain('h-[var(--sui-table-header,var(--sui-table-row,2.75rem))]')
     expect(mount(Table, { props: { columns, rows } }).find('tbody td').classes()).toContain('py-3')
     await expectAccessible(wrapper.element)
     wrapper.unmount()
+  })
+
+  it('gives the header its own height with headerHeight', async () => {
+    const wrapper = mount(Table, { props: { columns, rows, rowHeight: 44, headerHeight: 36 } })
+
+    expect(wrapper.attributes('style')).toContain('--sui-table-row: 44px; --sui-table-header: 36px')
+    expect(mount(Table, { props: { columns, rows } }).attributes('style')).toBeUndefined()
   })
 
   it('lays the header on canvas, a sorted header staying accent-wash', async () => {
