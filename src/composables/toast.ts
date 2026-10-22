@@ -1,6 +1,6 @@
 import { shallowReactive } from 'vue'
 
-export type ToastSeverity = 'info' | 'success' | 'error'
+export type ToastSeverity = 'info' | 'success' | 'warning' | 'error'
 
 /** A button on the toast: pressing it runs `onClick`, then closes the toast. */
 export interface ToastAction {
@@ -72,5 +72,6 @@ export function removeToast(id: number, reason: ToastDismissReason = 'close') {
 export const toast = {
   info: (summary: string, options?: ToastOptions) => add('info', summary, options),
   success: (summary: string, options?: ToastOptions) => add('success', summary, options),
+  warning: (summary: string, options?: ToastOptions) => add('warning', summary, options),
   error: (summary: string, options?: ToastOptions) => add('error', summary, options)
 }

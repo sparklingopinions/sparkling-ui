@@ -14,7 +14,7 @@ const meta: Meta<typeof Toaster> = {
     docs: {
       description: {
         component:
-          'Mount one `<Toaster />` near the app root, then `toast.info(message)`, `toast.success(...)` or `toast.error(...)`, with `{ detail, life, closable, action, actions, onDismiss }`. An `action` (or up to two `actions`) adds ghost-inverse buttons after the message; pressing one runs it and closes the toast. A toast with an action stays 6s and draws a bar counting down, paused while the toasts are hovered or focused; when it runs out, `onDismiss` gets `timeout` and nothing runs. `preview` draws toasts in place instead, for docs, designs and demos: give each an `id` to animate them in and out as the list changes, and remove one on `close`.'
+          'Mount one `<Toaster />` near the app root, then `toast.info(message)`, `toast.success(...)`, `toast.warning(...)` or `toast.error(...)`, with `{ detail, life, closable, action, actions, onDismiss }`. An `action` (or up to two `actions`) adds ghost-inverse buttons after the message; pressing one runs it and closes the toast. A toast with an action stays 6s and draws a bar counting down, paused while the toasts are hovered or focused; when it runs out, `onDismiss` gets `timeout` and nothing runs. `preview` draws toasts in place instead, for docs, designs and demos: give each an `id` to animate them in and out as the list changes, and remove one on `close`.'
       }
     }
   },
@@ -27,6 +27,10 @@ type Story = StoryObj<typeof Toaster>
 export const Info: Story = {}
 
 export const Success: Story = { args: { preview: [{ severity: 'success', summary: 'Reply sent' }] } }
+
+export const Warning: Story = {
+  args: { preview: [{ severity: 'warning', summary: 'Sync is slow', detail: 'Changes may take a minute to appear' }] }
+}
 
 export const Error: Story = { args: { preview: [{ severity: 'error', summary: 'Couldn’t send the reply' }] } }
 
