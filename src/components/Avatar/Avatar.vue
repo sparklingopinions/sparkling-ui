@@ -6,7 +6,8 @@ import { type Hue, hueFor } from '../../utils/hues'
 export interface AvatarProps {
   name?: string | null
   image?: string | null
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  /** xs 16, sm 24, md 32, lg 40, xl 64; or a number of px, 20 for list rows and activity feeds. */
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number
   shape?: 'circle' | 'square'
   /** An attention dot, e.g. unread. */
   badge?: boolean
@@ -46,6 +47,17 @@ const hues: Record<Hue, string> = {
   gray: 'border-sui-line bg-sui-sunken text-sui-ink-body'
 }
 
+// A number of px: the initial steps down with the coin.
+const sizeClass = computed(() => {
+  if (typeof props.size !== 'number') return sizes[props.size]
+  if (props.size <= 20) return 'text-10'
+  if (props.size <= 28) return 'text-11'
+  return props.size <= 36 ? 'text-xs' : 'text-sm'
+})
+const sizeStyle = computed(() =>
+  typeof props.size === 'number' ? { width: `${props.size}px`, height: `${props.size}px` } : undefined
+)
+
 const shapeClass = computed(() => (props.shape === 'square' ? 'rounded-lg' : 'rounded-full'))
 
 // A photo gets a neutral hairline, so it reads as a crisp coin too.
@@ -55,7 +67,8 @@ const colorClass = computed(() => (props.image ? 'border-sui-line-subtle' : hues
 <template>
   <div
     class="relative inline-flex shrink-0 items-center justify-center border font-semibold"
-    :class="[sizes[size], shapeClass, colorClass]"
+    :class="[sizeClass, shapeClass, colorClass]"
+    :style="sizeStyle"
   >
     <img v-if="image" alt="" class="h-full w-full object-cover" :class="shapeClass" :src="image" />
     <template v-else>{{ initial }}</template>

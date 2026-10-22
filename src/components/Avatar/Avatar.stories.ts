@@ -36,6 +36,25 @@ export const Sizes: Story = {
   })
 }
 
+export const Size20: Story = {
+  render: (args) => ({
+    components: { Avatar },
+    setup: () => ({ args }),
+    template: `
+      <ul class="m-0 flex list-none flex-col gap-2 p-0 text-13 text-sui-ink">
+        <li v-for="name in ['Ada Lovelace', 'Grace Hopper', 'Katherine Johnson']" :key="name" class="flex items-center gap-2">
+          <Avatar v-bind="args" :name="name" :size="20" />
+          {{ name }}
+        </li>
+        <li class="flex items-center gap-2">
+          <Avatar v-bind="args" name="Acme" shape="square" :size="20" />
+          Acme
+        </li>
+      </ul>
+    `
+  })
+}
+
 export const Hues: Story = {
   render: (args) => ({
     components: { Avatar },
