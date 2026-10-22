@@ -15,6 +15,10 @@ export interface TagProps {
   removable?: boolean
   /** The remove button's accessible name. */
   removeLabel?: string
+  /** A toggle button for quick choices, bound to `v-model:pressed`. Group several in a `role="group"` with a label. */
+  pressable?: boolean
+  /** pressable only. */
+  disabled?: boolean
 }
 
 withDefaults(defineProps<TagProps>(), {
@@ -25,6 +29,8 @@ withDefaults(defineProps<TagProps>(), {
 })
 
 defineEmits<{ remove: [] }>()
+
+const pressed = defineModel<boolean>('pressed', { default: false })
 
 const dots: Record<Hue, string> = {
   blue: 'bg-sui-hue-blue-ink',
@@ -39,10 +45,36 @@ const dots: Record<Hue, string> = {
 }
 </script>
 
-<!-- A label: soft for the ones people create, outline for a value from a fixed set. -->
+<!-- A label: soft for the ones people create, outline for a value from a fixed set; or, pressable, a toggle chip. -->
 <template>
+  <button
+    v-if="pressable"
+    :aria-pressed="pressed"
+    class="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-13 leading-none font-medium whitespace-nowrap transition-colors duration-150 outline-hidden focus-visible:sui-ring disabled:cursor-default disabled:opacity-50"
+    :class="
+      pressed
+        ? 'border-sui-accent-line bg-sui-accent-wash text-sui-accent enabled:hover:border-sui-accent-bright enabled:hover:bg-sui-accent-soft enabled:active:border-sui-accent-solid enabled:active:bg-sui-accent-soft'
+        : 'border-sui-line bg-sui-surface text-sui-ink-body enabled:hover:border-sui-line-strong enabled:hover:bg-sui-canvas enabled:hover:text-sui-ink enabled:active:bg-sui-sunken'
+    "
+    :disabled="disabled"
+    type="button"
+    @click="pressed = !pressed"
+  >
+    <svg
+      v-if="pressed"
+      aria-hidden="true"
+      class="-ml-0.5 size-3 shrink-0 fill-none stroke-current"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.75"
+      viewBox="0 0 16 16"
+    >
+      <path d="M3.5 8.25l3 3 6-6.5" />
+    </svg>
+    <slot>{{ name }}</slot>
+  </button>
   <span
-    v-if="variant === 'outline'"
+    v-else-if="variant === 'outline'"
     class="inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs whitespace-nowrap"
     :class="
       muted ? 'border-sui-line-subtle text-sui-ink-muted' : 'border-sui-line bg-sui-sunken font-medium text-sui-ink'

@@ -102,6 +102,32 @@ describe('Badge', () => {
 })
 
 describe('Tag', () => {
+  it('toggles as a pressable button with aria-pressed and a check when on', async () => {
+    const wrapper = mount(Tag, {
+      props: { pressable: true, pressed: false, 'onUpdate:pressed': (v: boolean) => wrapper.setProps({ pressed: v }) },
+      slots: { default: 'Morning' },
+      attachTo: document.body
+    })
+
+    expect(wrapper.element.tagName).toBe('BUTTON')
+    expect(wrapper.attributes()).toMatchObject({ type: 'button', 'aria-pressed': 'false' })
+    expect(wrapper.find('svg').exists()).toBe(false)
+    await wrapper.trigger('click')
+    expect(wrapper.attributes('aria-pressed')).toBe('true')
+    expect(wrapper.classes()).toEqual(expect.arrayContaining(['bg-sui-accent-wash', 'text-sui-accent']))
+    expect(wrapper.find('svg').attributes('aria-hidden')).toBe('true')
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
+
+  it('does not toggle when disabled', async () => {
+    const wrapper = mount(Tag, { props: { pressable: true, disabled: true }, slots: { default: 'Morning' } })
+
+    await wrapper.trigger('click')
+    expect(wrapper.attributes()).toMatchObject({ disabled: '', 'aria-pressed': 'false' })
+    expect(wrapper.emitted('update:pressed')).toBeUndefined()
+  })
+
   it('shows a name with a dot of its colour', async () => {
     const wrapper = mount(Tag, { props: { name: 'Investors', color: 'green' }, attachTo: document.body })
 
