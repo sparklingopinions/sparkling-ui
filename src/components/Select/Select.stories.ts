@@ -31,6 +31,13 @@ const tags = [
   { value: 'press', label: 'Press', color: 'orange' as const }
 ]
 
+const statuses = [
+  { value: 'reply', label: 'To reply', icon: 'reply', iconColor: 'accent' as const },
+  { value: 'waiting', label: 'Waiting', icon: 'hourglass', iconColor: 'ink-muted' as const },
+  { value: 'nudge', label: 'Follow-up', icon: 'bell-ring', iconColor: 'warning' as const },
+  { value: 'done', label: 'Done', icon: 'circle-check', iconColor: 'success' as const }
+]
+
 const openOnPlay = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   await userEvent.click(within(canvasElement).getAllByRole('button')[0]!)
   await expect(await within(document.body).findByRole('listbox')).toBeInTheDocument()
@@ -60,6 +67,12 @@ export const Disabled: Story = { args: { 'aria-label': 'Rows per page', disabled
 export const Open: Story = {
   args: { 'aria-label': 'Rows per page', class: 'w-40' },
   parameters: { value: 50 },
+  play: openOnPlay
+}
+
+export const WithIcons: Story = {
+  args: { 'aria-label': 'Status', class: 'w-44' },
+  parameters: { choices: statuses, value: 'nudge' },
   play: openOnPlay
 }
 

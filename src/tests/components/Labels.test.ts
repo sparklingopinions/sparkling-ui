@@ -69,6 +69,23 @@ describe('Tag outline', () => {
   })
 })
 
+describe('Tag icon', () => {
+  it('draws a 14px icon before the name, outline or soft, in place of the dot', async () => {
+    const outline = mount(Tag, {
+      props: { name: 'Follow-up', variant: 'outline', icon: 'bell-ring', iconColor: 'warning' },
+      attachTo: document.body
+    })
+    expect(outline.get('svg').classes()).toEqual(expect.arrayContaining(['size-3.5', 'stroke-sui-warning']))
+    expect(outline.text()).toBe('Follow-up')
+    await expectAccessible(outline.element)
+    outline.unmount()
+
+    const soft = mount(Tag, { props: { name: 'VIP', color: 'purple', icon: 'trophy' } })
+    expect(soft.get('svg').classes()).toContain('stroke-sui-ink-subtle')
+    expect(soft.find('.rounded-full').exists()).toBe(false)
+  })
+})
+
 describe('Chip, the former name', () => {
   it('is an outline Tag', () => {
     const wrapper = mount(Chip, { props: { label: 'Lead', muted: true } })

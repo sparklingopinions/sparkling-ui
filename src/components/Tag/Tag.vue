@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { Hue } from '../../utils/hues'
+import Icon from '../Icon/Icon.vue'
+import type { IconColor } from '../Icon/colors'
 import CloseSmallIcon from '../internal/CloseSmallIcon.vue'
 
 export interface TagProps {
@@ -9,6 +11,10 @@ export interface TagProps {
   variant?: 'soft' | 'outline'
   /** soft only: a dot of the tag's own hue, on a neutral chip. */
   color?: Hue
+  /** soft and outline: a 14px icon before the name, through the app's icon resolver, in place of the dot. */
+  icon?: string
+  /** The icon's colour; ink-subtle by default. */
+  iconColor?: IconColor
   /** outline only: the quieter, superseded side, e.g. the "from" of a stage change. */
   muted?: boolean
   /** soft only. */
@@ -27,6 +33,8 @@ withDefaults(defineProps<TagProps>(), {
   name: undefined,
   variant: 'soft',
   color: undefined,
+  icon: undefined,
+  iconColor: 'ink-subtle',
   removeLabel: 'Remove tag',
   size: 'md'
 })
@@ -84,13 +92,15 @@ const dots: Record<Hue, string> = {
       muted ? 'border-sui-line-subtle text-sui-ink-muted' : 'border-sui-line bg-sui-sunken font-medium text-sui-ink'
     "
   >
+    <Icon v-if="icon" class="size-3.5 shrink-0" :color="iconColor" :name="icon" />
     <slot>{{ name }}</slot>
   </span>
   <div
     v-else
     class="inline-flex items-center gap-1.5 rounded-md bg-sui-sunken px-2 py-0.5 text-xs font-medium text-sui-ink-body"
   >
-    <span v-if="color" class="h-1.5 w-1.5 shrink-0 rounded-full" :class="dots[color]" />
+    <Icon v-if="icon" class="size-3.5 shrink-0" :color="iconColor" :name="icon" />
+    <span v-else-if="color" class="h-1.5 w-1.5 shrink-0 rounded-full" :class="dots[color]" />
     <span class="truncate"
       ><slot>{{ name }}</slot></span
     >

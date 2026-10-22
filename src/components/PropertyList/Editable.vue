@@ -116,7 +116,13 @@ const field =
         @click="toggle"
       >
         <span v-if="name" class="sr-only">{{ name }}: </span>
-        <Tag v-if="selected[0]" :name="selected[0].label" variant="outline" />
+        <Tag
+          v-if="selected[0]"
+          :icon="selected[0].icon"
+          :icon-color="selected[0].iconColor"
+          :name="selected[0].label"
+          variant="outline"
+        />
         <span v-else class="text-sui-ink-muted">{{ placeholder }}</span>
       </button>
     </template>
