@@ -67,7 +67,7 @@ The package is published to npm as `@sparklingopinions/sparkling-ui`. Apps insta
    import { Button } from 'sparkling-ui'
    ```
 
-5. `Icon` draws the library's set of 134 icons by name: `<Icon name="users" color="ink-muted" />`. Older names (`people`, `companies`, `dot-vertical`...) resolve as aliases, and `iconNames` lists the set. To add icons or replace some of the set, register a resolver once, before mounting; names it returns a component for win. With SVG files imported as components (e.g. `vite-svg-loader`):
+5. `Icon` draws the library's set of 135 icons by name: `<Icon name="users" color="ink-muted" />`. Older names (`people`, `companies`, `dot-vertical`...) resolve as aliases, and `iconNames` lists the set. To add icons or replace some of the set, register a resolver once, before mounting; names it returns a component for win. With SVG files imported as components (e.g. `vite-svg-loader`):
 
    ```ts
    import { type Component, defineAsyncComponent } from 'vue'

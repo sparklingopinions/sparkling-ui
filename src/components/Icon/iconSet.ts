@@ -143,6 +143,7 @@ export const iconSet: Record<string, IconDefinition> = {
   'chevron-right': s('0 0 16 16', p('M6 3L11 8L6 13')),
   'circle-alert': s('0 0 24 24', '<circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><path d="M12 16.25h.01"/>', 2.25),
   'circle-check': s('0 0 24 24', '<circle cx="12" cy="12" r="9"/><path d="M8.5 12.25l2.4 2.4L15.5 9.75"/>', 2.25),
+  'circle-minus': s('0 0 24 24', '<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>', 2.25),
   'circle-dashed': s(
     '0 0 24 24',
     '<path d="M13.25 3.09A9 9 0 0 1 17.42 4.81M19.19 6.58A9 9 0 0 1 20.91 10.75M20.91 13.25A9 9 0 0 1 19.19 17.42M17.42 19.19A9 9 0 0 1 13.25 20.91M10.75 20.91A9 9 0 0 1 6.58 19.19M4.81 17.42A9 9 0 0 1 3.09 13.25M3.09 10.75A9 9 0 0 1 4.81 6.58M6.58 4.81A9 9 0 0 1 10.75 3.09"/>',
