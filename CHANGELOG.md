@@ -1,5 +1,58 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.6.0
+
+### Minor Changes
+
+- 93e015a: `Button` takes `variant="ghost-inverse"` for inverse grounds such as toasts and dark bands: on-inverse text and icons, an on-inverse wash at 12% on hover and 20% pressed, and the inverse focus ring. It comes in the same sizes as the other variants.
+- 4468cf6: A new `ContextMenu`: DropdownMenu's items opened at the pointer, for right-click on rows and cards. It takes the same `items` (icons, shortcuts, separators, danger, confirm-first) and emits the same `click-item`, `show` and `hide`, plus `update:open`.
+  
+  ```vue
+  <ContextMenu :items="items" label="Post actions" @click-item="run">
+    <PostRow tabindex="0" />
+  </ContextMenu>
+  ```
+  
+  - The default slot is the target, rendered with no wrapper of its own; make it focusable.
+  - From the keyboard, Shift+F10 or the Menu key opens it at the focused target with its first item focused. Arrow keys, Home, End and typeahead move; Escape closes and returns focus to the target.
+  - It opens at the pointer and stays inside the window. `disabled` lets the browser's own menu through.
+  - Keep every action reachable from a visible control too, such as the row's More menu: context menus aren't discoverable.
+- f384ca4: `DataList` groups can carry their own header:
+  
+  - `variant="cards"` draws each group as its own bordered card, 12px apart, with headers on the surface colour that don't stick. `joined` stays the default.
+  - A `#group-header="{ group, count, collapsed }"` slot renders your content, such as a status Badge and a count, inside the group's heading in place of its name and count. A group's `header` does the same with plain text.
+  - A group's `label` is its accessible name when its header isn't just its name, and names its + button.
+- 1f3a42e: `Dialog` takes `presentation="sheet"` to show as a bottom sheet, or `"auto"` to be a sheet on viewports narrower than `sheetBelow` (640px by default) and a dialog above it. `dialog` stays the default.
+  
+  - The sheet sits full width at the bottom with rounded top corners (a new `--sui-radius-sheet` token, 1.25rem), a grab handle, the title row, a scrolling body and a sticky footer. The confirm runs full width at 48px with the `hint` centred above it, and the footer clears the device's safe area.
+  - Drag the handle or title row down and the sheet follows; let go past a third of its height, or with a flick, and it closes, otherwise it springs back. A tap on the scrim and Escape close it too, so it draws no Cancel button. Each of these emits `cancel`.
+  - It slides up from the bottom and back down, without animation when reduced motion is on.
+  - `:closable="false"` hides the close button but keeps a Close that appears on keyboard focus, so keyboard and screen-reader users can always leave.
+  - Focus, labelling and the ⌘/Ctrl Enter confirm work as in a dialog. A sheet doesn't draw `band` or the `hero` slot.
+- d471bde: `EmptyState` takes `size="sm"` for an empty card in settings or a tray: an optional 16px icon in ink-muted, the `title` as one 13px muted line (a paragraph, not a heading), and the action as a small secondary button, in tighter padding. `description` isn't shown at this size. `md` stays the default and is unchanged.
+- 2b83bec: `SortMenu` and `FilterMenu` fit a page header:
+  
+  - `variant="ghost"` (with `as="button"`) draws a ghost Sort or Filters button. Without it they stay secondary, tinted while sorting or filtering.
+  - A `#trigger` slot draws your own opener: `#trigger="{ open, toggle, active, label, props }"` on SortMenu (`label` reads like the sort chip) and `#trigger="{ open, toggle, count, props }"` on FilterMenu. Spread `props` on your button (`v-bind="props"`): it carries `aria-haspopup`, `aria-expanded`, `aria-controls`, the click and a ref, so the panel opens from it and focus returns to it. With a trigger, SortMenu renders even while unsorted.
+  - Both already take `v-model:open` to open and close them from outside.
+  - `FilterTriggerProps` is exported.
+- 1d04494: `FormField` takes `softLimit` for a recommended length, such as a 60-character title. The counter counts against it, and past it the count turns warning, in medium weight with a small warning triangle, and screen readers hear "Longer than recommended". The control stays valid: no danger colour, no `aria-invalid`, and the value still saves. A `maxLength` set as well stays the hard limit in danger, and takes over the counter once it's passed. New labels: `softCounterLabel` (`'{count} of {max} recommended characters'`) and `overSoftLabel` (`'Longer than recommended'`).
+- e8b744d: `Icon` draws four more icons, 118 in all: `smile`, `lock`, `redo` and `keyboard`. Their common names resolve too: `emoji`, `lock-keyhole`, `redo-2` and `keys`.
+- 346344d: `SegmentedControl` takes `block` to fill its row: the segments share the width evenly, centred, and long labels truncate with an ellipsis. For phone tab bars. `SegmentedControlProps` is exported.
+- d45569f: `Table` takes `rowHeight` (px) to set its rows and header between the two sizes, such as 44; cells keep their side padding and drop the vertical one. It works through a new `--sui-table-row` token, which an app can also set on `:root` to put every table at one height. `headerTone="canvas"` lays the header on the page colour, for a table directly on the canvas; a sorted header stays accent-wash. The defaults are unchanged.
+- 8c8525f: `Tag` takes `pressable` to become a toggle chip for quick choices, bound to `v-model:pressed`, with `disabled`. It renders a `<button type="button" aria-pressed>`, 28px tall with 13px medium text: off on a surface with a line border, on in accent-wash with an accent-line border, accent text and a leading check. Group several in a `role="group"` with a label. A plain Tag is unchanged.
+- d7cb065: Toasts take actions: `toast.success('Post approved', { action: { label: 'Undo', onClick: undo } })`, or `actions` with up to two (any more are ignored). They sit after the message as small `ghost-inverse` buttons, then a hairline and the close button; pressing one runs `onClick` and closes the toast.
+  
+  - A toast with an action stays 6s by default instead of 3s, and a thin bar at its bottom counts down. Hovering or focusing the toasts pauses the bar and the timer together. Summary and detail truncate to one line, so keep them short.
+  - `onDismiss(reason)` reports why a toast left: `'action'`, `'close'` (the close button or Escape) or `'timeout'`. When an undo toast times out, nothing runs and the change stands.
+  - The `Toaster` preview takes `action`, `actions` and `life` too, and its `close` event now passes the reason as a second argument.
+  - `ToastAction` and `ToastDismissReason` are exported.
+- b698fea: `toast.warning(summary, options)` adds a fourth severity, led by a warning-mid dot. It's announced politely, like info and success; only errors interrupt. `ToastSeverity` includes `'warning'`.
+
+### Patch Changes
+
+- e32cd57: `Avatar`'s `size` also takes a number of px. 20 is the supported off-scale size, for list rows and activity feeds, with a 10px initial; the initial steps up with the size (11px up to 28, xs up to 36, sm above). The named sizes are unchanged.
+
 ## 0.5.0
 
 ### Minor Changes
