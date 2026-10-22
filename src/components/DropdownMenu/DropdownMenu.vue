@@ -10,29 +10,24 @@ import {
   DropdownMenuTrigger
 } from 'reka-ui'
 
-import { useConfirm } from '../../composables/useConfirm'
 import Button from '../Button/Button.vue'
 import Icon from '../Icon/Icon.vue'
 import Tooltip from '../Tooltip/Tooltip.vue'
+import MenuItemContent from '../internal/MenuItemContent.vue'
+import {
+  type DropdownMenuAction,
+  type DropdownMenuEntry,
+  type MenuConfirmLabels,
+  menuConfirmDefaults,
+  menuContentClass,
+  menuItemClass,
+  menuSeparatorClass,
+  useMenuSelect
+} from '../internal/menu'
 
-export interface DropdownMenuAction {
-  type: 'action'
-  label: string
-  action?: string
-  icon?: string
-  variant?: 'danger'
-  shortcut?: string
-  /** Asks first, with this wording; `confirmed: true` asks with the generic wording. */
-  confirm?: { message: string; title?: string; acceptLabel?: string }
-  confirmed?: boolean
-  [key: string]: unknown
-}
+export type { DropdownMenuAction, DropdownMenuEntry }
 
-export type DropdownMenuEntry = DropdownMenuAction | { type: 'separator' }
-
-export interface DropdownMenuProps {
-  /** Passed back with every clicked item, e.g. the record the menu acts on. */
-  id?: string
+export interface DropdownMenuProps extends MenuConfirmLabels {
   items?: DropdownMenuEntry[]
   buttonIcon?: string
   /** A label beside the icon; without one the button is icon-only, named by the tooltip. */
@@ -41,46 +36,21 @@ export interface DropdownMenuProps {
   tooltip?: string | null
   /** Lines the menu up with the trigger's start or end edge. */
   align?: 'start' | 'end'
-  confirmTitle?: string
-  confirmMessage?: string
-  confirmLabel?: string
-  deleteLabel?: string
-  cancelLabel?: string
 }
 
 const props = withDefaults(defineProps<DropdownMenuProps>(), {
-  id: undefined,
+  ...menuConfirmDefaults,
   items: () => [],
   buttonIcon: 'more-vertical',
   buttonLabel: undefined,
   tooltip: 'More actions',
-  align: 'start',
-  confirmTitle: 'Are you sure?',
-  confirmMessage: "This can't be undone.",
-  confirmLabel: 'Confirm',
-  deleteLabel: 'Delete',
-  cancelLabel: 'Cancel'
+  align: 'start'
 })
 
 const emit = defineEmits<{ 'click-item': [item: DropdownMenuAction & { id?: string }]; show: []; hide: [] }>()
 
 const open = ref(false)
-const confirm = useConfirm()
-
-async function select(item: DropdownMenuAction) {
-  if (item.confirm || item.confirmed) {
-    const destructive = item.variant === 'danger' || item.action === 'delete'
-    const confirmed = await confirm({
-      title: item.confirm?.title ?? props.confirmTitle,
-      message: item.confirm?.message ?? props.confirmMessage,
-      cancelLabel: props.cancelLabel,
-      confirmLabel: item.confirm?.acceptLabel ?? (item.action === 'delete' ? props.deleteLabel : props.confirmLabel),
-      confirmVariant: destructive ? 'danger' : 'primary'
-    })
-    if (!confirmed) return
-  }
-  emit('click-item', { id: props.id, ...item })
-}
+const select = useMenuSelect(props, (item) => emit('click-item', item))
 
 function onOpenChange(value: boolean) {
   open.value = value
@@ -114,29 +84,13 @@ function onOpenChange(value: boolean) {
       <DropdownMenuPortal>
         <DropdownMenuContent
           :align="align"
-          class="z-[1100] min-w-[max(12rem,var(--reka-dropdown-menu-trigger-width))] rounded-xl border border-sui-line-subtle bg-sui-surface p-1 shadow-lg outline-hidden data-[state=open]:animate-sui-menu-in"
+          :class="[menuContentClass, 'min-w-[max(12rem,var(--reka-dropdown-menu-trigger-width))]']"
           side="bottom"
         >
           <template v-for="(item, index) in items" :key="index">
-            <DropdownMenuSeparator v-if="item.type === 'separator'" class="my-1 border-t border-sui-line-subtle" />
-            <DropdownMenuItem
-              v-else
-              class="relative rounded-lg text-sm text-sui-ink transition-colors duration-150 outline-hidden hover:bg-sui-sunken focus-visible:sui-ring-inset data-highlighted:bg-sui-sunken"
-              @select="select(item)"
-            >
-              <div
-                class="flex cursor-pointer items-center gap-2.5 px-2.5 py-1.5"
-                :class="item.variant === 'danger' ? 'text-sui-danger' : 'text-sui-ink'"
-              >
-                <Icon
-                  v-if="item.icon"
-                  class="h-4 w-4 shrink-0"
-                  :color="item.variant === 'danger' ? 'danger' : 'ink-muted'"
-                  :name="item.icon"
-                />
-                <span class="flex-1 text-13">{{ item.label }}</span>
-                <span v-if="item.shortcut" class="text-11 text-sui-ink-muted">{{ item.shortcut }}</span>
-              </div>
+            <DropdownMenuSeparator v-if="item.type === 'separator'" :class="menuSeparatorClass" />
+            <DropdownMenuItem v-else :class="menuItemClass" @select="select(item)">
+              <MenuItemContent :item="item" />
             </DropdownMenuItem>
           </template>
         </DropdownMenuContent>
