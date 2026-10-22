@@ -39,7 +39,7 @@ const pairs: { text: string; background: string; usage: string; min?: number; wa
   { text: 'ink-body', background: 'warning-soft', usage: 'Warning banners' },
   { text: 'ink-body', background: 'accent-soft', usage: 'Info banners' },
   { text: 'ink-body', background: 'canvas', usage: 'Neutral banners' },
-  { text: 'warning', background: 'surface', usage: 'Text pills' },
+  { text: 'warning', background: 'surface', usage: 'Text pills, a count past its soft limit' },
   { text: 'success', background: 'surface', usage: 'Text pills' },
   { text: 'info', background: 'surface', usage: 'Text pills' },
   { text: 'hue-blue-ink', background: 'hue-blue-soft', usage: 'Avatar initials' },
