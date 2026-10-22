@@ -15,6 +15,7 @@ import {
 
 import type { Hue } from '../../utils/hues'
 import { useFieldControl } from '../FormField/context'
+import Icon from '../Icon/Icon.vue'
 import Spinner from '../Spinner/Spinner.vue'
 import Tag from '../Tag/Tag.vue'
 import CheckIcon from '../internal/CheckIcon.vue'
@@ -276,10 +277,22 @@ const optionClass =
               v-for="option in selected"
               :key="option.value"
               :color="option.color ?? undefined"
+              :icon="option.icon"
+              :icon-color="option.iconColor"
               :name="option.label"
             />
           </span>
-          <Tag v-else-if="selected[0]!.color" :color="selected[0]!.color" :name="selected[0]!.label" />
+          <Tag
+            v-else-if="selected[0]!.color"
+            :color="selected[0]!.color"
+            :icon="selected[0]!.icon"
+            :icon-color="selected[0]!.iconColor"
+            :name="selected[0]!.label"
+          />
+          <span v-else-if="selected[0]!.icon" class="inline-flex min-w-0 items-center gap-1.5">
+            <Icon class="shrink-0" :color="selected[0]!.iconColor ?? 'ink-subtle'" :name="selected[0]!.icon" />
+            <span class="truncate whitespace-nowrap">{{ selected[0]!.label }}</span>
+          </span>
           <span v-else class="min-w-0 truncate whitespace-nowrap">{{ selected[0]!.label }}</span>
           <svg
             aria-hidden="true"
@@ -327,6 +340,8 @@ const optionClass =
                 v-for="option in selected"
                 :key="option.value"
                 :color="option.color ?? undefined"
+                :icon="option.icon"
+                :icon-color="option.iconColor"
                 :name="option.label"
                 removable
                 :remove-label="removeLabel"
@@ -365,8 +380,21 @@ const optionClass =
               >
                 <span class="inline-flex min-w-0 items-center gap-1.5 truncate">
                   <slot name="option" :option="option as SelectOption<T>">
-                    <Tag v-if="option.color" :color="option.color" :name="option.label" />
-                    <template v-else>{{ option.label }}</template>
+                    <Tag
+                      v-if="option.color"
+                      :color="option.color"
+                      :icon="option.icon"
+                      :icon-color="option.iconColor"
+                      :name="option.label"
+                    />
+                    <template v-else>
+                      <Icon
+                        v-if="option.icon"
+                        class="shrink-0"
+                        :color="option.iconColor ?? 'ink-subtle'"
+                        :name="option.icon"
+                      />{{ option.label }}
+                    </template>
                   </slot>
                 </span>
                 <CheckIcon v-if="values.includes(option.value)" />
@@ -383,8 +411,21 @@ const optionClass =
               >
                 <span class="inline-flex min-w-0 items-center gap-1.5 truncate">
                   <slot name="option" :option="option">
-                    <Tag v-if="option.color" :color="option.color" :name="option.label" />
-                    <template v-else>{{ option.label }}</template>
+                    <Tag
+                      v-if="option.color"
+                      :color="option.color"
+                      :icon="option.icon"
+                      :icon-color="option.iconColor"
+                      :name="option.label"
+                    />
+                    <template v-else>
+                      <Icon
+                        v-if="option.icon"
+                        class="shrink-0"
+                        :color="option.iconColor ?? 'ink-subtle'"
+                        :name="option.icon"
+                      />{{ option.label }}
+                    </template>
                   </slot>
                 </span>
                 <CheckIcon v-if="values.includes(option.value)" />

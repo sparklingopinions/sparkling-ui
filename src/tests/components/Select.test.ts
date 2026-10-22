@@ -59,6 +59,28 @@ describe('Select', () => {
     expect(document.querySelector('[role="listbox"]')).toBeNull()
   })
 
+  it('draws the icon of an option in the list and in the trigger, ink-subtle unless coloured', async () => {
+    const statuses = [
+      { value: 'nudge', label: 'Follow-up', icon: 'bell-ring', iconColor: 'warning' as const },
+      { value: 'waiting', label: 'Waiting', icon: 'hourglass' }
+    ]
+    const wrapper = mount(Select, {
+      props: { options: statuses, modelValue: 'nudge' },
+      attrs: { 'aria-label': 'Status' },
+      attachTo: document.body
+    })
+    const trigger = wrapper.get('button')
+    expect(trigger.text()).toBe('Status: Follow-up')
+    expect(trigger.findAll('svg')[0]!.classes()).toContain('stroke-sui-warning')
+
+    await trigger.trigger('click')
+    await flushPromises()
+    expect(option('Waiting').querySelector('svg')!.classList).toContain('stroke-sui-ink-subtle')
+    expect(option('Waiting').textContent?.trim()).toBe('Waiting')
+    await expectAccessible(document.body)
+    wrapper.unmount()
+  })
+
   it('filters a searchable list and reports the query', async () => {
     const wrapper = mount(Select, {
       props: { options: rows, searchable: true },

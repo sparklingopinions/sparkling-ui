@@ -111,6 +111,18 @@ describe('Editable', () => {
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['lead'])
     wrapper.unmount()
   })
+
+  it('shows the icon of a chosen option inside its outline Tag', () => {
+    const wrapper = mountField({
+      variant: 'select',
+      modelValue: 'customer',
+      options: [{ label: 'Customer', value: 'customer', icon: 'heart', iconColor: 'success' }],
+      placeholder: 'Pick a stage'
+    })
+    expect(wrapper.get('button').text()).toBe('Pick a stage: Customer')
+    expect(wrapper.get('button svg').classes()).toEqual(expect.arrayContaining(['size-3.5', 'stroke-sui-success']))
+    wrapper.unmount()
+  })
 })
 
 describe('PropertyList', () => {

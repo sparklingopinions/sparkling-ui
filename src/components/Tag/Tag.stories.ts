@@ -34,6 +34,10 @@ export const Removable: Story = { args: { removable: true } }
 
 export const Outline: Story = { args: { name: 'Customer', variant: 'outline', color: undefined } }
 
+export const OutlineWithIcon: Story = {
+  args: { name: 'Follow-up', variant: 'outline', color: undefined, icon: 'bell-ring', iconColor: 'warning' }
+}
+
 export const OutlineChange: Story = {
   render: () => ({
     components: { Tag },
