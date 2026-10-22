@@ -47,6 +47,48 @@ describe('toast', () => {
     wrapper.unmount()
   })
 
+  it('sits at the bottom centre by default, clear of the safe area and any insets', async () => {
+    const wrapper = mount(Toaster, { attachTo: document.body })
+    const region = document.body.querySelector<HTMLElement>('[data-sui-toasts]')!
+
+    expect(region.dataset.suiPosition).toBe('bottom-center')
+    expect(region.className).toContain('flex-col')
+    expect(region.style.bottom).toBe(
+      'calc(var(--sui-toaster-margin) + var(--sui-toaster-inset-bottom) + env(safe-area-inset-bottom))'
+    )
+    expect(region.style.left).toBe('calc(var(--sui-toaster-margin) + var(--sui-toaster-inset-left))')
+    expect(region.style.right).toBe('calc(var(--sui-toaster-margin) + var(--sui-toaster-inset-right))')
+    wrapper.unmount()
+  })
+
+  it.each([
+    ['bottom-left', { left: 'calc(var(--sui-toaster-margin) + var(--sui-toaster-inset-left))', right: 'auto' }],
+    ['bottom-right', { left: 'auto', right: 'calc(var(--sui-toaster-margin) + var(--sui-toaster-inset-right))' }]
+  ])('sits at the %s', async (position, sides) => {
+    const wrapper = mount(Toaster, { props: { position: position as 'bottom-left' }, attachTo: document.body })
+    const region = document.body.querySelector<HTMLElement>('[data-sui-toasts]')!
+
+    expect(region.style.left).toBe(sides.left)
+    expect(region.style.right).toBe(sides.right)
+    wrapper.unmount()
+  })
+
+  it('stacks from the top edge, newest nearest it, and slides in from above', async () => {
+    const wrapper = mount(Toaster, { props: { position: 'top-center' }, attachTo: document.body })
+    toast.info('Draft saved')
+    await flushPromises()
+    const region = document.body.querySelector<HTMLElement>('[data-sui-toasts]')!
+
+    expect(region.style.top).toBe(
+      'calc(var(--sui-toaster-margin) + var(--sui-toaster-inset-top) + env(safe-area-inset-top))'
+    )
+    expect(region.style.bottom).toBe('')
+    expect(region.className).toContain('flex-col-reverse')
+    expect(messages()[0]!.className).toContain('data-[state=open]:animate-sui-toast-in-top')
+    await expectAccessible(document.body)
+    wrapper.unmount()
+  })
+
   it('closes from its button', async () => {
     const wrapper = mount(Toaster, { attachTo: document.body })
     toast.info('Draft saved', { life: 0 })

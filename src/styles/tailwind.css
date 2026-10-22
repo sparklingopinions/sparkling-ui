@@ -300,6 +300,14 @@
   --sui-table-row: initial;
   /* The header row's own height, e.g. 36px over 44px rows; unset, it follows the rows. */
   --sui-table-header: initial;
+  /* Live toasts: their width, their gap to the viewport's edges, and insets an app sets to keep them clear of its own
+     chrome (a sidebar, a tab bar), per route or breakpoint. The safe area is added on top. */
+  --sui-toaster-width: 24rem;
+  --sui-toaster-margin: 1.25rem;
+  --sui-toaster-inset-top: 0px;
+  --sui-toaster-inset-right: 0px;
+  --sui-toaster-inset-bottom: 0px;
+  --sui-toaster-inset-left: 0px;
   --sui-shadow-raised: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --sui-focus-width: 2px;
   --sui-focus-offset: 2px;
@@ -366,9 +374,11 @@
   --animate-sui-sheet-in: sui-sheet-in 300ms cubic-bezier(0.32, 0.72, 0, 1);
   --animate-sui-sheet-out: sui-sheet-out 200ms cubic-bezier(0.4, 0, 1, 1) forwards;
   --animate-sui-toast-in: sui-toast-in 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-sui-toast-in-top: sui-toast-in-top 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --animate-sui-toast-out:
     sui-toast-collapse 450ms cubic-bezier(0, 1, 0, 1) forwards,
     sui-toast-fade 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  --animate-sui-toast-fade: sui-toast-fade 200ms linear forwards;
   /* Its duration is the toast's life, set inline. */
   --animate-sui-toast-timer: sui-toast-timer linear forwards;
 
@@ -456,6 +466,13 @@
     from {
       opacity: 0;
       transform: translateY(50%);
+    }
+  }
+
+  @keyframes sui-toast-in-top {
+    from {
+      opacity: 0;
+      transform: translateY(-50%);
     }
   }
 
