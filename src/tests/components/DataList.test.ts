@@ -32,6 +32,54 @@ describe('DataList', () => {
     wrapper.unmount()
   })
 
+  it('draws each group as its own card, headers not sticky', async () => {
+    const wrapper = mount(DataList, { props: { groups, variant: 'cards' }, attachTo: document.body })
+    const sections = wrapper.findAll('section')
+
+    expect(wrapper.classes()).toContain('gap-3')
+    expect(wrapper.classes()).not.toContain('border')
+    expect(sections.every((s) => s.classes().includes('rounded-xl') && s.classes().includes('border'))).toBe(true)
+    expect(wrapper.find('header').classes()).toContain('bg-sui-surface')
+    expect(wrapper.find('header').classes()).not.toContain('sticky')
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
+
+  it('renders a custom group header inside the heading, named by the group label', async () => {
+    const wrapper = mount(DataList, {
+      props: {
+        groups: [
+          { ...groups[0]!, name: undefined, label: 'In review', header: undefined },
+          { id: 'text', label: 'Done', header: 'Done, 40 total', items: [{ id: 3, name: 'Kickoff' }] }
+        ],
+        onNew: () => {}
+      },
+      slots: {
+        'group-header':
+          '<template #group-header="{ group, count, collapsed }"><span class="badge">{{ group.label }}</span><span>{{ count }}</span><span>{{ collapsed }}</span></template>'
+      },
+      attachTo: document.body
+    })
+    const [first, second] = wrapper.findAll('section')
+
+    expect(first!.attributes('aria-label')).toBe('In review')
+    expect(first!.find('h3 .badge').text()).toBe('In review')
+    expect(first!.find('h3').text()).toBe('In review2false')
+    expect(first!.find('button[aria-label="New in In review"]').exists()).toBe(true)
+    expect(second!.attributes('aria-label')).toBe('Done')
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
+
+  it('shows a group header given as text', () => {
+    const wrapper = mount(DataList, {
+      props: { groups: [{ id: 'text', label: 'Done', header: 'Done, 40 total', items: [{ id: 3, name: 'Kickoff' }] }] }
+    })
+
+    expect(wrapper.find('h3').text()).toBe('Done, 40 total')
+    expect(wrapper.find('section').attributes('aria-labelledby')).toBeUndefined()
+  })
+
   it('collapses a group', async () => {
     const wrapper = mount(DataList, {
       props: { groups, collapsed: [], 'onUpdate:collapsed': (collapsed) => wrapper.setProps({ collapsed }) }

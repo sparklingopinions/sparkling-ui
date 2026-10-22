@@ -12,6 +12,8 @@ export interface DataListProps<T> {
   /** A checkbox gutter bound to `v-model:selected`: it shows on hover, and on every row once anything is selected. */
   selectable?: boolean
   loading?: boolean
+  /** joined: one frame, sticky sunken group headers. cards: each group its own card, 12px apart, headers not sticky. */
+  variant?: 'joined' | 'cards'
   /** The group headings' level, to fit the page's outline. */
   headingLevel?: 2 | 3 | 4 | 5 | 6
   /** Makes rows open on click and Enter (`@row-click`). */
@@ -27,6 +29,7 @@ export interface DataListProps<T> {
 
 const props = withDefaults(defineProps<DataListProps<T>>(), {
   rowKey: 'id' as never,
+  variant: 'joined',
   headingLevel: 3,
   onRowClick: undefined,
   onNew: undefined,
@@ -39,9 +42,11 @@ const props = withDefaults(defineProps<DataListProps<T>>(), {
 const selected = defineModel<unknown[]>('selected', { default: () => [] })
 const collapsed = defineModel<string[]>('collapsed', { default: () => [] })
 
-defineSlots<{
+const slots = defineSlots<{
   /** Marks before a group's name, e.g. a status icon. */
   'group-leading'?: (props: { group: DataListGroup<T> }) => unknown
+  /** Your own group header in place of the name and count, e.g. a status Badge and a count; inside the heading. */
+  'group-header'?: (props: { group: DataListGroup<T>; count: number; collapsed: boolean }) => unknown
   /** Small marks before an item's title: a status icon, an id, an avatar. */
   leading?: (props: { item: T }) => unknown
   /** The item's title; `item.name` by default. */
@@ -83,6 +88,11 @@ function onKeydown(event: KeyboardEvent, item: T) {
   event.preventDefault()
 }
 
+const cards = computed(() => props.variant === 'cards')
+const card = 'overflow-clip rounded-xl border border-sui-line-subtle bg-sui-surface'
+const custom = (group: DataListGroup<T>) => !!slots['group-header'] || group.header !== undefined
+const groupName = (group: DataListGroup<T>) => group.label ?? group.name ?? ''
+
 const skeletonWidths = ['42%', '58%', '35%', '50%', '46%']
 const iconButton =
   'flex size-6 shrink-0 items-center justify-center rounded-md text-sui-ink-muted outline-hidden transition-colors duration-150 hover:bg-sui-line-subtle hover:text-sui-ink focus-visible:sui-ring-inset'
@@ -90,12 +100,11 @@ const iconButton =
 
 <!-- A grouped list: one dense line per record under sticky, collapsible group headers. -->
 <template>
-  <div
-    ref="root"
-    class="flex flex-col overflow-clip rounded-xl border border-sui-line-subtle bg-sui-surface text-13 text-sui-ink"
-  >
-    <slot v-if="isEmpty && $slots.empty" name="empty" />
-    <section v-else-if="loading" :aria-busy="true">
+  <div ref="root" class="flex flex-col text-13 text-sui-ink" :class="cards ? 'gap-3' : card">
+    <div v-if="isEmpty && $slots.empty" :class="cards && card">
+      <slot name="empty" />
+    </div>
+    <section v-else-if="loading" :aria-busy="true" :class="cards && card">
       <div
         v-for="(width, i) in skeletonWidths"
         :key="i"
@@ -112,12 +121,14 @@ const iconButton =
       <section
         v-for="group in groups"
         :key="group.id"
-        :aria-labelledby="group.name ? `${id}-${group.id}-name` : undefined"
-        class="border-t border-sui-line-subtle first:border-t-0"
+        :aria-label="group.label"
+        :aria-labelledby="!group.label && (group.name || custom(group)) ? `${id}-${group.id}-name` : undefined"
+        :class="cards ? card : 'border-t border-sui-line-subtle first:border-t-0'"
       >
         <header
-          v-if="group.name"
-          class="sticky top-0 z-10 flex h-9 items-center gap-2 border-b border-sui-line-subtle bg-sui-sunken pr-2 pl-1.5"
+          v-if="group.name || custom(group)"
+          class="flex h-9 items-center gap-2 border-b border-sui-line-subtle pr-2 pl-1.5"
+          :class="cards ? 'bg-sui-surface' : 'sticky top-0 z-10 bg-sui-sunken'"
         >
           <button
             :aria-controls="`${id}-${group.id}`"
@@ -139,18 +150,34 @@ const iconButton =
               <path d="M3 4.5 6 7.5l3-3" />
             </svg>
           </button>
-          <slot :group="group" name="group-leading" />
           <component
             :is="`h${headingLevel}`"
+            v-if="custom(group)"
             :id="`${id}-${group.id}-name`"
-            class="m-0 text-13 font-medium text-sui-ink"
+            class="m-0 flex min-w-0 items-center gap-2 text-13 font-medium text-sui-ink"
           >
-            {{ group.name }}
+            <slot
+              :collapsed="collapsed.includes(group.id)"
+              :count="group.count ?? group.items.length"
+              :group="group"
+              name="group-header"
+              >{{ group.header }}</slot
+            >
           </component>
-          <span class="text-13 text-sui-ink-muted tabular-nums">{{ group.count ?? group.items.length }}</span>
+          <template v-else>
+            <slot :group="group" name="group-leading" />
+            <component
+              :is="`h${headingLevel}`"
+              :id="`${id}-${group.id}-name`"
+              class="m-0 text-13 font-medium text-sui-ink"
+            >
+              {{ group.name }}
+            </component>
+            <span class="text-13 text-sui-ink-muted tabular-nums">{{ group.count ?? group.items.length }}</span>
+          </template>
           <button
             v-if="onNew"
-            :aria-label="newLabel.replace('{group}', group.name)"
+            :aria-label="newLabel.replace('{group}', groupName(group))"
             class="ml-auto"
             :class="iconButton"
             type="button"
