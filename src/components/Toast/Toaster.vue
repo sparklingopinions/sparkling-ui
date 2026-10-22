@@ -1,7 +1,16 @@
 <script setup lang="ts">
+import { reactive } from 'vue'
+
 import { ToastProvider, ToastRoot, ToastViewport } from 'reka-ui'
 
-import { type ToastSeverity, removeToast, toasts } from '../../composables/toast'
+import {
+  type ToastAction,
+  type ToastDismissReason,
+  type ToastSeverity,
+  removeToast,
+  toastActions,
+  toasts
+} from '../../composables/toast'
 import ToastMessage from './ToastMessage.vue'
 
 export interface ToastPreview {
@@ -11,6 +20,10 @@ export interface ToastPreview {
   detail?: string
   severity?: ToastSeverity
   closable?: boolean
+  action?: ToastAction
+  actions?: ToastAction[]
+  /** With actions, the countdown bar's length in ms; it emits `close` with `timeout` when it runs out. */
+  life?: number
 }
 
 export interface ToasterProps {
@@ -30,10 +43,24 @@ withDefaults(defineProps<ToasterProps>(), {
   preview: undefined
 })
 
-defineEmits<{
-  /** A preview toast's close button, with its `id` (or index). */
-  close: [id: string | number]
+const emit = defineEmits<{
+  /** A preview toast left, with its `id` (or index): its close button, one of its actions, or its countdown. */
+  close: [id: string | number, reason: ToastDismissReason]
 }>()
+
+// Reka pauses every toast's timer while the region is hovered or focused, or the window is in the background; the
+// countdown bars follow it.
+const paused = reactive(new Set<number>())
+
+function runLive(id: number, action: ToastAction) {
+  action.onClick()
+  removeToast(id, 'action')
+}
+
+function runPreview(id: string | number, action: ToastAction) {
+  action.onClick()
+  emit('close', id, 'action')
+}
 </script>
 
 <!-- Mount once near the app root; `toast.info(...)` and friends show here. Swiping is off. -->
@@ -48,12 +75,16 @@ defineEmits<{
     <ToastMessage
       v-for="(item, index) in preview"
       :key="item.id ?? index"
+      :actions="toastActions(item)"
       :closable="item.closable"
       :close-label="closeLabel"
       :detail="item.detail"
+      :life="item.life"
       :severity="item.severity"
       :summary="item.summary"
-      @close="$emit('close', item.id ?? index)"
+      @action="runPreview(item.id ?? index, $event)"
+      @close="emit('close', item.id ?? index, 'close')"
+      @expire="emit('close', item.id ?? index, 'timeout')"
     />
   </TransitionGroup>
   <ToastProvider v-else :swipe-threshold="Number.POSITIVE_INFINITY">
@@ -64,16 +95,23 @@ defineEmits<{
       :duration="item.life || Number.POSITIVE_INFINITY"
       :open="item.open"
       :type="item.severity === 'error' ? 'foreground' : 'background'"
-      @update:open="(open) => !open && removeToast(item.id)"
+      @escape-key-down="removeToast(item.id, 'close')"
+      @pause="paused.add(item.id)"
+      @resume="paused.delete(item.id)"
+      @update:open="(open) => !open && removeToast(item.id, 'timeout')"
     >
       <ToastMessage
+        :actions="item.actions"
         class="pointer-events-auto data-[state=closed]:animate-sui-toast-out data-[state=closed]:overflow-hidden data-[state=open]:animate-sui-toast-in"
         :closable="item.closable"
         :close-label="closeLabel"
         :detail="item.detail"
+        :life="item.life"
+        :paused="paused.has(item.id)"
         :severity="item.severity"
         :summary="item.summary"
-        @close="removeToast(item.id)"
+        @action="runLive(item.id, $event)"
+        @close="removeToast(item.id, 'close')"
       />
     </ToastRoot>
     <!-- A div, not Reka's default ol: the toasts are divs, so a page can draw one alone. -->

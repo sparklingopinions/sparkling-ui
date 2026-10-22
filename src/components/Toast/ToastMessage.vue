@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { ToastSeverity } from '../../composables/toast'
+import type { ToastAction, ToastSeverity } from '../../composables/toast'
+import Button from '../Button/Button.vue'
 
 export interface ToastMessageProps {
   summary: string
@@ -7,16 +8,24 @@ export interface ToastMessageProps {
   severity?: ToastSeverity
   closable?: boolean
   closeLabel?: string
+  /** At most two, after the message. */
+  actions?: ToastAction[]
+  /** With actions, a bar at the bottom counts this many ms down. */
+  life?: number
+  /** Holds the countdown bar, in step with the toast's timer. */
+  paused?: boolean
 }
 
 withDefaults(defineProps<ToastMessageProps>(), {
   detail: undefined,
   severity: 'info',
   closable: true,
-  closeLabel: 'Close'
+  closeLabel: 'Close',
+  actions: () => [],
+  life: 0
 })
 
-defineEmits<{ close: [] }>()
+defineEmits<{ close: []; action: [action: ToastAction]; expire: [] }>()
 
 // Info has no dot; the others lead with one of their colour.
 const dots: Record<ToastSeverity, string> = { info: '', success: 'bg-sui-success-mid', error: 'bg-sui-danger-solid' }
@@ -25,13 +34,29 @@ const dots: Record<ToastSeverity, string> = { info: '', success: 'bg-sui-success
 <!-- One toast as drawn: the Toaster shows these, live or as a preview. -->
 <template>
   <div
-    class="mb-2 flex w-full items-center gap-2.5 rounded-lg bg-sui-inverse py-2.5 pr-2.5 pl-3 text-sui-on-inverse shadow-md backdrop-blur-[10px]"
+    class="group/toast relative mb-2 flex w-full items-center gap-2.5 rounded-lg bg-sui-inverse pr-2.5 pl-3 text-sui-on-inverse shadow-md backdrop-blur-[10px]"
+    :class="actions.length ? 'overflow-hidden py-1.5' : 'py-2.5'"
   >
     <span v-if="dots[severity]" class="h-2 w-2 shrink-0 rounded-full" :class="dots[severity]" />
     <div class="flex min-w-0 flex-1 flex-col gap-0.5 text-sm leading-5">
-      <span class="font-medium">{{ summary }}</span>
-      <span v-if="detail" class="text-13 text-sui-on-inverse/80">{{ detail }}</span>
+      <span class="font-medium" :class="actions.length ? 'truncate' : ''">{{ summary }}</span>
+      <span v-if="detail" class="text-13 text-sui-on-inverse/80" :class="actions.length ? 'truncate' : ''">{{
+        detail
+      }}</span>
     </div>
+    <div v-if="actions.length" class="-mr-0.5 flex shrink-0 items-center gap-0.5 [&>button]:px-2">
+      <Button
+        v-for="action in actions"
+        :key="action.label"
+        size="sm"
+        type="button"
+        variant="ghost-inverse"
+        @click="$emit('action', action)"
+      >
+        {{ action.label }}
+      </Button>
+    </div>
+    <span v-if="closable && actions.length" aria-hidden="true" class="h-4 w-px shrink-0 bg-sui-on-inverse/20" />
     <button
       v-if="closable"
       :aria-label="closeLabel"
@@ -46,5 +71,14 @@ const dots: Record<ToastSeverity, string> = { info: '', success: 'bg-sui-success
         />
       </svg>
     </button>
+    <span
+      v-if="actions.length && life > 0"
+      aria-hidden="true"
+      class="absolute inset-x-0 bottom-0 h-0.5 origin-left animate-sui-toast-timer bg-sui-on-inverse/[0.32] group-focus-within/toast:[animation-play-state:paused] group-hover/toast:[animation-play-state:paused]"
+      :class="paused && '[animation-play-state:paused]'"
+      data-sui-toast-timer
+      :style="{ animationDuration: `${life}ms` }"
+      @animationend="$emit('expire')"
+    />
   </div>
 </template>

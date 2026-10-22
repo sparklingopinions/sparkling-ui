@@ -35,6 +35,12 @@ export * from './components/Tooltip'
 export * from './components/TypingIndicator'
 export { hueFor, type Hue } from './utils/hues'
 export { initColorMode, useColorMode, useForceLightMode, type ColorMode } from './composables/useColorMode'
-export { toast, type ToastOptions, type ToastSeverity } from './composables/toast'
+export {
+  toast,
+  type ToastAction,
+  type ToastDismissReason,
+  type ToastOptions,
+  type ToastSeverity
+} from './composables/toast'
 export { useConfirm, type ConfirmOptions } from './composables/useConfirm'
 export * from './aliases'
