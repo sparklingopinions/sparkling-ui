@@ -17,13 +17,17 @@ export interface ButtonProps extends PrimitiveProps {
   /** Where the icon sits next to the label; it's spaced from the text on the other side. */
   iconPosition?: 'start' | 'end'
   disabled?: boolean
+  /** A toggle's state, as `aria-pressed`. Drawn on for ghost, ghost-inverse and secondary; leave it unset on a plain
+   *  button. */
+  pressed?: boolean
 }
 
 const props = withDefaults(defineProps<ButtonProps>(), {
   as: 'button',
   variant: 'secondary',
   size: 'md',
-  iconPosition: 'start'
+  iconPosition: 'start',
+  pressed: undefined
 })
 
 const variants: Record<ButtonVariant, string> = {
@@ -44,6 +48,16 @@ const variants: Record<ButtonVariant, string> = {
   // For inverse grounds: toasts, dark bands.
   'ghost-inverse':
     'border border-transparent bg-transparent text-sui-on-inverse not-data-disabled:hover:bg-sui-on-inverse/[0.12] not-data-disabled:active:bg-sui-on-inverse/[0.2] [&_svg]:stroke-sui-on-inverse'
+}
+
+// On is a step past hover, and hovering it deepens it again. On inverse, 22% is as deep as white text keeps 4.5:1.
+const pressedVariants: Partial<Record<ButtonVariant, string>> = {
+  secondary:
+    'border border-sui-accent-line bg-sui-accent-wash text-sui-accent shadow-(--sui-shadow-raised) not-data-disabled:hover:border-sui-accent-bright not-data-disabled:hover:bg-sui-accent-soft [&_svg]:stroke-sui-accent',
+  ghost:
+    'border border-transparent bg-sui-accent-wash text-sui-accent not-data-disabled:hover:bg-sui-accent-soft [&_svg]:stroke-sui-accent',
+  'ghost-inverse':
+    'border border-transparent bg-sui-on-inverse/[0.18] text-sui-on-inverse not-data-disabled:hover:bg-sui-on-inverse/[0.22] [&_svg]:stroke-sui-on-inverse'
 }
 
 const heights: Record<ButtonSize, string> = {
@@ -71,7 +85,7 @@ const classes = computed(() => [
   // no-underline: as a link, it shouldn't pick up the app's link styles.
   'flex items-center justify-center font-medium text-nowrap no-underline transition-all duration-200 ease-in-out data-disabled:opacity-50',
   props.variant === 'ghost-inverse' ? 'focus-visible:sui-ring-inverse' : 'focus-visible:sui-ring',
-  variants[props.variant],
+  (props.pressed && pressedVariants[props.variant]) || variants[props.variant],
   heights[props.size],
   texts[props.size],
   props.iconOnly ? 'aspect-square px-0' : paddings[props.size],
@@ -87,6 +101,7 @@ const isNativeButton = computed(() => props.as === 'button' && !props.asChild)
 <template>
   <Primitive
     :aria-disabled="disabled && !isNativeButton ? 'true' : undefined"
+    :aria-pressed="pressed === undefined ? undefined : String(pressed)"
     :as="as"
     :as-child="asChild"
     :class="classes"
