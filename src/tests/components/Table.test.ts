@@ -86,6 +86,16 @@ describe('Table', () => {
     expect(wrapper.find('tbody b').text()).toBe('Ada (1)')
   })
 
+  it('truncates cells to one line unless the column wraps', () => {
+    const wrapper = mount(Table, {
+      props: { columns: [{ key: 'name', label: 'Name', wrap: true }, columns[1]!], rows }
+    })
+    const [name, email] = wrapper.findAll('tbody tr')[0]!.findAll('td')
+    expect(name!.classes()).toContain('whitespace-normal')
+    expect(name!.classes()).not.toContain('truncate')
+    expect(email!.classes()).toContain('truncate')
+  })
+
   it('shows skeleton rows while loading, then the empty or error slot', async () => {
     const wrapper = mount(Table, {
       props: { columns, rows: [], loading: true, loadingRows: 2 },

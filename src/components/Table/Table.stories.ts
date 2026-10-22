@@ -121,3 +121,28 @@ export const WithFooter: Story = {
     `
   }
 }
+
+export const WrappedCells: Story = {
+  args: {
+    columns: [
+      { key: 'name', label: 'Thread', wrap: true },
+      { key: 'stage', label: 'Stage', width: 140 }
+    ]
+  },
+  render: (args) => ({
+    components: { Table: Table as Component },
+    setup: () => ({ args }),
+    template: `
+      <Table v-bind="args">
+        <template #cell-name="{ row }">
+          <span class="flex flex-col gap-0.5">
+            <span class="font-medium text-sui-ink">{{ row.name }}</span>
+            <span class="line-clamp-2 text-13 text-sui-ink-muted">
+              Asked about pricing for a team of five, then about onboarding, and whether the import keeps tags and notes.
+            </span>
+          </span>
+        </template>
+      </Table>
+    `
+  })
+}
