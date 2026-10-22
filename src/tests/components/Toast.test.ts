@@ -60,6 +60,102 @@ describe('toast', () => {
   })
 })
 
+describe('toast actions', () => {
+  afterEach(() => {
+    toasts.splice(0)
+    vi.useRealTimers()
+  })
+
+  const buttons = () => [...document.body.querySelectorAll<HTMLButtonElement>('[data-sui-toasts] button')]
+
+  it('draws the action after the message, a hairline, then the close, and stays 6s', async () => {
+    const wrapper = mount(Toaster, { attachTo: document.body })
+    toast.success('Post approved', { action: { label: 'Undo', onClick: () => {} } })
+    await flushPromises()
+
+    expect(buttons().map((b) => b.textContent?.trim() || b.getAttribute('aria-label'))).toEqual(['Undo', 'Close'])
+    expect(buttons()[0]!.className).toContain('text-sui-on-inverse')
+    expect(document.body.querySelector('[data-sui-toasts] [aria-hidden="true"].w-px')).not.toBeNull()
+    expect(document.body.querySelector<HTMLElement>('[data-sui-toast-timer]')!.style.animationDuration).toBe('6000ms')
+    expect(toasts[0]?.life).toBe(6000)
+    await expectAccessible(document.body)
+    wrapper.unmount()
+  })
+
+  it('runs the action, closes and reports why; extra actions are ignored', async () => {
+    const wrapper = mount(Toaster, { attachTo: document.body })
+    const undo = vi.fn()
+    const onDismiss = vi.fn()
+    toast.info('Archived', {
+      actions: [
+        { label: 'Undo', onClick: undo },
+        { label: 'View', onClick: () => {} },
+        { label: 'Extra', onClick: () => {} }
+      ],
+      onDismiss
+    })
+    await flushPromises()
+
+    expect(buttons().map((b) => b.textContent?.trim())).toEqual(['Undo', 'View', ''])
+    buttons()[0]!.click()
+    await flushPromises()
+    expect(undo).toHaveBeenCalledOnce()
+    expect(onDismiss).toHaveBeenCalledWith('action')
+    expect(toasts[0]?.open).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('times out without running the action', async () => {
+    vi.useFakeTimers()
+    const wrapper = mount(Toaster, { attachTo: document.body })
+    const undo = vi.fn()
+    const onDismiss = vi.fn()
+    toast.success('Post approved', { action: { label: 'Undo', onClick: undo }, onDismiss })
+    await flushPromises()
+
+    vi.advanceTimersByTime(5900)
+    expect(toasts[0]?.open).toBe(true)
+    vi.advanceTimersByTime(200)
+    await flushPromises()
+    expect(toasts[0]?.open).toBe(false)
+    expect(undo).not.toHaveBeenCalled()
+    expect(onDismiss).toHaveBeenCalledExactlyOnceWith('timeout')
+    wrapper.unmount()
+  })
+
+  it('reports the close button as close', async () => {
+    const wrapper = mount(Toaster, { attachTo: document.body })
+    const onDismiss = vi.fn()
+    toast.info('Archived', { action: { label: 'Undo', onClick: () => {} }, onDismiss })
+    await flushPromises()
+
+    buttons()[1]!.click()
+    await flushPromises()
+    expect(onDismiss).toHaveBeenCalledExactlyOnceWith('close')
+    wrapper.unmount()
+  })
+
+  it('holds the countdown bar while the timer is paused', async () => {
+    vi.useFakeTimers()
+    const wrapper = mount(Toaster, { attachTo: document.body })
+    toast.info('Archived', { action: { label: 'Undo', onClick: () => {} } })
+    await flushPromises()
+    const viewport = document.body.querySelector('[data-sui-toasts]')!
+    const bar = () => document.body.querySelector('[data-sui-toast-timer]')!
+
+    viewport.dispatchEvent(new CustomEvent('toast.viewportPause'))
+    await flushPromises()
+    expect(bar().className).toContain('[animation-play-state:paused]')
+    vi.advanceTimersByTime(10000)
+    expect(toasts[0]?.open).toBe(true)
+
+    viewport.dispatchEvent(new CustomEvent('toast.viewportResume'))
+    await flushPromises()
+    expect(bar().className).not.toMatch(/(^| )\[animation-play-state:paused\]/)
+    wrapper.unmount()
+  })
+})
+
 describe('Toaster preview', () => {
   it('draws toasts in place, without a close button when not closable', async () => {
     const wrapper = mount(Toaster, {
@@ -83,7 +179,10 @@ describe('Toaster preview', () => {
     const [first, second] = wrapper.findAll('button')
     await first!.trigger('click')
     await second!.trigger('click')
-    expect(wrapper.emitted('close')).toEqual([[0], ['snoozed']])
+    expect(wrapper.emitted('close')).toEqual([
+      [0, 'close'],
+      ['snoozed', 'close']
+    ])
     wrapper.unmount()
   })
 
@@ -105,6 +204,26 @@ describe('Toaster preview', () => {
     await wrapper.setProps({ preview: [{ id: 2, summary: 'Snoozed' }] })
     await nextTick()
     expect(wrapper.find('.animate-sui-toast-out').text()).toBe('Saved')
+    wrapper.unmount()
+  })
+
+  it('runs a preview action and emits close with the reason, and timeout when the bar runs out', async () => {
+    const undo = vi.fn()
+    const wrapper = mount(Toaster, {
+      props: {
+        preview: [{ id: 'approved', summary: 'Post approved', action: { label: 'Undo', onClick: undo }, life: 6000 }]
+      },
+      attachTo: document.body
+    })
+
+    await wrapper.find('button').trigger('click')
+    await wrapper.find('[data-sui-toast-timer]').trigger('animationend')
+    expect(undo).toHaveBeenCalledOnce()
+    expect(wrapper.emitted('close')).toEqual([
+      ['approved', 'action'],
+      ['approved', 'timeout']
+    ])
+    await expectAccessible(wrapper.element)
     wrapper.unmount()
   })
 })
