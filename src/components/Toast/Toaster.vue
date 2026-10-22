@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 
 import { ToastProvider, ToastRoot, ToastViewport } from 'reka-ui'
 
@@ -26,7 +26,11 @@ export interface ToastPreview {
   life?: number
 }
 
+export type ToasterPosition = 'bottom-center' | 'bottom-left' | 'bottom-right' | 'top-center' | 'top-left' | 'top-right'
+
 export interface ToasterProps {
+  /** Where live toasts sit. Move them clear of the app's own chrome with the `--sui-toaster-inset-*` tokens. */
+  position?: ToasterPosition
   /** The toast region's name for assistive tech; `{hotkey}` is F8, which focuses it. */
   label?: string
   closeLabel?: string
@@ -37,7 +41,8 @@ export interface ToasterProps {
   preview?: ToastPreview[]
 }
 
-withDefaults(defineProps<ToasterProps>(), {
+const props = withDefaults(defineProps<ToasterProps>(), {
+  position: 'bottom-center',
   label: 'Notifications ({hotkey})',
   closeLabel: 'Close',
   preview: undefined
@@ -51,6 +56,20 @@ const emit = defineEmits<{
 // Reka pauses every toast's timer while the region is hovered or focused, or the window is in the background; the
 // countdown bars follow it.
 const paused = reactive(new Set<number>())
+
+// The region sits `--sui-toaster-margin` in from the viewport's edges plus the app's insets, and the safe area
+// beyond them; centred, it centres in what's left between the side insets.
+const side = (edge: 'left' | 'right') => `calc(var(--sui-toaster-margin) + var(--sui-toaster-inset-${edge}))`
+const placement = computed(() => {
+  const [vertical, horizontal] = props.position.split('-') as ['top' | 'bottom', 'left' | 'center' | 'right']
+  return {
+    [vertical]: `calc(var(--sui-toaster-margin) + var(--sui-toaster-inset-${vertical}) + env(safe-area-inset-${vertical}))`,
+    left: horizontal === 'right' ? 'auto' : side('left'),
+    right: horizontal === 'left' ? 'auto' : side('right'),
+    width: `min(var(--sui-toaster-width), 100vw - ${side('left')} - ${side('right')})`
+  }
+})
+const fromTop = computed(() => props.position.startsWith('top'))
 
 function runLive(id: number, action: ToastAction) {
   action.onClick()
@@ -102,7 +121,12 @@ function runPreview(id: string | number, action: ToastAction) {
     >
       <ToastMessage
         :actions="item.actions"
-        class="pointer-events-auto data-[state=closed]:animate-sui-toast-out data-[state=closed]:overflow-hidden data-[state=open]:animate-sui-toast-in"
+        class="pointer-events-auto data-[state=closed]:overflow-hidden data-[state=closed]:animate-sui-toast-out motion-reduce:data-[state=closed]:animate-sui-toast-fade"
+        :class="
+          fromTop
+            ? 'data-[state=open]:animate-sui-toast-in-top motion-reduce:data-[state=open]:animate-sui-fade-in'
+            : 'data-[state=open]:animate-sui-toast-in motion-reduce:data-[state=open]:animate-sui-fade-in'
+        "
         :closable="item.closable"
         :close-label="closeLabel"
         :detail="item.detail"
@@ -114,12 +138,16 @@ function runPreview(id: string | number, action: ToastAction) {
         @close="removeToast(item.id, 'close')"
       />
     </ToastRoot>
-    <!-- A div, not Reka's default ol: the toasts are divs, so a page can draw one alone. -->
+    <!-- A div, not Reka's default ol: the toasts are divs, so a page can draw one alone. From the top, the newest is
+         nearest the edge, as it is at the bottom. -->
     <ToastViewport
       as="div"
-      class="pointer-events-none fixed bottom-5 left-1/2 z-[1200] flex w-96 max-w-[calc(100vw-2.5rem)] -translate-x-1/2 flex-col rounded-md outline-hidden"
+      class="pointer-events-none fixed z-[1200] mx-auto flex rounded-md outline-hidden"
+      :class="fromTop ? 'flex-col-reverse' : 'flex-col'"
+      :data-sui-position="position"
       data-sui-toasts
       :label="label"
+      :style="placement"
     />
   </ToastProvider>
 </template>

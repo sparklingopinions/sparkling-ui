@@ -14,7 +14,7 @@ const meta: Meta<typeof Toaster> = {
     docs: {
       description: {
         component:
-          'Mount one `<Toaster />` near the app root, then `toast.info(message)`, `toast.success(...)`, `toast.warning(...)` or `toast.error(...)`, with `{ detail, life, closable, action, actions, onDismiss }`. An `action` (or up to two `actions`) adds ghost-inverse buttons after the message; pressing one runs it and closes the toast. A toast with an action stays 6s and draws a bar counting down, paused while the toasts are hovered or focused; when it runs out, `onDismiss` gets `timeout` and nothing runs. `preview` draws toasts in place instead, for docs, designs and demos: give each an `id` to animate them in and out as the list changes, and remove one on `close`.'
+          'Mount one `<Toaster />` near the app root, then `toast.info(message)`, `toast.success(...)`, `toast.warning(...)` or `toast.error(...)`, with `{ detail, life, closable, action, actions, onDismiss }`. An `action` (or up to two `actions`) adds ghost-inverse buttons after the message; pressing one runs it and closes the toast. A toast with an action stays 6s and draws a bar counting down, paused while the toasts are hovered or focused; when it runs out, `onDismiss` gets `timeout` and nothing runs. `position` puts live toasts at the bottom centre (the default), left or right, or the top centre, left or right. Keep them clear of your own chrome with `--sui-toaster-inset-top`, `-right`, `-bottom` and `-left` (set on :root, per breakpoint, or on an element around the Toaster); `--sui-toaster-margin` is their gap to those edges and `--sui-toaster-width` their width. The safe area is added on top. `preview` draws toasts in place instead, for docs, designs and demos: give each an `id` to animate them in and out as the list changes, and remove one on `close`.'
       }
     }
   },
@@ -142,5 +142,69 @@ export const LiveWithUndo: Story = {
     await userEvent.click(await within(document.body).findByRole('button', { name: 'Undo' }))
     await expect(await canvas.findByText('Undone')).toBeInTheDocument()
     await waitFor(() => expect(within(document.body).queryByText('Post approved')).not.toBeInTheDocument())
+  }
+}
+
+const positions = ['bottom-center', 'bottom-left', 'bottom-right', 'top-center', 'top-left', 'top-right'] as const
+
+export const Positions: Story = {
+  render: () => ({
+    components: { Button, Toaster },
+    setup: () => {
+      const position = ref<(typeof positions)[number]>('bottom-center')
+      const show = (at: (typeof positions)[number]) => {
+        position.value = at
+        toast.info(`Toasts at ${at.replace('-', ' ')}`, { life: 0 })
+      }
+      return { positions, position, show }
+    },
+    template: `
+      <div class="flex flex-wrap gap-2">
+        <Button v-for="at in positions" :key="at" size="sm" @click="show(at)">{{ at.replace('-', ' ') }}</Button>
+      </div>
+      <Toaster :position="position" />
+    `
+  }),
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'top right' }))
+    const message = await within(document.body).findByText('Toasts at top right')
+    await waitFor(() => {
+      const box = message.closest('[data-sui-toasts]')!.getBoundingClientRect()
+      expect(box.top).toBeCloseTo(20, 0)
+      expect(window.innerWidth - box.right).toBeCloseTo(20, 0)
+    })
+  }
+}
+
+// The app keeps toasts clear of its own chrome with the inset tokens, set wherever suits it: on :root, under a media
+// query, or on an element around the Toaster, as here.
+export const ClearOfAppChrome: Story = {
+  render: () => ({
+    components: { Button, Toaster },
+    setup: () => ({
+      show: () => toast.success('Post approved', { life: 0, action: { label: 'Undo', onClick: noop } })
+    }),
+    template: `
+      <div
+        class="fixed inset-0 flex text-sm text-sui-ink"
+        style="--sui-toaster-inset-left: 200px; --sui-toaster-inset-bottom: 56px; --sui-toaster-margin: 1.5rem"
+      >
+        <nav aria-label="Sidebar" class="w-[200px] shrink-0 border-r border-sui-line-subtle bg-sui-canvas p-4">Sidebar</nav>
+        <main class="flex flex-1 flex-col">
+          <div class="flex-1 p-6"><Button size="sm" @click="show">Approve</Button></div>
+          <div class="flex h-14 items-center border-t border-sui-line-subtle bg-sui-surface px-6">Bottom bar</div>
+        </main>
+        <Toaster position="bottom-left" />
+      </div>
+    `
+  }),
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Approve' }))
+    const message = await within(document.body).findByText('Post approved')
+    await waitFor(() => {
+      const box = message.closest('[data-sui-toasts]')!.getBoundingClientRect()
+      expect(box.left).toBeCloseTo(224, 0)
+      expect(window.innerHeight - box.bottom).toBeCloseTo(80, 0)
+    })
   }
 }

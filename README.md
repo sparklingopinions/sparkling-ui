@@ -83,7 +83,7 @@ The package is published to npm as `@sparklingopinions/sparkling-ui`. Apps insta
 
 6. For light and dark, call `initColorMode()` once before mounting (it sets `data-mode` on `<html>` from the saved choice or the system's); then `useColorMode()` gives `mode`, `resolved`, `isDark`, `setMode` and `toggle`, and `useForceLightMode()` keeps a page light while it's mounted.
 
-7. For toasts, mount one `<Toaster />` near the app root, then call `toast.info('Draft saved')`, `toast.success(...)` or `toast.error(...)` anywhere, with `{ detail, life, closable }` as options.
+7. For toasts, mount one `<Toaster />` near the app root, then call `toast.info('Draft saved')`, `toast.success(...)` or `toast.error(...)` anywhere, with `{ detail, life, closable }` as options. `position` and the `--sui-toaster-inset-*` tokens move them clear of your own sidebar or bottom bar.
 
 8. To use `useConfirm`, mount one `<AlertDialog />` near the app root (it takes default `confirm-label` and `cancel-label` for translation). Then anywhere:
 
