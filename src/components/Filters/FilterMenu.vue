@@ -8,6 +8,7 @@ import {
   ListboxGroupLabel,
   ListboxItem,
   ListboxRoot,
+  PopoverAnchor,
   PopoverContent,
   PopoverPortal,
   PopoverRoot,
@@ -17,6 +18,7 @@ import {
 import Button from '../Button/Button.vue'
 import FilterFrame from './FilterFrame.vue'
 import FilterGlyph from './FilterGlyph.vue'
+import { type FilterTriggerProps, useCustomTrigger } from './trigger'
 import type { FilterField } from './types'
 
 export interface FilterMenuProps {
@@ -25,6 +27,8 @@ export interface FilterMenuProps {
   inUse?: string[]
   /** chip: the dashed "+ Filter" in the view bar. button: the page header's Filters button, tinted while filters are in use. */
   as?: 'chip' | 'button'
+  /** as="button" only: ghost for a page header. Secondary by default, tinted while filters are in use. */
+  variant?: 'secondary' | 'ghost' | 'tinted'
   /** The footer's status; "{count} fields" by default. */
   status?: string
   label?: string
@@ -44,6 +48,7 @@ defineOptions({ inheritAttrs: false })
 const props = withDefaults(defineProps<FilterMenuProps>(), {
   inUse: () => [],
   as: 'chip',
+  variant: undefined,
   status: undefined,
   label: 'Filter',
   buttonLabel: 'Filters',
@@ -59,7 +64,13 @@ const emit = defineEmits<{ pick: [name: string] }>()
 
 const open = defineModel<boolean>('open', { default: false })
 
+defineSlots<{
+  /** Your own opener in place of the chip or button: spread `props` on it. `count` is the filters in use. */
+  trigger?: (props: { open: boolean; toggle: () => void; count: number; props: FilterTriggerProps }) => unknown
+}>()
+
 const attrs = useAttrs()
+const custom = useCustomTrigger(open)
 const query = ref('')
 // Only the keyboard's highlight gets the focus ring; the pointer's is just a tint.
 const keyboard = ref(false)
@@ -92,8 +103,11 @@ function onKeydown(event: KeyboardEvent) {
 <!-- The field list behind "+ Filter": search, fields grouped with their type, and which are already filtering. -->
 <template>
   <PopoverRoot v-model:open="open" @update:open="onOpen">
-    <PopoverTrigger v-if="as === 'button'" as-child>
-      <Button v-bind="attrs" :variant="inUse.length ? 'tinted' : 'secondary'">
+    <PopoverAnchor v-if="$slots.trigger" as-child>
+      <slot :count="inUse.length" name="trigger" :open="open" :props="custom.props.value" :toggle="custom.toggle" />
+    </PopoverAnchor>
+    <PopoverTrigger v-else-if="as === 'button'" as-child>
+      <Button v-bind="attrs" :variant="variant ?? (inUse.length ? 'tinted' : 'secondary')">
         <svg
           aria-hidden="true"
           class="size-4 fill-none stroke-current"
@@ -117,8 +131,12 @@ function onKeydown(event: KeyboardEvent) {
     <PopoverPortal>
       <PopoverContent
         align="start"
+        :aria-label="$slots.trigger ? searchPlaceholder : undefined"
         class="z-[1100] w-85 max-w-[calc(100vw-2rem)] origin-(--reka-popover-content-transform-origin) rounded-xl border border-sui-line bg-sui-surface text-sui-ink shadow-lg data-[state=open]:animate-sui-overlay-in"
+        :data-sui-panel="custom.panelKey"
         :side-offset="8"
+        @close-auto-focus="custom.returnFocus"
+        @interact-outside="custom.ignoreTrigger"
         @keydown="onKeydown"
         @pointermove="keyboard = false"
       >

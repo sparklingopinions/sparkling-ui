@@ -1,8 +1,8 @@
-import { nextTick } from 'vue'
+import { defineComponent, nextTick, ref } from 'vue'
 
 import { flushPromises, mount } from '@vue/test-utils'
 
-import { FilterChip, FilterMenu, SortMenu, describeFilter } from '../../index'
+import { Button, FilterChip, FilterMenu, SortMenu, describeFilter } from '../../index'
 import { expectAccessible } from '../support/axe'
 
 const stages = [
@@ -197,11 +197,46 @@ describe('FilterMenu', () => {
     wrapper.unmount()
   })
 
-  it('is the Filters button, tinted while filters are in use', () => {
+  it('is the Filters button, tinted while filters are in use, or ghost in a page header', () => {
     const wrapper = mount(FilterMenu, { props: { fields, as: 'button', inUse: ['stage'] } })
 
     expect(wrapper.find('button').text()).toBe('Filters')
     expect(wrapper.find('button').classes()).toContain('bg-sui-accent-wash')
+    const ghost = mount(FilterMenu, { props: { fields, as: 'button', variant: 'ghost', inUse: ['stage'] } })
+    expect(ghost.find('button').classes()).toContain('text-sui-ink-subtle')
+    expect(ghost.find('button').classes()).not.toContain('bg-sui-accent-wash')
+  })
+
+  it('opens from your own trigger, with its count, and is controlled with v-model:open', async () => {
+    const open = ref(false)
+    const wrapper = mount(
+      defineComponent({
+        components: { SuiButton: Button, FilterMenu },
+        setup: () => ({ fields, open }),
+        template: `
+          <FilterMenu v-model:open="open" :fields="fields" :in-use="['stage']">
+            <template #trigger="{ count, props }">
+              <SuiButton v-bind="props" variant="ghost">Filters {{ count }}</SuiButton>
+            </template>
+          </FilterMenu>`
+      }),
+      { attachTo: document.body }
+    )
+    const button = wrapper.find('button')
+
+    expect(button.text()).toBe('Filters 1')
+    expect(button.attributes()).toMatchObject({ 'aria-haspopup': 'dialog', 'aria-expanded': 'false' })
+    await button.trigger('click')
+    await flushPromises()
+    expect(open.value).toBe(true)
+    expect(button.attributes('aria-expanded')).toBe('true')
+    expect(button.attributes('aria-controls')).toBe(panel().id)
+    await expectAccessible(document.body)
+
+    open.value = false
+    await flushPromises()
+    expect(document.body.querySelector('[role="dialog"]')).toBeNull()
+    wrapper.unmount()
   })
 })
 
@@ -253,6 +288,46 @@ describe('SortMenu', () => {
     panel().querySelectorAll<HTMLElement>('[role="radio"]')[2]!.click()
     await flushPromises()
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([{ name: 'lastContact', dir: 'desc' }])
+    wrapper.unmount()
+  })
+
+  it('is a ghost Sort button in a page header, even while sorted', () => {
+    const wrapper = mount(SortMenu, {
+      props: { options: fields, as: 'button', variant: 'ghost', modelValue: { name: 'name', dir: 'asc' } }
+    })
+
+    expect(wrapper.find('button').classes()).toContain('text-sui-ink-subtle')
+    expect(wrapper.find('button').classes()).not.toContain('bg-sui-accent-wash')
+  })
+
+  it('opens from your own trigger, even unsorted, and returns focus to it', async () => {
+    const wrapper = mount(
+      defineComponent({
+        components: { SuiButton: Button, SortMenu },
+        setup: () => ({ fields, sort: ref(null), open: ref(false) }),
+        template: `
+          <SortMenu v-model="sort" v-model:open="open" :options="fields">
+            <template #trigger="{ active, label, props }">
+              <SuiButton v-bind="props" :variant="active ? 'tinted' : 'ghost'">{{ label || 'Sort' }}</SuiButton>
+            </template>
+          </SortMenu>`
+      }),
+      { attachTo: document.body }
+    )
+    const button = () => wrapper.find('button')
+
+    expect(button().text()).toBe('Sort')
+    await button().trigger('click')
+    await flushPromises()
+    panel().querySelectorAll<HTMLElement>('[role="radio"]')[0]!.click()
+    await flushPromises()
+    expect(button().text()).toBe('Name, A → Z')
+    expect(button().classes()).toContain('bg-sui-accent-wash')
+
+    panel().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await flushPromises()
+    expect(document.body.querySelector('[role="dialog"]')).toBeNull()
+    expect(document.activeElement).toBe(button().element)
     wrapper.unmount()
   })
 })

@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { computed, useAttrs } from 'vue'
 
-import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger, RadioGroupItem, RadioGroupRoot } from 'reka-ui'
+import {
+  PopoverAnchor,
+  PopoverContent,
+  PopoverPortal,
+  PopoverRoot,
+  PopoverTrigger,
+  RadioGroupItem,
+  RadioGroupRoot
+} from 'reka-ui'
 
 import Button from '../Button/Button.vue'
 import CheckIcon from '../internal/CheckIcon.vue'
@@ -9,6 +17,7 @@ import FilterFrame from './FilterFrame.vue'
 import FilterGlyph from './FilterGlyph.vue'
 import SortArrow from './SortArrow.vue'
 import { sortDirections } from './defaults'
+import { type FilterTriggerProps, useCustomTrigger } from './trigger'
 import type { FilterField, FilterFieldType, ViewSort } from './types'
 
 export interface SortMenuProps {
@@ -16,6 +25,8 @@ export interface SortMenuProps {
   options: FilterField[]
   /** chip: the sort in the view bar, which shows only while there is one. button: the page header's Sort button. */
   as?: 'chip' | 'button'
+  /** as="button" only: ghost for a page header. Secondary by default, tinted while sorted. */
+  variant?: 'secondary' | 'ghost' | 'tinted'
   /** Boards can't sort: disable the button, with a Tooltip saying why. */
   disabled?: boolean
   status?: string
@@ -33,6 +44,7 @@ defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<SortMenuProps>(), {
   as: 'chip',
+  variant: undefined,
   status: undefined,
   directionLabels: () => ({}),
   title: 'Sort by',
@@ -46,7 +58,19 @@ const props = withDefaults(defineProps<SortMenuProps>(), {
 const sort = defineModel<ViewSort | null>({ default: null })
 const open = defineModel<boolean>('open', { default: false })
 
+defineSlots<{
+  /** Your own opener in place of the chip or button: spread `props` on it. `label` reads like the chip. */
+  trigger?: (props: {
+    open: boolean
+    toggle: () => void
+    active: boolean
+    label: string
+    props: FilterTriggerProps
+  }) => unknown
+}>()
+
 const attrs = useAttrs()
+const custom = useCustomTrigger(open)
 
 const current = computed(() => (sort.value ? props.options.find((o) => o.name === sort.value!.name) : undefined))
 const words = (type: FilterFieldType) => props.directionLabels[type] ?? sortDirections[type]
@@ -68,9 +92,19 @@ const row =
 
 <!-- A view's sort: the header's Sort button or the view bar's chip ("Name, A → Z") open a panel of fields and a direction. -->
 <template>
-  <PopoverRoot v-if="as === 'button' || current" v-model:open="open">
-    <PopoverTrigger v-if="as === 'button'" as-child>
-      <Button v-bind="attrs" :disabled="disabled" :variant="current ? 'tinted' : 'secondary'">
+  <PopoverRoot v-if="$slots.trigger || as === 'button' || current" v-model:open="open">
+    <PopoverAnchor v-if="$slots.trigger" as-child>
+      <slot
+        :active="!!current"
+        :label="current ? `${current.label}, ${dirLabel}` : ''"
+        name="trigger"
+        :open="open"
+        :props="custom.props.value"
+        :toggle="custom.toggle"
+      />
+    </PopoverAnchor>
+    <PopoverTrigger v-else-if="as === 'button'" as-child>
+      <Button v-bind="attrs" :disabled="disabled" :variant="variant ?? (current ? 'tinted' : 'secondary')">
         <svg
           aria-hidden="true"
           class="size-4 fill-none stroke-current"
@@ -106,8 +140,12 @@ const row =
     <PopoverPortal>
       <PopoverContent
         align="start"
+        :aria-label="$slots.trigger ? title : undefined"
         class="z-[1100] w-85 max-w-[calc(100vw-2rem)] origin-(--reka-popover-content-transform-origin) rounded-xl border border-sui-line bg-sui-surface text-sui-ink shadow-lg data-[state=open]:animate-sui-overlay-in"
+        :data-sui-panel="custom.panelKey"
         :side-offset="8"
+        @close-auto-focus="custom.returnFocus"
+        @interact-outside="custom.ignoreTrigger"
       >
         <FilterFrame :close-label="closeLabel" :enter-label="doneLabel" :status="status" @enter="open = false">
           <div class="flex h-11 items-center gap-1.5 pr-1.5 pl-3.5 text-sui-ink-muted">
