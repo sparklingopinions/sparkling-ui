@@ -100,7 +100,8 @@ const statusIcons = [
   'phone',
   'calendar-users',
   'sticky-note',
-  'sparkles'
+  'sparkles',
+  'circle-minus'
 ]
 
 export const StatusIcons: Story = {

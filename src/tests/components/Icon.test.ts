@@ -57,7 +57,7 @@ describe('Icon', () => {
     expect(wrapper.element.tagName).toBe('svg')
     expect(wrapper.attributes()).toMatchObject({ viewBox: '0 0 16 16', 'stroke-width': '1.5', style: 'fill: none;' })
     expect(wrapper.find('path').exists()).toBe(true)
-    expect(iconNames).toHaveLength(134)
+    expect(iconNames).toHaveLength(135)
   })
 
   it('draws every icon on the 16 grid, or the 8 or 24 one', () => {
@@ -113,7 +113,8 @@ describe('Icon', () => {
     'phone',
     'calendar-users',
     'sticky-note',
-    'sparkles'
+    'sparkles',
+    'circle-minus'
   ])('draws %s on the 24 grid at a 2.25 stroke', async (name) => {
     const wrapper = mount(Icon, { props: { name }, attachTo: document.body })
 
