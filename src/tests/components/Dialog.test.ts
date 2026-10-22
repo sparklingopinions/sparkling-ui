@@ -54,6 +54,122 @@ describe('Dialog', () => {
     wrapper.unmount()
   })
 
+  describe('as a bottom sheet', () => {
+    const grab = () => dialog()!.querySelector<HTMLElement>('[data-modal-header]')!
+    const pointer = (type: string, clientY: number) =>
+      grab().dispatchEvent(new PointerEvent(type, { bubbles: true, button: 0, pointerId: 1, clientY }))
+
+    it('draws a handle, the title row and a full-width confirm, without Cancel', async () => {
+      const wrapper = mountModal({ presentation: 'sheet', confirmLabel: 'Schedule', hint: 'Posts at 9:00' })
+      await flushPromises()
+
+      expect(dialog()!.className).toContain('rounded-t-(--sui-radius-sheet)')
+      expect(grab().querySelector('span[aria-hidden="true"]')!.className).toContain('bg-sui-mark-faint')
+      expect(dialog()!.querySelector('h2')!.textContent).toBe('Revoke key')
+      expect(button('Cancel')).toBeUndefined()
+      expect(button('Schedule').className).toEqual(expect.stringContaining('w-full'))
+      expect(button('Schedule').className).toEqual(expect.stringContaining('h-12'))
+      expect(dialog()!.querySelector('[data-modal-footer]')!.textContent).toContain('Posts at 9:00')
+      expect(dialog()!.querySelector('[data-modal-body]')!.className).toContain('overscroll-contain')
+      button('Schedule').click()
+      expect(wrapper.emitted('confirm')).toHaveLength(1)
+      await expectAccessible(document.body)
+      wrapper.unmount()
+    })
+
+    it('cancels on a tap on the scrim, the close button and Escape', async () => {
+      const wrapper = mountModal({ presentation: 'sheet' })
+      await flushPromises()
+
+      document.body.querySelector<HTMLElement>('[aria-label="Close"]')!.click()
+      escape()
+      await flushPromises()
+      expect(wrapper.emitted('cancel')).toHaveLength(2)
+
+      await wrapper.setProps({ open: false })
+      await wrapper.setProps({ open: true })
+      await flushPromises()
+      document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+      await flushPromises()
+      expect(wrapper.emitted('cancel')).toHaveLength(3)
+      expect(wrapper.emitted('update:open')?.at(-1)).toEqual([false])
+      wrapper.unmount()
+    })
+
+    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+    it('follows a drag down, springs back from a slow short one and dismisses past a third', async () => {
+      const wrapper = mountModal({ presentation: 'sheet' })
+      await flushPromises()
+      Object.defineProperty(dialog()!, 'offsetHeight', { value: 300 })
+
+      pointer('pointerdown', 100)
+      pointer('pointermove', 150)
+      await flushPromises()
+      expect(dialog()!.style.transform).toBe('translateY(50px)')
+      await wait(150)
+      pointer('pointerup', 150)
+      await flushPromises()
+      expect(dialog()!.style.transform).toBe('')
+      expect(wrapper.emitted('cancel')).toBeUndefined()
+
+      pointer('pointerdown', 100)
+      await wait(250)
+      pointer('pointerup', 220)
+      await flushPromises()
+      expect(wrapper.emitted('cancel')).toHaveLength(1)
+      wrapper.unmount()
+    })
+
+    it('dismisses on a quick flick', async () => {
+      const wrapper = mountModal({ presentation: 'sheet' })
+      await flushPromises()
+      Object.defineProperty(dialog()!, 'offsetHeight', { value: 600 })
+
+      pointer('pointerdown', 100)
+      pointer('pointerup', 160)
+      await flushPromises()
+      expect(wrapper.emitted('cancel')).toHaveLength(1)
+      wrapper.unmount()
+    })
+
+    it('keeps a Close for the keyboard when not closable', async () => {
+      const wrapper = mountModal({ presentation: 'sheet', closable: false })
+      await flushPromises()
+
+      expect(document.body.querySelector('[aria-label="Close"]')).toBeNull()
+      const close = button('Close')
+      expect(close.className).toEqual(expect.stringContaining('opacity-0'))
+      expect(close.className).toEqual(expect.stringContaining('focus-visible:opacity-100'))
+      close.click()
+      escape()
+      await flushPromises()
+      expect(wrapper.emitted('cancel')).toHaveLength(2)
+      await expectAccessible(document.body)
+      wrapper.unmount()
+    })
+
+    it('is a sheet below sheetBelow with auto, and a dialog above it', async () => {
+      const matchMedia = vi.fn((query: string) => ({
+        matches: query === '(max-width: 639.98px)',
+        addEventListener: () => {},
+        removeEventListener: () => {}
+      }))
+      vi.stubGlobal('matchMedia', matchMedia)
+      const narrow = mountModal({ presentation: 'auto' })
+      await flushPromises()
+      expect(dialog()!.className).toContain('rounded-t-(--sui-radius-sheet)')
+      narrow.unmount()
+
+      const wide = mountModal({ presentation: 'auto', sheetBelow: 480 })
+      await flushPromises()
+      expect(matchMedia).toHaveBeenLastCalledWith('(max-width: 479.98px)')
+      expect(dialog()!.className).not.toContain('rounded-t-(--sui-radius-sheet)')
+      wide.unmount()
+      vi.unstubAllGlobals()
+    })
+  })
+
   it('focuses an [autofocus] field, or else the dialog', async () => {
     const plain = mountModal()
     await flushPromises()

@@ -294,6 +294,8 @@
   --sui-button-padding-x: 0.875rem;
   --sui-button-text: 0.875rem;
   --sui-radius-button: 0.5rem;
+  /* A bottom sheet's top corners. */
+  --sui-radius-sheet: 1.25rem;
   /* Table rows and headers at one height, e.g. 44px; unset (initial), each Table's size decides. */
   --sui-table-row: initial;
   --sui-shadow-raised: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -359,6 +361,8 @@
   --animate-sui-scrim-out: sui-scrim-out 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
   --animate-sui-dialog-in: sui-dialog-in 200ms ease-out;
   --animate-sui-dialog-out: sui-dialog-out 200ms ease-out forwards;
+  --animate-sui-sheet-in: sui-sheet-in 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-sui-sheet-out: sui-sheet-out 200ms cubic-bezier(0.4, 0, 1, 1) forwards;
   --animate-sui-toast-in: sui-toast-in 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --animate-sui-toast-out:
     sui-toast-collapse 450ms cubic-bezier(0, 1, 0, 1) forwards,
@@ -431,6 +435,18 @@
     to {
       opacity: 0;
       transform: scale(0.75);
+    }
+  }
+
+  @keyframes sui-sheet-in {
+    from {
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes sui-sheet-out {
+    to {
+      transform: translateY(100%);
     }
   }
 
