@@ -71,7 +71,7 @@ src/
 
 ### Layers
 
-Every floating layer (Dialog, Popover, Select, DropdownMenu, the filter panels, Tooltip) is `z-[1100]`, and layers on one z-index stack in the order their portals mount: a menu inside a dialog mounts after it, so it's on top. Above them sit the floating ActionBar (`1150`), the AlertDialog (`1160`: an app mounts it once near the root, before any dialog, and a confirmation always belongs on top) and the Toaster (`1200`).
+Every floating layer (Dialog, Popover, Select, DropdownMenu, ContextMenu, the filter panels, Tooltip) is `z-[1100]`, and layers on one z-index stack in the order their portals mount: a menu inside a dialog mounts after it, so it's on top. Above them sit the floating ActionBar (`1150`), the AlertDialog (`1160`: an app mounts it once near the root, before any dialog, and a confirmation always belongs on top) and the Toaster (`1200`).
 
 ### Icons
 
