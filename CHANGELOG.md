@@ -1,5 +1,17 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.5.0
+
+### Minor Changes
+
+- 25b79a2: `Board` drags with pointer events instead of the browser's drag and drop, so cards move with a finger too. A mouse drags once it moves a few pixels, so a click still clicks. A finger drags after a short press, so a swipe still scrolls the page. A copy of the card follows the pointer, a column scrolls near its top and bottom, the board scrolls near its sides, and Escape cancels. `move` is emitted as before.
+  
+  Cards are buttons only when you listen to `card-click` (Enter and Space open them, as before). Without a listener, the card slot carries its own link or buttons, so a card with a menu no longer nests buttons. `cardFrame: false` drops the card's border, padding and surface, for a slot that draws its own.
+- 3edfb69: - `FilterChip` takes a `summary` (`{ field, op, value }`, each optional) to word the chip yourself, in place of the field, operator and value it reads by default: "Not archived", "Last message in the last 7 days". The `FilterSummary` type is exported.
+  - A `FilterField` can set `sortDir: 'desc'` so `SortMenu` starts it newest first when picked; fields start ascending by default, as before.
+  - A boolean `FilterChip` with no value yet leaves Yes and No unpicked; it used to show No as chosen while the chip read empty.
+- 81a3512: `TableColumn` takes `wrap: true` to let a cell's content run onto more lines, such as a name over a two-line summary. Cells still truncate to one line by default.
+
 ## 0.4.2
 
 ### Patch Changes
