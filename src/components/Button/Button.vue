@@ -3,7 +3,8 @@ import { computed } from 'vue'
 
 import { Primitive, type PrimitiveProps } from 'reka-ui'
 
-export type ButtonVariant = 'primary' | 'secondary' | 'tinted' | 'ghost' | 'contrast' | 'danger' | 'danger-outline'
+export type ButtonVariant =
+  'primary' | 'secondary' | 'tinted' | 'ghost' | 'contrast' | 'danger' | 'danger-outline' | 'ghost-inverse'
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
 export interface ButtonProps extends PrimitiveProps {
@@ -39,7 +40,10 @@ const variants: Record<ButtonVariant, string> = {
   // No border: it's 2px narrower than the other variants.
   danger: 'bg-sui-danger-solid text-sui-on-danger not-data-disabled:hover:bg-sui-danger-hover',
   'danger-outline':
-    'border border-sui-danger-line bg-sui-surface text-sui-danger not-data-disabled:hover:bg-sui-danger-soft [&_svg]:stroke-sui-danger'
+    'border border-sui-danger-line bg-sui-surface text-sui-danger not-data-disabled:hover:bg-sui-danger-soft [&_svg]:stroke-sui-danger',
+  // For inverse grounds: toasts, dark bands.
+  'ghost-inverse':
+    'border border-transparent bg-transparent text-sui-on-inverse not-data-disabled:hover:bg-sui-on-inverse/[0.12] not-data-disabled:active:bg-sui-on-inverse/[0.2] [&_svg]:stroke-sui-on-inverse'
 }
 
 const heights: Record<ButtonSize, string> = {
@@ -65,7 +69,8 @@ const texts: Record<ButtonSize, string> = {
 
 const classes = computed(() => [
   // no-underline: as a link, it shouldn't pick up the app's link styles.
-  'flex items-center justify-center font-medium text-nowrap no-underline transition-all duration-200 ease-in-out focus-visible:sui-ring data-disabled:opacity-50',
+  'flex items-center justify-center font-medium text-nowrap no-underline transition-all duration-200 ease-in-out data-disabled:opacity-50',
+  props.variant === 'ghost-inverse' ? 'focus-visible:sui-ring-inverse' : 'focus-visible:sui-ring',
   variants[props.variant],
   heights[props.size],
   texts[props.size],

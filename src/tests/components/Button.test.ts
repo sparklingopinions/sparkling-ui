@@ -78,4 +78,19 @@ describe('Button', () => {
     await expectAccessible(wrapper.element)
     wrapper.unmount()
   })
+
+  it('draws ghost-inverse in on-inverse, with the inverse focus ring', async () => {
+    const wrapper = mount(Button, {
+      props: { variant: 'ghost-inverse', size: 'sm' },
+      slots: { default: 'Undo' },
+      attachTo: document.body
+    })
+
+    expect(wrapper.classes()).toEqual(
+      expect.arrayContaining(['text-sui-on-inverse', 'focus-visible:sui-ring-inverse', 'h-7'])
+    )
+    expect(wrapper.classes()).not.toContain('focus-visible:sui-ring')
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
 })
