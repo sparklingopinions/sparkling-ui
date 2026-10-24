@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.9.3
+
+### Patch Changes
+
+- f87d1fb: Table's select-all checkbox lines up with the row checkboxes; the header cell centred it.
+
 ## 0.9.2
 
 ### Patch Changes
