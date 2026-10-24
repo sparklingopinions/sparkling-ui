@@ -124,7 +124,7 @@ const td = computed(() => [
 const pad = computed(() => [sm.value ? 'px-3' : 'px-4', !fixed.value && (sm.value ? 'py-1.5' : 'py-3')])
 const headTone = computed(() => (props.headerTone === 'canvas' ? 'bg-sui-canvas' : 'bg-sui-sunken'))
 const headPad = computed(() => (sm.value ? 'px-3' : 'px-4'))
-const checkCell = 'w-12 pl-4'
+const checkCell = 'w-12 pl-4 text-left'
 </script>
 
 <!-- A data table: sunken header strip, sortable headers, selection, loading, empty and error states, a footer. -->
