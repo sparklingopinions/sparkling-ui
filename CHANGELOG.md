@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.10.0
+
+### Minor Changes
+
+- e41fe84: Badge has an `outline` variant: a small neutral pill whose dot carries the tone, for a count that belongs somewhere else.
+
 ## 0.9.3
 
 ### Patch Changes
