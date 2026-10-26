@@ -10,7 +10,7 @@ const meta: Meta<typeof Badge> = {
   args: { tone: 'success', variant: 'soft', dot: true, label: 'Warm' },
   argTypes: {
     tone: { control: 'select', options: tones },
-    variant: { control: 'inline-radio', options: ['soft', 'text'] }
+    variant: { control: 'inline-radio', options: ['soft', 'text', 'outline'] }
   }
 }
 
@@ -29,5 +29,7 @@ export const Soft: Story = {
 }
 
 export const Text: Story = { ...Soft, args: { variant: 'text' } }
+
+export const Outline: Story = { args: { tone: 'accent', variant: 'outline', label: '5' } }
 
 export const NoDot: Story = { args: { tone: 'accent', dot: false, label: 'New' } }
