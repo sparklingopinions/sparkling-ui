@@ -116,6 +116,16 @@ describe('Badge', () => {
     expect(wrapper.find('span span').exists()).toBe(false)
     expect(wrapper.text()).toBe('Cool')
   })
+
+  it('can be an outlined pill whose dot carries the tone', async () => {
+    const wrapper = mount(Badge, { props: { tone: 'accent', variant: 'outline', label: '5' }, attachTo: document.body })
+
+    expect(wrapper.classes()).toEqual(expect.arrayContaining(['border-sui-line', 'bg-sui-surface', 'rounded-full']))
+    expect(wrapper.classes()).not.toContain('text-sui-accent')
+    expect(wrapper.find('span.bg-sui-accent-solid').exists()).toBe(true)
+    await expectAccessible(wrapper.element)
+    wrapper.unmount()
+  })
 })
 
 describe('Tag', () => {

@@ -5,8 +5,11 @@ export type BadgeTone = 'neutral' | 'accent' | 'success' | 'warning' | 'info' | 
 
 export interface BadgeProps {
   tone?: BadgeTone
-  /** `soft` is a tinted chip; `text` is a dot and a coloured label, lighter. */
-  variant?: 'soft' | 'text'
+  /**
+   * `soft` is a tinted chip; `text` is a dot and a coloured label, lighter; `outline` is a small
+   * neutral pill (the dot carries the tone) for a count that isn't the page's own.
+   */
+  variant?: 'soft' | 'text' | 'outline'
   dot?: boolean
   label?: string
 }
@@ -31,13 +34,17 @@ const tones: Record<BadgeTone, { chip: string; text: string; dot: string }> = {
 }
 
 const tone = computed(() => tones[props.tone])
+
+const shape = computed(() => {
+  if (props.variant === 'soft') return ['h-6 gap-1.5 rounded-md px-2.5 text-xs font-medium', tone.value.chip]
+  if (props.variant === 'outline')
+    return 'h-5 gap-1.25 rounded-full border border-sui-line bg-sui-surface pr-1.75 pl-1.5 text-11.5 leading-none font-semibold text-sui-ink-emphasis tabular-nums'
+  return ['gap-1.5 text-xs font-medium', tone.value.text]
+})
 </script>
 
 <template>
-  <span
-    class="inline-flex items-center gap-1.5 text-xs font-medium whitespace-nowrap"
-    :class="variant === 'soft' ? ['h-6 rounded-md px-2.5', tone.chip] : tone.text"
-  >
+  <span class="inline-flex items-center whitespace-nowrap" :class="shape">
     <span v-if="dot" class="h-1.5 w-1.5 shrink-0 rounded-full" :class="tone.dot" />
     <slot>{{ label }}</slot>
   </span>
