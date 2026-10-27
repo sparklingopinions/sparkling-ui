@@ -59,7 +59,10 @@ const pairs: { text: string; background: string; usage: string; min?: number; wa
   { text: 'accent', background: 'surface', usage: 'The focus ring', min: 3 },
   { text: 'accent', background: 'canvas', usage: 'The focus ring, on the page background', min: 3 },
   { text: 'accent', background: 'sunken', usage: 'The focus ring on a highlighted option', min: 3 },
-  { text: 'on-inverse', background: 'inverse', usage: 'The focus ring on toasts', min: 3 }
+  { text: 'on-inverse', background: 'inverse', usage: 'The focus ring on toasts', min: 3 },
+  { text: 'ink-muted', background: 'line-subtle', usage: 'Meter fills', min: 3 },
+  { text: 'warning', background: 'line-subtle', usage: 'Meter fills nearly at the limit', min: 3 },
+  { text: 'accent', background: 'line-subtle', usage: 'Accent meter fills', min: 3 }
 ]
 
 const probes = ref<Record<Mode, HTMLElement | null>>({ light: null, dark: null })
