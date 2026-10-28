@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 export interface SkeletonProps {
   shape?: 'rectangle' | 'circle'
-  /** Width and height together, for a circle or a square. */
+  /** Width and height together, for a circle or a square; it keeps that size in a flex row. */
   size?: string
   width?: string
   height?: string
@@ -24,7 +24,8 @@ const style = computed(() => ({ width: props.size ?? props.width, height: props.
     aria-hidden="true"
     :class="[
       'relative animate-pulse overflow-hidden bg-sui-sunken',
-      shape === 'circle' ? 'rounded-full' : 'rounded-md'
+      shape === 'circle' ? 'rounded-full' : 'rounded-md',
+      size && 'shrink-0'
     ]"
     :style="style"
   />
