@@ -37,6 +37,7 @@ describe('Skeleton', () => {
 
     expect(wrapper.element.style).toMatchObject({ width: '2rem', height: '2rem' })
     expect(wrapper.classes()).toContain('rounded-full')
+    expect(wrapper.classes()).toContain('shrink-0')
   })
 })
 
