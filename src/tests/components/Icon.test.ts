@@ -76,7 +76,7 @@ describe('Icon', () => {
     expect(wrapper.element.tagName).toBe('svg')
     expect(wrapper.attributes()).toMatchObject({ viewBox: '0 0 16 16', 'stroke-width': '1.5', style: 'fill: none;' })
     expect(wrapper.find('path').exists()).toBe(true)
-    expect(iconNames).toHaveLength(140)
+    expect(iconNames).toHaveLength(141)
   })
 
   it('draws every icon on the 16 grid, or the 8 or 24 one', () => {
