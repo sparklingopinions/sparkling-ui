@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.13.1
+
+### Patch Changes
+
+- 587ff1e: Skeleton: one given a `size` (a circle or a square) no longer shrinks in a flex row, so a placeholder avatar stays round beside a long bar, as in DataList's loading rows on a narrow list.
+
 ## 0.13.0
 
 ### Minor Changes
