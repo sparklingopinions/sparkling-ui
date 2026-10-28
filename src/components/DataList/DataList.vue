@@ -17,6 +17,8 @@ export interface DataListProps<T> {
   /** gutter: the checkbox in its own column. leading: it takes the place of the `leading` slot's first mark. */
   checkboxPlacement?: 'gutter' | 'leading'
   loading?: boolean
+  /** While loading, the placeholder groups drawn, as each one's number of rows. */
+  loadingGroups?: number[]
   /** joined: one frame, sticky sunken group headers. cards: each group its own card, 12px apart, headers not sticky. */
   variant?: 'joined' | 'cards'
   /** The group headings' level, to fit the page's outline. */
@@ -48,6 +50,7 @@ export interface DataListProps<T> {
 
 const props = withDefaults(defineProps<DataListProps<T>>(), {
   rowKey: 'id' as never,
+  loadingGroups: () => [4, 2],
   variant: 'joined',
   checkboxPlacement: 'gutter',
   headingLevel: 3,
@@ -182,7 +185,13 @@ const card = 'overflow-clip rounded-xl border border-sui-line-subtle bg-sui-surf
 const custom = (group: DataListGroup<T>) => !!slots['group-header'] || group.header !== undefined
 const groupName = (group: DataListGroup<T>) => group.label ?? group.name ?? ''
 
-const skeletonWidths = ['42%', '58%', '35%', '50%', '46%']
+const skeletonWidths = ['42%', '58%', '35%', '50%', '46%', '38%']
+const skeletonGroupWidths = ['5.5rem', '4rem', '4.75rem']
+// A Skeleton is sunken, so on a sunken header band its bars go a step darker.
+const headerBar = computed(() => [
+  'animate-pulse',
+  headerTone.value === tones.sunken ? 'bg-sui-line-subtle' : 'bg-sui-sunken'
+])
 const iconButton =
   'flex size-6 shrink-0 items-center justify-center rounded-md text-sui-ink-muted outline-hidden transition-colors duration-150 hover:bg-sui-line-subtle hover:text-sui-ink focus-visible:sui-ring-inset'
 </script>
@@ -193,19 +202,45 @@ const iconButton =
     <div v-if="isEmpty && $slots.empty" :class="cards && card">
       <slot name="empty" />
     </div>
-    <section v-else-if="loading" :aria-busy="true" :class="cards && card">
-      <div
-        v-for="(width, i) in skeletonWidths"
-        :key="i"
-        aria-hidden="true"
-        class="flex h-[var(--sui-list-row,2.5rem)] items-center gap-2.5 pr-4 pl-1"
+    <!-- Placeholder groups in the list's own shape: its header, rows, leading marks and meta. -->
+    <template v-else-if="loading">
+      <section
+        v-for="(rows, g) in loadingGroups"
+        :key="g"
+        aria-busy="true"
+        :class="cards ? card : 'border-t border-sui-line-subtle first:border-t-0'"
       >
-        <span class="w-6 shrink-0" />
-        <Skeleton height="0.75rem" :width="width" />
-        <span class="flex-1" />
-        <Skeleton height="0.75rem" width="64px" />
-      </div>
-    </section>
+        <div
+          aria-hidden="true"
+          class="flex h-[var(--sui-list-header,2.25rem)] items-center gap-2 border-b border-sui-line-subtle pr-2"
+          :class="[headerTone, collapsible ? 'pl-1.5' : 'pl-4']"
+        >
+          <span v-if="collapsible" class="size-6 shrink-0" />
+          <span
+            v-if="$slots['group-leading'] || $slots['group-header']"
+            class="size-3.5 rounded-full"
+            :class="headerBar"
+          />
+          <span class="h-2.5 rounded-md" :class="headerBar" :style="{ width: skeletonGroupWidths[g % 3] }" />
+          <span class="h-2.5 w-3.5 rounded-md" :class="headerBar" />
+        </div>
+        <div
+          v-for="r in rows"
+          :key="r"
+          aria-hidden="true"
+          class="flex h-[var(--sui-list-row,2.5rem)] items-center gap-2.5 pr-4"
+          :class="[gutter ? 'pl-9.5' : 'pl-4', dividers && '[&+&]:border-t [&+&]:border-sui-line-subtle']"
+        >
+          <Skeleton v-if="$slots.leading || leading" shape="circle" size="1.25rem" />
+          <Skeleton height="0.75rem" :width="skeletonWidths[(g * 3 + r) % skeletonWidths.length]" />
+          <span class="flex-1" />
+          <template v-if="$slots.meta">
+            <Skeleton height="0.625rem" width="6rem" />
+            <Skeleton height="0.625rem" width="3.5rem" />
+          </template>
+        </div>
+      </section>
+    </template>
     <template v-else>
       <section
         v-for="group in groups"
