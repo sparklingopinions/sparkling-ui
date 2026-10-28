@@ -7,7 +7,7 @@ import { Icon, iconNames, setIconResolver } from '../../index'
 import { expectAccessible } from '../support/axe'
 
 const svg = (id: string) => defineComponent(() => () => h('svg', { 'data-icon': id, viewBox: '0 0 16 16' }))
-const icons: Record<string, ReturnType<typeof svg>> = { plus: svg('plus'), close: svg('close'), mail: svg('mail') }
+const icons: Record<string, ReturnType<typeof svg>> = { plus: svg('plus'), close: svg('close'), rocket: svg('rocket') }
 
 describe('Icon from the set', () => {
   beforeEach(() => setIconResolver(() => undefined))
@@ -76,7 +76,7 @@ describe('Icon', () => {
     expect(wrapper.element.tagName).toBe('svg')
     expect(wrapper.attributes()).toMatchObject({ viewBox: '0 0 16 16', 'stroke-width': '1.5', style: 'fill: none;' })
     expect(wrapper.find('path').exists()).toBe(true)
-    expect(iconNames).toHaveLength(135)
+    expect(iconNames).toHaveLength(140)
   })
 
   it('draws every icon on the 16 grid, or the 8 or 24 one', () => {
@@ -133,7 +133,12 @@ describe('Icon', () => {
     'calendar-users',
     'sticky-note',
     'sparkles',
-    'circle-minus'
+    'circle-minus',
+    'sparkle',
+    'circle-help',
+    'info',
+    'command',
+    'mail'
   ])('draws %s on the 24 grid at a 2.25 stroke', async (name) => {
     const wrapper = mount(Icon, { props: { name }, attachTo: document.body })
 
@@ -145,7 +150,7 @@ describe('Icon', () => {
   })
 
   it("lets the app add icons and replace the set's", () => {
-    expect(mount(Icon, { props: { name: 'mail' } }).attributes('data-icon')).toBe('mail')
+    expect(mount(Icon, { props: { name: 'rocket' } }).attributes('data-icon')).toBe('rocket')
     expect(mount(Icon, { props: { name: 'plus' } }).attributes('data-icon')).toBe('plus')
   })
 })

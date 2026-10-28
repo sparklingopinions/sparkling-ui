@@ -101,7 +101,12 @@ const statusIcons = [
   'calendar-users',
   'sticky-note',
   'sparkles',
-  'circle-minus'
+  'circle-minus',
+  'sparkle',
+  'circle-help',
+  'info',
+  'command',
+  'mail'
 ]
 
 export const StatusIcons: Story = {
