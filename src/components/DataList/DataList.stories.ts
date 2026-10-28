@@ -82,6 +82,8 @@ export const Ungrouped: Story = { args: { groups: [{ id: 'all', items: people.sl
 
 export const Loading: Story = { args: { loading: true } }
 
+export const LoadingCards: Story = { args: { loading: true, variant: 'cards', loadingGroups: [4, 1, 2] } }
+
 export const Empty: Story = { args: { groups: groups.map((group) => ({ ...group, items: [] })) } }
 
 export const Cards: Story = { args: { variant: 'cards' } }

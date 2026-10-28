@@ -160,6 +160,36 @@ describe('DataList', () => {
     expect(wrapper.text()).toBe('Nothing here')
   })
 
+  it('draws placeholder groups in its own shape while loading', async () => {
+    const wrapper = mount(DataList, {
+      props: {
+        groups,
+        loading: true,
+        variant: 'cards',
+        loadingGroups: [3, 1],
+        groupHeaderTone: 'canvas',
+        dividers: true
+      },
+      slots: { meta: '<template #meta="{ item }"><span>#{{ item.id }}</span></template>' },
+      attachTo: document.body
+    })
+
+    const sections = wrapper.findAll('section')
+    expect(sections).toHaveLength(2)
+    expect(sections.every((section) => section.attributes('aria-busy') === 'true')).toBe(true)
+    expect(sections[0].classes()).toContain('rounded-xl')
+    expect(sections[0].find('div').classes()).toContain('bg-sui-canvas')
+    expect(sections[0].findAll(':scope > div')).toHaveLength(4)
+    expect(sections[1].findAll(':scope > div')).toHaveLength(2)
+    expect(sections[0].findAll(':scope > div')[1].findAll('[aria-hidden="true"]').length).toBeGreaterThanOrEqual(3)
+    expect(wrapper.find('li').exists()).toBe(false)
+    await expectAccessible(wrapper.element)
+
+    await wrapper.setProps({ loading: false })
+    expect(wrapper.findAll('li')).toHaveLength(3)
+    wrapper.unmount()
+  })
+
   describe('drawn denser, as cards', () => {
     const mountSelectable = (props: Record<string, unknown> = {}) => {
       const wrapper = mount(DataList, {
