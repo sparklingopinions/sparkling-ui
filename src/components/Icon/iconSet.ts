@@ -442,6 +442,11 @@ export const iconSet: Record<string, IconDefinition> = {
     '<path d="M12 3H6a3 3 0 0 0-3 3V16l4.25-3.75H12a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3Z"/><path d="M18 7.75a3 3 0 0 1 3 3V21l-3.75-3.25H11.5a3 3 0 0 1-3-3v-.25"/>',
     2.25
   ),
+  mic: s(
+    '0 0 24 24',
+    '<rect x="9" y="2.75" width="6" height="11.5" rx="3"/><path d="M18.75 10.25v.75a6.75 6.75 0 0 1-13.5 0v-.75"/><path d="M12 17.75v3.5"/>',
+    2.25
+  ),
   minimize: s(
     '0 0 24 24',
     '<path d="M14 4v6h6"/><path d="M14 10l6.5-6.5"/><path d="M10 20v-6H4"/><path d="M10 14l-6.5 6.5"/>',
