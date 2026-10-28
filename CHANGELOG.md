@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.14.0
+
+### Minor Changes
+
+- 0230335: `Icon` gains `mic`, a microphone for anything said out loud: voice input, dictation, a spoken answer.
+
 ## 0.13.1
 
 ### Patch Changes
