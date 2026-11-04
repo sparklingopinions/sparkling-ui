@@ -223,7 +223,7 @@ const isTarget = (column: string, index: number, item: T) =>
   target.value?.column === column && target.value.index === index && dragged.value?.id !== idOf(item)
 
 const frame =
-  'border border-sui-line-subtle bg-sui-surface p-4 transition-[border-color,opacity] duration-150 hover:border-sui-line'
+  'border border-sui-edge bg-sui-raised p-4 transition-[border-color,opacity] duration-150 hover:border-sui-line-strong'
 </script>
 
 <!-- A board: cards in columns by a field (a stage, a status), dragged between columns. -->
@@ -249,23 +249,18 @@ const frame =
           {{ column.name }}
         </component>
         <span
-          class="ml-2 inline-flex h-5 items-center justify-center rounded-full bg-sui-sunken px-2 text-xs text-sui-ink-muted tabular-nums"
+          class="ml-2 inline-flex h-5 items-center justify-center rounded-full bg-sui-fill px-2 text-xs text-sui-ink-muted tabular-nums"
         >
           <slot :column="column" name="count">{{ column.items.length }}</slot>
         </span>
       </header>
       <div
-        class="group/body flex min-h-[120px] flex-1 flex-col gap-2.5 overflow-y-auto rounded-xl bg-sui-sunken p-2.5 transition-shadow duration-150"
+        class="group/body flex min-h-[120px] flex-1 flex-col gap-2.5 overflow-y-auto rounded-xl bg-sui-fill p-2.5 transition-shadow duration-150"
         :class="target?.column === column.id && 'ring-2 ring-sui-accent-line ring-inset'"
         :data-board-column="column.id"
       >
         <template v-if="loading">
-          <div
-            v-for="i in 3"
-            :key="i"
-            aria-hidden="true"
-            class="rounded-xl border border-sui-line-subtle bg-sui-surface p-4"
-          >
+          <div v-for="i in 3" :key="i" aria-hidden="true" class="rounded-xl border border-sui-edge bg-sui-raised p-4">
             <Skeleton class="mb-3" />
             <Skeleton height="0.75rem" width="70%" />
           </div>
@@ -303,7 +298,7 @@ const frame =
         </ul>
         <button
           v-if="onNew && !loading"
-          class="flex h-9 w-full shrink-0 items-center justify-center gap-1.5 rounded-lg border border-dashed border-sui-line-strong text-xs font-medium text-sui-ink-muted opacity-0 outline-hidden transition-all duration-150 group-hover/body:opacity-100 hover:border-sui-ink-muted hover:bg-sui-surface/60 hover:text-sui-ink-body focus-visible:opacity-100 focus-visible:sui-ring"
+          class="flex h-(--sui-control-height) w-full shrink-0 items-center justify-center gap-1.5 rounded-lg border border-dashed border-sui-line-strong text-xs font-medium text-sui-ink-muted opacity-0 outline-hidden transition-all duration-150 group-hover/body:opacity-100 hover:border-sui-ink-muted hover:bg-sui-surface/60 hover:text-sui-ink-body focus-visible:opacity-100 focus-visible:sui-ring"
           type="button"
           @click="onNew(column)"
         >

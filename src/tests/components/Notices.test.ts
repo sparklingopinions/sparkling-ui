@@ -122,7 +122,7 @@ describe('EmptyState', () => {
   it('draws a neutral tile for no matches', () => {
     const wrapper = mount(EmptyState, { props: { icon: 'search', tone: 'neutral', title: 'No matches' } })
 
-    expect(wrapper.find('div[aria-hidden="true"]').classes()).toContain('bg-sui-sunken')
+    expect(wrapper.find('div[aria-hidden="true"]').classes()).toContain('bg-sui-fill')
     expect(wrapper.find('[data-icon="search"]').classes()).toContain('stroke-sui-ink-muted')
   })
 

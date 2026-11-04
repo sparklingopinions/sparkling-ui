@@ -29,7 +29,7 @@ describe('Avatar', () => {
     const wrapper = mount(Avatar)
 
     expect(wrapper.text()).toBe('?')
-    expect(wrapper.classes()).toEqual(expect.arrayContaining(['bg-sui-sunken', 'text-sui-ink-body']))
+    expect(wrapper.classes()).toEqual(expect.arrayContaining(['sui-band', 'text-sui-ink-body']))
   })
 
   it('shows a photo instead, with a neutral hairline', async () => {
@@ -61,7 +61,7 @@ describe('Tag outline', () => {
     const wrapper = mount(Tag, { props: { name: 'Customer', variant: 'outline' }, attachTo: document.body })
 
     expect(wrapper.text()).toBe('Customer')
-    expect(wrapper.classes()).toContain('bg-sui-sunken')
+    expect(wrapper.classes()).toContain('bg-sui-fill')
     await wrapper.setProps({ muted: true })
     expect(wrapper.classes()).toEqual(expect.arrayContaining(['border-sui-line-subtle', 'text-sui-ink-muted']))
     await expectAccessible(wrapper.element)

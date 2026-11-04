@@ -368,6 +368,16 @@
   --sui-focus-offset-inset: -2px;
 }
 
+/* The soft fill as an opaque band over surface, for what content scrolls under or what overlaps (sticky headers,
+   stacked avatars). */
+@utility sui-band {
+  background-color: rgb(var(--sui-surface));
+  background-image: linear-gradient(
+    rgb(var(--sui-fill) / var(--sui-fill-alpha)),
+    rgb(var(--sui-fill) / var(--sui-fill-alpha))
+  );
+}
+
 /* The keyboard focus ring, one treatment everywhere, applied with a variant (focus-visible:sui-ring). Outside by
    default, so it reads around filled buttons; a halo on fields; inset in menus, lists and tight groups. */
 @utility sui-ring {

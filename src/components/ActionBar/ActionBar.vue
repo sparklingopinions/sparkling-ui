@@ -80,7 +80,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
     role="toolbar"
   >
     <div
-      class="pointer-events-auto flex animate-sui-toast-in items-center gap-2 rounded-2xl border border-sui-line-subtle bg-sui-surface py-1.5 pr-2 pl-4 text-sm text-sui-ink shadow-md"
+      class="pointer-events-auto flex animate-sui-toast-in items-center gap-2 rounded-xl border border-sui-edge bg-sui-raised py-1.5 pr-2 pl-4 text-sm text-sui-ink shadow-(--sui-shadow-floating)"
     >
       <span aria-live="polite" class="whitespace-nowrap tabular-nums">{{ text }}</span>
       <span aria-hidden="true" class="mx-1 h-4 w-px bg-sui-line" />

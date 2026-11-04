@@ -251,7 +251,7 @@ const hueDots: Record<string, string> = {
             <template v-if="isChecklist">
               <div
                 v-if="options.length > 6"
-                class="mx-2 mb-1 flex h-9 items-center gap-2 rounded-lg border border-sui-line-subtle px-2.5 text-sui-ink-muted"
+                class="mx-2 mb-1 flex h-(--sui-control-height) items-center gap-2 rounded-lg border border-sui-fill-line bg-sui-fill px-2.5 text-sui-ink-muted"
               >
                 <FilterGlyph class="size-4" name="search" />
                 <!-- focus: classes too: an app's forms plugin rings focused text fields, and outranks plain utilities. -->

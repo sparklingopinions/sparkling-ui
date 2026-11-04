@@ -173,7 +173,7 @@ function onKeydown(event: KeyboardEvent, item: T) {
 const cards = computed(() => props.variant === 'cards')
 const leading = computed(() => props.selectable && props.checkboxPlacement === 'leading')
 const gutter = computed(() => props.selectable && props.checkboxPlacement === 'gutter')
-const tones = { sunken: 'bg-sui-sunken', surface: 'bg-sui-surface', canvas: 'bg-sui-canvas' }
+const tones = { sunken: 'sui-band', surface: 'bg-sui-surface', canvas: 'bg-sui-canvas' }
 const headerTone = computed(() => tones[props.groupHeaderTone ?? (cards.value ? 'surface' : 'sunken')])
 const sizes = computed(() => {
   const style: Record<string, string> = {}
@@ -187,13 +187,9 @@ const groupName = (group: DataListGroup<T>) => group.label ?? group.name ?? ''
 
 const skeletonWidths = ['42%', '58%', '35%', '50%', '46%', '38%']
 const skeletonGroupWidths = ['5.5rem', '4rem', '4.75rem']
-// A Skeleton is sunken, so on a sunken header band its bars go a step darker.
-const headerBar = computed(() => [
-  'animate-pulse',
-  headerTone.value === tones.sunken ? 'bg-sui-line-subtle' : 'bg-sui-sunken'
-])
+const headerBar = 'animate-pulse bg-sui-fill-hover'
 const iconButton =
-  'flex size-6 shrink-0 items-center justify-center rounded-md text-sui-ink-muted outline-hidden transition-colors duration-150 hover:bg-sui-line-subtle hover:text-sui-ink focus-visible:sui-ring-inset'
+  'flex size-6 shrink-0 items-center justify-center rounded-md text-sui-ink-muted outline-hidden transition-colors duration-150 hover:bg-sui-fill-hover hover:text-sui-ink focus-visible:sui-ring-inset'
 </script>
 
 <!-- A grouped list: one dense line per record under sticky, collapsible group headers. -->
@@ -336,7 +332,7 @@ const iconButton =
                 dividers && '[&+&]:border-t [&+&]:border-sui-line-subtle',
                 selected.includes(idOf(item))
                   ? 'bg-sui-accent-wash'
-                  : 'hover:bg-sui-fill-hover has-focus-visible:bg-sui-sunken'
+                  : 'hover:bg-sui-fill-hover has-focus-visible:bg-sui-fill-hover'
               ]"
               :style="item.depth ? { paddingLeft: `${item.depth * 22}px` } : undefined"
             >

@@ -44,7 +44,7 @@ const hues: Record<Hue, string> = {
   slate: 'border-sui-hue-slate-line bg-sui-hue-slate-soft text-sui-hue-slate-ink',
   red: 'border-sui-hue-red-line bg-sui-hue-red-soft text-sui-hue-red-ink',
   amber: 'border-sui-hue-amber-line bg-sui-hue-amber-soft text-sui-hue-amber-ink',
-  gray: 'border-sui-line bg-sui-sunken text-sui-ink-body'
+  gray: 'border-sui-line sui-band text-sui-ink-body'
 }
 
 // A number of px: the initial steps down with the coin.

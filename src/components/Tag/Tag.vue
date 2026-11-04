@@ -89,7 +89,7 @@ const dots: Record<Hue, string> = {
     v-else-if="variant === 'outline'"
     class="inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs whitespace-nowrap"
     :class="
-      muted ? 'border-sui-line-subtle text-sui-ink-muted' : 'border-sui-line bg-sui-sunken font-medium text-sui-ink'
+      muted ? 'border-sui-line-subtle text-sui-ink-muted' : 'border-sui-line bg-sui-fill font-medium text-sui-ink'
     "
   >
     <Icon v-if="icon" class="size-3.5 shrink-0" :color="iconColor" :name="icon" />
@@ -97,7 +97,7 @@ const dots: Record<Hue, string> = {
   </span>
   <div
     v-else
-    class="inline-flex items-center gap-1.5 rounded-md bg-sui-sunken px-2 py-0.5 text-xs font-medium text-sui-ink-body"
+    class="inline-flex items-center gap-1.5 rounded-md bg-sui-fill px-2 py-0.5 text-xs font-medium text-sui-ink-body"
   >
     <Icon v-if="icon" class="size-3.5 shrink-0" :color="iconColor" :name="icon" />
     <span v-else-if="color" class="h-1.5 w-1.5 shrink-0 rounded-full" :class="dots[color]" />

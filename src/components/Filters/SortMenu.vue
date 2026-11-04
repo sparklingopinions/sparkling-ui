@@ -87,7 +87,7 @@ function clear() {
 }
 
 const row =
-  'flex min-h-9 w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1 text-left text-13.5 outline-hidden transition-colors duration-100 focus-visible:sui-ring-inset'
+  'flex min-h-8 w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1 text-left text-13.5 outline-hidden transition-colors duration-100 focus-visible:sui-ring-inset'
 </script>
 
 <!-- A view's sort: the header's Sort button or the view bar's chip ("Name, A → Z") open a panel of fields and a direction. -->
