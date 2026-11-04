@@ -40,9 +40,9 @@ export const menuConfirmDefaults = {
 }
 
 export const menuContentClass =
-  'z-[1100] rounded-xl border border-sui-line-subtle bg-sui-surface p-1 shadow-lg outline-hidden data-[state=open]:animate-sui-menu-in'
+  'z-[1100] rounded-xl border border-sui-edge bg-sui-raised p-1 shadow-lg outline-hidden data-[state=open]:animate-sui-menu-in'
 export const menuItemClass =
-  'relative rounded-lg text-sm text-sui-ink transition-colors duration-150 outline-hidden hover:bg-sui-sunken focus-visible:sui-ring-inset data-highlighted:bg-sui-sunken'
+  'relative rounded-lg text-sm text-sui-ink transition-colors duration-150 outline-hidden hover:bg-sui-fill-hover focus-visible:sui-ring-inset data-highlighted:bg-sui-fill-hover'
 export const menuSeparatorClass = 'my-1 border-t border-sui-line-subtle'
 
 /** Runs an item: asks first when it says so, then emits it with the menu's `id`. */

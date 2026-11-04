@@ -61,7 +61,7 @@ const arrows = computed(() => {
 
 const button =
   'inline-flex h-7 min-w-7 items-center justify-center rounded-(--sui-radius-button) px-1.5 text-13 font-medium tabular-nums transition-colors duration-150 focus-visible:sui-ring disabled:cursor-default disabled:opacity-50'
-const idle = 'text-sui-ink-body enabled:hover:bg-sui-sunken enabled:hover:text-sui-ink'
+const idle = 'text-sui-ink-body enabled:hover:bg-sui-fill-hover enabled:hover:text-sui-ink'
 </script>
 
 <!-- A table's paginator: first, previous, the pages with gaps, next, last. The current page is a solid accent tile. -->

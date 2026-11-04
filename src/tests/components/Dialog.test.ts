@@ -33,15 +33,41 @@ describe('Dialog', () => {
     wrapper.unmount()
   })
 
-  it('cancels from the footer, the close button and Escape, but not an outside click', async () => {
+  it('draws one raised piece: a footer without Cancel, its shortcut as keys', async () => {
     const wrapper = mountModal({ confirmLabel: 'Revoke' })
     await flushPromises()
 
-    button('Cancel').click()
+    expect(dialog()!.className).toEqual(expect.stringContaining('bg-sui-raised'))
+    expect(dialog()!.className).toEqual(expect.stringContaining('border-sui-edge'))
+    expect(dialog()!.querySelector('[data-modal-header]')!.className).not.toContain('border-b')
+    const footer = dialog()!.querySelector('[data-modal-footer]')!
+    expect(footer.className).not.toContain('border-t')
+    expect(button('Cancel')).toBeUndefined()
+    expect([...footer.querySelectorAll('kbd')].map((key) => key.textContent)).toEqual(['Ctrl', '↵'])
+    expect(button('Revoke').getAttribute('aria-keyshortcuts')).toBe('Control+Enter')
+    await expectAccessible(document.body)
+    wrapper.unmount()
+  })
+
+  it('puts a context before the title, behind a chevron', async () => {
+    const wrapper = mountModal({ confirmLabel: 'Add' }, { context: '<button type="button">Inbox</button>' })
+    await flushPromises()
+
+    const header = dialog()!.querySelector('[data-modal-header]')!
+    expect(header.textContent).toMatch(/Inbox.*Revoke key/)
+    expect(header.querySelector('svg[aria-hidden="true"]')).not.toBeNull()
+    expect(dialog()!.getAttribute('aria-labelledby')).toBe(header.querySelector('h2')!.id)
+    wrapper.unmount()
+  })
+
+  it('cancels from the close button and Escape, but not an outside click', async () => {
+    const wrapper = mountModal({ confirmLabel: 'Revoke' })
+    await flushPromises()
+
     document.body.querySelector<HTMLElement>('[aria-label="Close"]')!.click()
     escape()
     await flushPromises()
-    expect(wrapper.emitted('cancel')).toHaveLength(3)
+    expect(wrapper.emitted('cancel')).toHaveLength(2)
     expect(wrapper.emitted('update:open')?.every(([value]) => value === false)).toBe(true)
 
     await wrapper.setProps({ open: false })
@@ -226,7 +252,7 @@ describe('Dialog', () => {
     expect(band.textContent).toContain('New contact')
     expect(band.textContent).toContain('Ada Lovelace')
     const footer = dialog()!.querySelector('[data-modal-footer]')!.textContent
-    expect(footer).toMatch(/Delete.*⌘ Enter to save.*Cancel.*Add contact/)
+    expect(footer).toMatch(/Delete.*⌘ Enter to save.*Add contact/)
     await expectAccessible(document.body)
     wrapper.unmount()
   })

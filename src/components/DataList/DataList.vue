@@ -336,7 +336,7 @@ const iconButton =
                 dividers && '[&+&]:border-t [&+&]:border-sui-line-subtle',
                 selected.includes(idOf(item))
                   ? 'bg-sui-accent-wash'
-                  : 'hover:bg-sui-sunken has-focus-visible:bg-sui-sunken'
+                  : 'hover:bg-sui-fill-hover has-focus-visible:bg-sui-sunken'
               ]"
               :style="item.depth ? { paddingLeft: `${item.depth * 22}px` } : undefined"
             >

@@ -61,12 +61,12 @@ const dots: Record<Hue, string> = {
   <button
     v-if="pressable"
     :aria-pressed="pressed"
-    class="inline-flex cursor-pointer items-center rounded-md border leading-none font-medium whitespace-nowrap transition-colors duration-150 outline-hidden focus-visible:sui-ring disabled:cursor-default disabled:opacity-50"
+    class="inline-flex cursor-pointer items-center rounded-full border leading-none font-medium whitespace-nowrap transition-colors duration-150 outline-hidden focus-visible:sui-ring disabled:cursor-default disabled:opacity-50"
     :class="[
-      size === 'sm' ? 'h-5.5 gap-1 px-2 text-xs' : 'h-7 gap-1.5 px-3 text-13',
+      size === 'sm' ? 'h-5.5 gap-1 px-2.5 text-xs' : 'h-7 gap-1.5 px-3 text-13',
       pressed
         ? 'border-sui-accent-line bg-sui-accent-wash text-sui-accent enabled:hover:border-sui-accent-bright enabled:hover:bg-sui-accent-soft enabled:active:border-sui-accent-solid enabled:active:bg-sui-accent-soft'
-        : 'border-sui-line bg-sui-surface text-sui-ink-body enabled:hover:border-sui-line-strong enabled:hover:bg-sui-canvas enabled:hover:text-sui-ink enabled:active:bg-sui-sunken'
+        : 'border-sui-fill-line bg-sui-fill text-sui-ink-emphasis enabled:hover:bg-sui-fill-hover enabled:hover:text-sui-ink'
     ]"
     :disabled="disabled"
     type="button"

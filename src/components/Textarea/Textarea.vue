@@ -9,6 +9,9 @@ export interface TextareaProps {
   /** Marks the field as failing validation: a danger border and `aria-invalid`. */
   invalid?: boolean
   disabled?: boolean
+  /** No box: for when the text is the thing being made (a note, a message), filling a dialog edge to edge. Give it an
+   *  `aria-label` or a visually hidden label. */
+  bare?: boolean
 }
 
 const props = defineProps<TextareaProps>()
@@ -54,12 +57,16 @@ watch(model, () => nextTick(resize))
     ref="textarea"
     v-bind="fieldAttrs"
     :aria-invalid="isInvalid ? 'true' : undefined"
-    class="m-0 w-full appearance-none rounded-md border bg-sui-surface px-3 py-1.5 font-sans text-sm leading-5 text-sui-ink transition-[border-color,box-shadow] duration-200 placeholder:text-sui-ink-faint"
+    class="m-0 w-full appearance-none font-sans text-sui-ink placeholder:text-sui-ink-faint"
     :class="[
-      isInvalid ? 'border-sui-danger-mid' : 'border-sui-line-strong hover:border-sui-ink-muted',
-      disabled
-        ? 'pointer-events-none cursor-default opacity-60 select-none'
-        : 'focus:border-sui-accent focus:ring-0 focus-visible:sui-ring-field'
+      bare
+        ? 'resize-none border-0 bg-transparent p-0 text-sm leading-[1.55] shadow-none outline-hidden focus:border-0 focus:shadow-none focus:ring-0 focus:outline-hidden'
+        : [
+            'rounded-lg border bg-sui-fill px-3 py-1.5 text-sm leading-5 transition-[border-color,box-shadow,background-color] duration-200',
+            isInvalid ? 'border-sui-danger-mid' : 'border-sui-fill-line hover:bg-sui-fill-hover',
+            !disabled && 'focus:border-sui-accent focus:bg-transparent focus:ring-0 focus-visible:sui-ring-field'
+          ],
+      disabled && 'pointer-events-none cursor-default opacity-60 select-none'
     ]"
     :disabled="disabled"
     :value="model ?? ''"

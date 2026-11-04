@@ -141,7 +141,7 @@ const row =
       <PopoverContent
         align="start"
         :aria-label="$slots.trigger ? title : undefined"
-        class="z-[1100] w-85 max-w-[calc(100vw-2rem)] origin-(--reka-popover-content-transform-origin) rounded-xl border border-sui-line bg-sui-surface text-sui-ink shadow-lg data-[state=open]:animate-sui-overlay-in"
+        class="z-[1100] w-85 max-w-[calc(100vw-2rem)] origin-(--reka-popover-content-transform-origin) rounded-xl border border-sui-edge bg-sui-raised text-sui-ink shadow-lg data-[state=open]:animate-sui-overlay-in"
         :data-sui-panel="custom.panelKey"
         :side-offset="8"
         @close-auto-focus="custom.returnFocus"
@@ -162,7 +162,7 @@ const row =
             <span class="text-sm font-semibold text-sui-ink">{{ title }}</span>
             <button
               v-if="current"
-              class="ml-auto inline-flex h-7 items-center rounded-lg px-2 text-12.5 font-medium text-sui-ink-muted outline-hidden transition-colors duration-150 hover:bg-sui-sunken hover:text-sui-ink focus-visible:sui-ring-inset"
+              class="ml-auto inline-flex h-7 items-center rounded-lg px-2 text-12.5 font-medium text-sui-ink-muted outline-hidden transition-colors duration-150 hover:bg-sui-fill-hover hover:text-sui-ink focus-visible:sui-ring-inset"
               type="button"
               @click="clear"
             >
@@ -182,14 +182,16 @@ const row =
                 row,
                 option.name === sort?.name
                   ? 'bg-sui-accent-wash font-semibold text-sui-accent'
-                  : 'text-sui-ink hover:bg-sui-sunken'
+                  : 'text-sui-ink hover:bg-sui-fill-hover'
               ]"
               :value="option.name"
             >
               <span
                 class="flex size-6 shrink-0 items-center justify-center rounded-md"
                 :class="
-                  option.name === sort?.name ? 'bg-sui-surface text-sui-accent' : 'bg-sui-sunken text-sui-ink-body'
+                  option.name === sort?.name
+                    ? 'bg-sui-lifted text-sui-accent shadow-(--sui-shadow-lifted)'
+                    : 'bg-sui-fill text-sui-ink-body'
                 "
               >
                 <FilterGlyph :name="option.type" />
@@ -201,7 +203,7 @@ const row =
           <RadioGroupRoot
             v-if="current"
             :aria-label="directionLabel"
-            class="mx-3 mb-3 grid grid-cols-2 gap-0.5 rounded-lg bg-sui-sunken p-0.75"
+            class="mx-3 mb-3 grid grid-cols-2 gap-0.5 rounded-lg bg-sui-track p-0.75 ring-1 ring-sui-fill-line ring-inset"
             :model-value="sort!.dir"
             orientation="horizontal"
             @update:model-value="sort = { name: sort!.name, dir: $event as ViewSort['dir'] }"
@@ -209,10 +211,10 @@ const row =
             <RadioGroupItem
               v-for="(dir, i) in ['asc', 'desc'] as const"
               :key="dir"
-              class="flex h-9 items-center justify-center gap-1.5 rounded-md text-13 font-medium outline-hidden transition-colors duration-150 focus-visible:sui-ring-inset"
+              class="flex h-7 items-center justify-center gap-1.5 rounded-md text-13 font-medium outline-hidden transition-colors duration-150 focus-visible:sui-ring-inset"
               :class="
                 sort!.dir === dir
-                  ? 'bg-sui-surface text-sui-ink shadow-(--sui-shadow-raised) ring-1 ring-sui-line-subtle'
+                  ? 'bg-sui-lifted text-sui-ink shadow-(--sui-shadow-lifted)'
                   : 'text-sui-ink-body hover:text-sui-ink'
               "
               :value="dir"

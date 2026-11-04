@@ -110,7 +110,7 @@ describe('PopoverDialog', () => {
 
     expect(trigger.attributes('aria-expanded')).toBe('true')
     expect(trigger.attributes('aria-controls')).toBe(dialog()?.id)
-    expect(dialog()?.className).toContain('rounded-lg')
+    expect(dialog()?.className).toContain('rounded-xl')
     wrapper.unmount()
   })
 

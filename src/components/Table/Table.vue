@@ -223,7 +223,7 @@ const checkCell = 'w-12 pl-4 text-left'
               :aria-selected="selectable ? selected.includes(idOf(row)) : undefined"
               class="group/row transition-colors duration-150"
               :class="[
-                selected.includes(idOf(row)) ? 'bg-sui-accent-wash' : 'hover:bg-sui-sunken',
+                selected.includes(idOf(row)) ? 'bg-sui-accent-wash' : 'hover:bg-sui-fill-hover',
                 onRowClick && 'cursor-pointer'
               ]"
               @click="onRowClick?.(row)"

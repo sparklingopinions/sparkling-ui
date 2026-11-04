@@ -28,8 +28,8 @@
   --sui-ink-emphasis: 69 68 74;
   --sui-ink-body: 83 83 90;
   --sui-ink-subtle: 97 97 104;
-  --sui-ink-muted: 111 111 117;
-  --sui-ink-faint: 111 111 117;
+  --sui-ink-muted: 105 105 111;
+  --sui-ink-faint: 105 105 111;
   --sui-mark-faint: 185 185 191;
 
   /* Contrast */
@@ -105,8 +105,27 @@
   --sui-inverse: 69 68 74;
   --sui-on-inverse: 255 255 255;
 
-  /* Behind dialogs, with an opacity modifier */
+  /* Behind dialogs, with an opacity modifier; dialogs use scrim-alpha, sheets their own */
   --sui-scrim: 0 0 0;
+  --sui-scrim-alpha: 0.1;
+
+  /* Floating layers (dialogs, sheets, popovers, menus) sit on raised, a step above the page in dark, with an edge */
+  --sui-raised: 255 255 255;
+  --sui-edge: 0 0 0;
+  --sui-edge-alpha: 0.08;
+  --sui-shadow-floating: 0 16px 70px rgb(0 0 0 / 0.16), 0 2px 8px rgb(0 0 0 / 0.04);
+
+  /* Soft fills: ink at a low alpha, so controls read the same on any ground (fields, secondary buttons, chips, keys) */
+  --sui-fill: 0 0 0;
+  --sui-fill-alpha: 0.035;
+  --sui-fill-hover-alpha: 0.06;
+  --sui-fill-line-alpha: 0.07;
+
+  /* A segmented control's track, and the segment lifted out of it */
+  --sui-track: 0 0 0;
+  --sui-track-alpha: 0.045;
+  --sui-lifted: 255 255 255;
+  --sui-shadow-lifted: 0 1px 2px rgb(0 0 0 / 0.08), 0 0 0 1px rgb(0 0 0 / 0.06);
 }
 
 :where([data-mode='dark']) {
@@ -128,8 +147,8 @@
   --sui-ink-emphasis: 204 204 209;
   --sui-ink-body: 182 182 188;
   --sui-ink-subtle: 162 162 169;
-  --sui-ink-muted: 142 142 149;
-  --sui-ink-faint: 142 142 149;
+  --sui-ink-muted: 152 152 159;
+  --sui-ink-faint: 152 152 159;
   --sui-mark-faint: 102 102 109;
 
   /* Contrast */
@@ -139,7 +158,7 @@
 
   /* Accent: accent is for text, accent-solid for fills (one step can't hold contrast as both in dark mode),
      accent-bright for hover borders */
-  --sui-accent: 144 132 255;
+  --sui-accent: 154 144 255;
   --sui-accent-solid: 111 97 208;
   --sui-accent-hover: 102 87 198;
   --sui-accent-bright: 107 94 196;
@@ -205,8 +224,27 @@
   --sui-inverse: 64 64 69;
   --sui-on-inverse: 228 228 231;
 
-  /* Behind dialogs, with an opacity modifier */
+  /* Behind dialogs, with an opacity modifier; dialogs use scrim-alpha, sheets their own */
   --sui-scrim: 0 0 0;
+  --sui-scrim-alpha: 0.35;
+
+  /* Floating layers: black shadows vanish on black, so the edge does the work */
+  --sui-raised: 35 35 38;
+  --sui-edge: 255 255 255;
+  --sui-edge-alpha: 0.09;
+  --sui-shadow-floating: 0 16px 70px rgb(0 0 0 / 0.55), 0 2px 8px rgb(0 0 0 / 0.3);
+
+  /* Soft fills */
+  --sui-fill: 255 255 255;
+  --sui-fill-alpha: 0.04;
+  --sui-fill-hover-alpha: 0.06;
+  --sui-fill-line-alpha: 0.07;
+
+  /* Segmented control */
+  --sui-track: 0 0 0;
+  --sui-track-alpha: 0.3;
+  --sui-lifted: 58 58 62;
+  --sui-shadow-lifted: 0 1px 2px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.07);
 }
 
 /* Prefixed, so they never meet an app's own colour names (bg-sui-surface, text-sui-ink).
@@ -286,16 +324,28 @@
   --color-sui-inverse: rgb(var(--sui-inverse) / 1);
   --color-sui-on-inverse: rgb(var(--sui-on-inverse) / 1);
   --color-sui-scrim: rgb(var(--sui-scrim) / 1);
+  --color-sui-raised: rgb(var(--sui-raised) / 1);
+  --color-sui-lifted: rgb(var(--sui-lifted) / 1);
+  /* Translucent by design: never put an opacity modifier on these */
+  --color-sui-edge: rgb(var(--sui-edge) / var(--sui-edge-alpha));
+  --color-sui-fill: rgb(var(--sui-fill) / var(--sui-fill-alpha));
+  --color-sui-fill-hover: rgb(var(--sui-fill) / var(--sui-fill-hover-alpha));
+  --color-sui-fill-line: rgb(var(--sui-fill) / var(--sui-fill-line-alpha));
+  --color-sui-track: rgb(var(--sui-track) / var(--sui-track-alpha));
 }
 
 /* Sizes and shapes, the same in both modes. */
 :where(:root) {
-  --sui-button-height: 2.25rem;
-  --sui-button-padding-x: 0.875rem;
-  --sui-button-text: 0.875rem;
+  /* Buttons, fields and select triggers share one height */
+  --sui-control-height: 2rem;
+  --sui-button-height: var(--sui-control-height);
+  --sui-button-padding-x: 0.75rem;
+  --sui-button-text: 0.8125rem;
   --sui-radius-button: 0.5rem;
   /* A bottom sheet's top corners. */
   --sui-radius-sheet: 1.25rem;
+  /* How far below the viewport's top a dialog opens, where a command palette usually sits */
+  --sui-dialog-offset: 12vh;
   /* Table rows and headers at one height, e.g. 44px; unset (initial), each Table's size decides. */
   --sui-table-row: initial;
   /* The header row's own height, e.g. 36px over 44px rows; unset, it follows the rows. */
@@ -442,14 +492,14 @@
   @keyframes sui-dialog-in {
     from {
       opacity: 0;
-      transform: scale(0.75);
+      transform: translateY(-4px) scale(0.97);
     }
   }
 
   @keyframes sui-dialog-out {
     to {
       opacity: 0;
-      transform: scale(0.75);
+      transform: translateY(-4px) scale(0.97);
     }
   }
 

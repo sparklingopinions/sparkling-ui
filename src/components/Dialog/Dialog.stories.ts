@@ -8,12 +8,15 @@ import AlertDialog from '../AlertDialog/AlertDialog.vue'
 import Avatar from '../Avatar/Avatar.vue'
 import Button from '../Button/Button.vue'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
+import FormField from '../FormField/FormField.vue'
+import Icon from '../Icon/Icon.vue'
 import Input from '../Input/Input.vue'
 import Popover from '../Popover/Popover.vue'
 import PropertyRow from '../PropertyRow/PropertyRow.vue'
+import SegmentedControl from '../SegmentedControl/SegmentedControl.vue'
 import Select from '../Select/Select.vue'
+import Textarea from '../Textarea/Textarea.vue'
 import Dialog from './Dialog.vue'
-import { saveHint } from './focus'
 
 const openAndCheck = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open' }))
@@ -138,10 +141,10 @@ export const Large: Story = { args: { size: 'lg', confirmLabel: undefined } }
 export const RecordForm: Story = {
   render: () => ({
     components: { Avatar, Button, PropertyRow, Dialog },
-    setup: () => ({ open: ref(false), hint: saveHint() }),
+    setup: () => ({ open: ref(false) }),
     template: `
       <Button size="sm" @click="open = true">Open</Button>
-      <Dialog v-model:open="open" band="rgb(var(--sui-hue-blue-soft))" confirm-label="Save" :hint="hint" title="Company">
+      <Dialog v-model:open="open" band="rgb(var(--sui-hue-blue-soft))" confirm-label="Save" title="Company">
         <template #hero>
           <Avatar name="Analytical Engines" shape="square" size="xl" />
           <span class="text-lg font-semibold text-sui-ink">Analytical Engines</span>
@@ -181,6 +184,53 @@ export const CustomFooter: Story = {
           <Button variant="danger-outline" @click="open = false">Delete</Button>
           <Button variant="primary" @click="open = false">Done</Button>
         </template>
+      </Dialog>
+    `
+  })
+}
+
+// The context says where the thing lands: a picker when it's a choice, plain text when it isn't.
+export const WithContext: Story = {
+  render: () => ({
+    components: { Avatar, Button, Dialog, FormField, Input, SegmentedControl },
+    setup: () => ({ open: ref(false), name: ref(''), layout: ref('table') }),
+    template: `
+      <Button size="sm" @click="open = true">Open</Button>
+      <Dialog v-model:open="open" title="New view" confirm-label="Add view" :confirm-disabled="!name" hint="No filters yet: every record shows.">
+        <template #context>
+          <span class="flex items-center gap-1.5 pr-0.5 text-13 font-medium text-sui-ink-subtle">
+            <Avatar name="Sales" shape="square" size="xs" />Sales
+          </span>
+        </template>
+        <div class="flex flex-col gap-4">
+          <FormField label="Name"><Input v-model="name" autofocus placeholder="Ready for review" /></FormField>
+          <FormField label="Layout">
+            <SegmentedControl
+              v-model="layout"
+              :options="[{ value: 'table', label: 'Table', iconName: 'list' }, { value: 'board', label: 'By stage', iconName: 'kanban' }, { value: 'calendar', label: 'Calendar', iconName: 'calendar' }]"
+            />
+          </FormField>
+        </div>
+      </Dialog>
+    `
+  })
+}
+
+// When the text is the thing being made, it fills the dialog with no box; the context picks where it goes.
+export const Composer: Story = {
+  render: () => ({
+    components: { Button, Dialog, Icon, Textarea },
+    setup: () => ({ open: ref(false), text: ref('') }),
+    template: `
+      <Button size="sm" @click="open = true">Open</Button>
+      <Dialog v-model:open="open" title="New note" confirm-label="Save note" :confirm-disabled="!text">
+        <template #context>
+          <Button aria-label="Inbox, change where it goes" icon-position="end" size="xs" variant="secondary">
+            Inbox <Icon class="size-3.5" color="ink-muted" name="chevron-down" />
+          </Button>
+        </template>
+        <Textarea v-model="text" aria-label="Note" autofocus bare class="min-h-24" placeholder="What’s on your mind?" />
+        <p class="mt-2 text-xs text-sui-ink-muted">Goes to your inbox. Paste a link or a quote too.</p>
       </Dialog>
     `
   })

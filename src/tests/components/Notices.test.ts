@@ -92,7 +92,7 @@ describe('EmptyState', () => {
     expect(wrapper.find('svg').classes()).toEqual(expect.arrayContaining(['size-4', 'stroke-sui-ink-muted']))
     const button = wrapper.find('button')
     expect(button.text()).toBe('Add webhook')
-    expect(button.classes()).toEqual(expect.arrayContaining(['h-7', 'bg-sui-surface']))
+    expect(button.classes()).toEqual(expect.arrayContaining(['h-7', 'bg-sui-fill']))
     await button.trigger('click')
     expect(wrapper.emitted('action')).toHaveLength(1)
     await expectAccessible(wrapper.element)

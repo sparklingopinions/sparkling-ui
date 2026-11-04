@@ -109,7 +109,7 @@ const field =
         :class="[
           field,
           'max-w-[16rem] text-sm leading-5',
-          disabled ? 'cursor-auto' : 'cursor-pointer hover:bg-sui-sunken'
+          disabled ? 'cursor-auto' : 'cursor-pointer hover:bg-sui-fill-hover'
         ]"
         :disabled="disabled"
         type="button"
@@ -137,7 +137,7 @@ const field =
       title
         ? 'min-h-10 min-w-4 text-lg leading-7 font-semibold [&_textarea]:min-h-10 [&_textarea]:text-lg [&_textarea]:leading-7 [&_textarea]:font-semibold [&_textarea]:whitespace-nowrap [&_textarea]:placeholder:text-lg [&_textarea]:placeholder:font-semibold'
         : 'max-w-[16rem] text-sm leading-5 [&_textarea]:placeholder:text-sm [&_textarea]:placeholder:leading-5',
-      disabled ? 'cursor-auto' : 'cursor-pointer hover:bg-sui-sunken',
+      disabled ? 'cursor-auto' : 'cursor-pointer hover:bg-sui-fill-hover',
       '[&_textarea]:bg-sui-surface [&_textarea]:placeholder:text-sui-ink-muted'
     ]"
     role="button"

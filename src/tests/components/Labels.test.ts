@@ -154,7 +154,7 @@ describe('Tag', () => {
       attachTo: document.body
     })
 
-    expect(wrapper.classes()).toEqual(expect.arrayContaining(['h-5.5', 'text-xs', 'px-2']))
+    expect(wrapper.classes()).toEqual(expect.arrayContaining(['h-5.5', 'text-xs', 'px-2.5']))
     expect(wrapper.classes()).not.toContain('h-7')
     await expectAccessible(wrapper.element)
     wrapper.unmount()
