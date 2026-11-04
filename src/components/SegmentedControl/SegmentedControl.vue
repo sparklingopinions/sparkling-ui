@@ -27,7 +27,7 @@ const model = defineModel<T>({ required: true })
 <template>
   <RadioGroupRoot
     v-model="model"
-    class="flex gap-0.5 rounded-lg bg-sui-sunken p-0.75 ring-1 ring-sui-line-subtle ring-inset"
+    class="flex gap-0.5 rounded-lg bg-sui-track p-0.75 ring-1 ring-sui-fill-line ring-inset"
     :class="block ? 'w-full' : 'w-fit'"
     orientation="horizontal"
   >
@@ -38,7 +38,7 @@ const model = defineModel<T>({ required: true })
       :class="[
         block ? 'min-w-0 flex-1 justify-center px-2' : 'pr-3 pl-2.5',
         option.value === model
-          ? 'bg-sui-surface text-sui-ink shadow-(--sui-shadow-raised) ring-1 ring-sui-line-subtle'
+          ? 'bg-sui-lifted text-sui-ink shadow-(--sui-shadow-lifted)'
           : 'text-sui-ink-body hover:text-sui-ink'
       ]"
       :value="option.value"

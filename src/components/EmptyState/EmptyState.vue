@@ -49,7 +49,7 @@ defineEmits<{ action: [] }>()
       v-if="icon"
       aria-hidden="true"
       class="mb-4 flex size-12 items-center justify-center rounded-xl ring-1 ring-inset"
-      :class="tone === 'accent' ? 'bg-sui-accent-wash ring-sui-accent-line' : 'bg-sui-sunken ring-sui-line-subtle'"
+      :class="tone === 'accent' ? 'bg-sui-accent-wash ring-sui-accent-line' : 'bg-sui-fill ring-sui-fill-line'"
     >
       <Icon class="size-6" :color="tone === 'accent' ? 'accent' : 'ink-muted'" :name="icon" />
     </div>

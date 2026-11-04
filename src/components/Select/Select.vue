@@ -246,9 +246,9 @@ function onHighlight(payload: { value: unknown } | undefined) {
   nextTick(() => listbox.value && !keyboard.value && !pointer.value && (listbox.value.highlightedElement = null))
 }
 
-const triggerSizes = { md: 'min-h-9 pr-2.5 pl-3 text-sm', sm: 'h-7 pr-1.5 pl-2 text-13' }
+const triggerSizes = { md: 'min-h-(--sui-control-height) pr-2.5 pl-3 text-sm', sm: 'h-7 pr-1.5 pl-2 text-13' }
 const optionClass =
-  'flex min-h-8 cursor-pointer items-center justify-between gap-3 rounded-lg py-1.5 pr-2 pl-2.5 text-13 whitespace-nowrap text-sui-ink outline-hidden select-none data-disabled:cursor-default data-disabled:opacity-50 data-highlighted:bg-sui-sunken data-[state=checked]:font-medium data-[state=checked]:text-sui-accent group-data-keyboard/list:data-highlighted:sui-ring-inset'
+  'flex min-h-8 cursor-pointer items-center justify-between gap-3 rounded-lg py-1.5 pr-2 pl-2.5 text-13 whitespace-nowrap text-sui-ink outline-hidden select-none data-disabled:cursor-default data-disabled:opacity-50 data-highlighted:bg-sui-fill-hover data-[state=checked]:font-medium data-[state=checked]:text-sui-accent group-data-keyboard/list:data-highlighted:sui-ring-inset'
 </script>
 
 <!-- One select for every choice: a short fixed list, a searchable one, several values as tags (`multiple`), or creating
@@ -262,10 +262,10 @@ const optionClass =
           :aria-expanded="open"
           aria-haspopup="listbox"
           :aria-invalid="isInvalid ? 'true' : undefined"
-          class="group inline-flex items-center justify-between gap-1.5 rounded-(--sui-radius-button) border bg-sui-surface text-left text-sui-ink transition-[border-color,box-shadow] duration-150 focus-visible:border-sui-accent focus-visible:sui-ring-field disabled:pointer-events-none disabled:opacity-60"
+          class="group inline-flex items-center justify-between gap-1.5 rounded-(--sui-radius-button) border bg-sui-fill text-left text-sui-ink transition-[border-color,box-shadow,background-color] duration-150 focus-visible:border-sui-accent focus-visible:bg-transparent focus-visible:sui-ring-field disabled:pointer-events-none disabled:opacity-60"
           :class="[
             triggerSizes[size],
-            isInvalid ? 'border-sui-danger-mid' : 'border-sui-line-strong hover:border-sui-ink-muted'
+            isInvalid ? 'border-sui-danger-mid' : 'border-sui-fill-line hover:bg-sui-fill-hover'
           ]"
           :disabled="disabled"
           type="button"
@@ -313,7 +313,7 @@ const optionClass =
       <PopoverContent
         :align="align"
         :aria-label="label ?? placeholder"
-        class="z-[1100] overflow-hidden rounded-xl border border-sui-line-subtle bg-sui-surface text-sui-ink shadow-lg data-[state=open]:animate-sui-menu-in"
+        class="z-[1100] overflow-hidden rounded-xl border border-sui-edge bg-sui-raised text-sui-ink shadow-lg data-[state=open]:animate-sui-menu-in"
         :class="
           search ? 'min-w-[max(var(--reka-popover-trigger-width),15rem)]' : 'min-w-(--reka-popover-trigger-width)'
         "

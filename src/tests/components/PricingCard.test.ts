@@ -18,7 +18,7 @@ describe('PricingCard', () => {
     expect(wrapper.text()).toContain('per month, plus VAT')
     expect(button.text()).toBe('Choose, Pro, monthly')
     expect(button.get('.sr-only').text()).toBe(', Pro, monthly')
-    expect(button.classes()).toContain('bg-sui-surface')
+    expect(button.classes()).toContain('bg-sui-fill')
 
     await button.trigger('click')
     expect(wrapper.emitted('select')).toHaveLength(1)

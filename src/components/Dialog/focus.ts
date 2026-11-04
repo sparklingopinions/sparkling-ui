@@ -10,6 +10,9 @@ export function focusFirst(event: Event) {
 
 const isApple = () => typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform)
 
+/** The confirm shortcut's modifier as a key cap: ⌘ on Apple devices, Ctrl elsewhere. */
+export const modifierKey = () => (isApple() ? '⌘' : 'Ctrl')
+
 /** The platform's save shortcut, for a Dialog's `hint`: "⌘ Enter to save" on Apple devices, "Ctrl Enter to save"
  *  elsewhere. `{key}` in the template is replaced. */
 export const saveHint = (template = '{key} Enter to save') => template.replace('{key}', isApple() ? '⌘' : 'Ctrl')

@@ -34,11 +34,11 @@ const variants: Record<ButtonVariant, string> = {
   primary:
     'border border-sui-accent-solid bg-sui-accent-solid text-sui-on-accent not-data-disabled:hover:border-sui-accent-hover not-data-disabled:hover:bg-sui-accent-hover [&_svg]:stroke-sui-on-accent',
   secondary:
-    'border border-sui-line bg-sui-surface text-sui-ink-emphasis shadow-(--sui-shadow-raised) not-data-disabled:hover:border-sui-line-strong not-data-disabled:hover:bg-sui-canvas [&_svg]:stroke-sui-ink-emphasis',
+    'border border-sui-fill-line bg-sui-fill text-sui-ink-emphasis not-data-disabled:hover:bg-sui-fill-hover not-data-disabled:hover:text-sui-ink [&_svg]:stroke-sui-ink-emphasis',
   tinted:
     'border border-sui-accent-line bg-sui-accent-wash text-sui-accent not-data-disabled:hover:bg-sui-accent-soft [&_svg]:stroke-sui-accent',
   ghost:
-    'border border-transparent bg-transparent text-sui-ink-subtle not-data-disabled:hover:bg-sui-sunken not-data-disabled:hover:text-sui-ink-emphasis',
+    'border border-transparent bg-transparent text-sui-ink-subtle not-data-disabled:hover:bg-sui-fill-hover not-data-disabled:hover:text-sui-ink-emphasis',
   contrast:
     'border border-sui-contrast bg-sui-contrast text-sui-on-contrast not-data-disabled:hover:border-sui-contrast-hover not-data-disabled:hover:bg-sui-contrast-hover',
   // No border: it's 2px narrower than the other variants.
@@ -81,9 +81,15 @@ const texts: Record<ButtonSize, string> = {
   lg: 'text-(length:--sui-button-text) leading-5'
 }
 
+// Filled buttons turn neutral when off, rather than fading their colour; ghosts, with nothing to fill, fade.
+const ghosts: ButtonVariant[] = ['ghost', 'ghost-inverse']
+const offClass =
+  'data-disabled:border-sui-fill-line data-disabled:bg-sui-fill data-disabled:text-sui-ink-muted data-disabled:shadow-none data-disabled:[&_svg]:stroke-sui-ink-muted'
+
 const classes = computed(() => [
   // no-underline: as a link, it shouldn't pick up the app's link styles.
-  'flex items-center justify-center font-medium text-nowrap no-underline transition-all duration-200 ease-in-out data-disabled:opacity-50',
+  'flex items-center justify-center font-medium text-nowrap no-underline transition-all duration-200 ease-in-out',
+  ghosts.includes(props.variant) ? 'data-disabled:opacity-50' : offClass,
   props.variant === 'ghost-inverse' ? 'focus-visible:sui-ring-inverse' : 'focus-visible:sui-ring',
   (props.pressed && pressedVariants[props.variant]) || variants[props.variant],
   heights[props.size],

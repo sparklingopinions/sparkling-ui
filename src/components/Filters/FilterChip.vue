@@ -132,11 +132,11 @@ function remove() {
 }
 
 const chip =
-  'inline-flex h-7.5 items-center gap-1.5 rounded-lg border text-13 whitespace-nowrap outline-hidden transition-[border-color,box-shadow] duration-150 focus-visible:sui-ring'
+  'inline-flex h-7 items-center gap-1.5 rounded-full border text-13 whitespace-nowrap outline-hidden transition-[border-color,box-shadow] duration-150 focus-visible:sui-ring'
 const row =
   'flex min-h-8 w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1 text-left text-13.5 outline-hidden transition-colors duration-100 focus-visible:sui-ring-inset'
 const rowOn = 'bg-sui-accent-wash font-semibold text-sui-accent'
-const rowOff = 'text-sui-ink hover:bg-sui-sunken'
+const rowOff = 'text-sui-ink hover:bg-sui-fill-hover'
 const hueDots: Record<string, string> = {
   blue: 'bg-sui-hue-blue-ink',
   green: 'bg-sui-hue-green-ink',
@@ -154,7 +154,7 @@ const hueDots: Record<string, string> = {
   <button
     v-if="kind === 'add'"
     v-bind="attrs"
-    class="border-dashed border-sui-line-strong px-2 font-medium text-sui-ink-muted hover:border-sui-ink-muted hover:text-sui-ink-body"
+    class="border-dashed border-sui-line-strong px-2.5 font-medium text-sui-ink-muted hover:border-sui-ink-muted hover:text-sui-ink-body"
     :class="chip"
     type="button"
   >
@@ -164,7 +164,7 @@ const hueDots: Record<string, string> = {
   <PopoverRoot v-else v-model:open="open">
     <PopoverTrigger
       v-bind="attrs"
-      class="border-sui-accent-line bg-sui-accent-wash pr-1.5 pl-2 text-sui-accent hover:border-sui-accent-bright data-[state=open]:border-sui-accent-solid data-[state=open]:shadow-[0_0_0_3px_rgb(var(--sui-focus-ring))]"
+      class="border-sui-accent-line bg-sui-accent-wash pr-2 pl-2.5 text-sui-accent hover:border-sui-accent-bright data-[state=open]:border-sui-accent-solid data-[state=open]:shadow-[0_0_0_3px_rgb(var(--sui-focus-ring))]"
       :class="chip"
     >
       <Icon v-if="icon" class="size-3.5 opacity-80" color="accent" :name="icon" />
@@ -190,7 +190,7 @@ const hueDots: Record<string, string> = {
     <PopoverPortal>
       <PopoverContent
         align="start"
-        class="z-[1100] w-85 max-w-[calc(100vw-2rem)] origin-(--reka-popover-content-transform-origin) rounded-xl border border-sui-line bg-sui-surface text-sui-ink shadow-lg data-[state=open]:animate-sui-overlay-in"
+        class="z-[1100] w-85 max-w-[calc(100vw-2rem)] origin-(--reka-popover-content-transform-origin) rounded-xl border border-sui-edge bg-sui-raised text-sui-ink shadow-lg data-[state=open]:animate-sui-overlay-in"
         :side-offset="8"
       >
         <FilterFrame :close-label="closeLabel" :enter-label="doneLabel" :status="status" @enter="open = false">
@@ -217,14 +217,14 @@ const hueDots: Record<string, string> = {
               <DropdownMenuPortal>
                 <DropdownMenuContent
                   align="start"
-                  class="z-[1100] w-44 rounded-lg border border-sui-line bg-sui-surface p-1 shadow-lg data-[state=open]:animate-sui-menu-in"
+                  class="z-[1100] w-44 rounded-lg border border-sui-edge bg-sui-raised p-1 shadow-lg data-[state=open]:animate-sui-menu-in"
                   :side-offset="4"
                 >
                   <DropdownMenuRadioGroup v-model="op">
                     <DropdownMenuRadioItem
                       v-for="operator in ops"
                       :key="operator.value"
-                      class="flex h-8 cursor-pointer items-center justify-between rounded-md px-2.5 text-13.5 text-sui-ink-body outline-hidden select-none data-highlighted:bg-sui-sunken data-[state=checked]:font-semibold data-[state=checked]:text-sui-ink"
+                      class="flex h-8 cursor-pointer items-center justify-between rounded-md px-2.5 text-13.5 text-sui-ink-body outline-hidden select-none data-highlighted:bg-sui-fill-hover data-[state=checked]:font-semibold data-[state=checked]:text-sui-ink"
                       :value="operator.value"
                     >
                       {{ operator.label }}
@@ -251,7 +251,7 @@ const hueDots: Record<string, string> = {
             <template v-if="isChecklist">
               <div
                 v-if="options.length > 6"
-                class="mx-2 mb-1 flex h-9 items-center gap-2 rounded-lg border border-sui-line-subtle px-2.5 text-sui-ink-muted"
+                class="mx-2 mb-1 flex h-(--sui-control-height) items-center gap-2 rounded-lg border border-sui-fill-line bg-sui-fill px-2.5 text-sui-ink-muted"
               >
                 <FilterGlyph class="size-4" name="search" />
                 <!-- focus: classes too: an app's forms plugin rings focused text fields, and outranks plain utilities. -->

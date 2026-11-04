@@ -28,7 +28,7 @@ const box = computed(() => [
     ? 'border-sui-accent-solid bg-sui-accent-solid'
     : props.invalid
       ? 'border-sui-danger-mid'
-      : 'border-sui-line-control bg-sui-surface',
+      : 'border-sui-line-control bg-transparent',
   props.disabled
     ? 'cursor-default opacity-60'
     : [!filled.value && !props.invalid && 'peer-hover:border-sui-accent-solid', 'peer-focus-visible:sui-ring']

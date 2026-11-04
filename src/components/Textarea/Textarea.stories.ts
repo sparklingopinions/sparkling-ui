@@ -25,4 +25,6 @@ export const AutoResize: Story = {
 
 export const Invalid: Story = { args: { invalid: true } }
 
+export const Bare: Story = { args: { bare: true } }
+
 export const Disabled: Story = { args: { modelValue: 'Sent', disabled: true } }

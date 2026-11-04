@@ -132,7 +132,7 @@ function onKeydown(event: KeyboardEvent) {
       <PopoverContent
         align="start"
         :aria-label="$slots.trigger ? searchPlaceholder : undefined"
-        class="z-[1100] w-85 max-w-[calc(100vw-2rem)] origin-(--reka-popover-content-transform-origin) rounded-xl border border-sui-line bg-sui-surface text-sui-ink shadow-lg data-[state=open]:animate-sui-overlay-in"
+        class="z-[1100] w-85 max-w-[calc(100vw-2rem)] origin-(--reka-popover-content-transform-origin) rounded-xl border border-sui-edge bg-sui-raised text-sui-ink shadow-lg data-[state=open]:animate-sui-overlay-in"
         :data-sui-panel="custom.panelKey"
         :side-offset="8"
         @close-auto-focus="custom.returnFocus"
@@ -171,11 +171,11 @@ function onKeydown(event: KeyboardEvent) {
                 <ListboxItem
                   v-for="field in group.fields"
                   :key="field.name"
-                  class="flex min-h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1 text-13.5 text-sui-ink outline-hidden select-none data-highlighted:bg-sui-sunken group-data-keyboard/list:data-highlighted:sui-ring-inset"
+                  class="flex min-h-8 cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1 text-13.5 text-sui-ink outline-hidden select-none data-highlighted:bg-sui-fill-hover group-data-keyboard/list:data-highlighted:sui-ring-inset"
                   :value="field.name"
                 >
                   <span
-                    class="flex size-6 shrink-0 items-center justify-center rounded-md bg-sui-sunken text-sui-ink-body"
+                    class="flex size-6 shrink-0 items-center justify-center rounded-md bg-sui-fill text-sui-ink-body"
                   >
                     <FilterGlyph :name="field.type" />
                   </span>

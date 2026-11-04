@@ -16,7 +16,7 @@ function onKeydown(event: KeyboardEvent) {
   <div @keydown="onKeydown">
     <slot />
     <div
-      class="flex h-9 items-center gap-3 rounded-b-[calc(0.75rem-1px)] border-t border-sui-line-subtle bg-sui-canvas px-3.5 text-xs whitespace-nowrap text-sui-ink-muted"
+      class="flex h-8 items-center gap-3 rounded-b-[calc(0.75rem-1px)] border-t border-sui-fill-line px-3.5 text-xs whitespace-nowrap text-sui-ink-muted"
     >
       <span class="mr-auto min-w-0 truncate font-medium text-sui-ink-body tabular-nums">{{ status }}</span>
       <span
@@ -28,7 +28,7 @@ function onKeydown(event: KeyboardEvent) {
         class="inline-flex items-center gap-1.5"
       >
         <kbd
-          class="inline-flex h-4.5 min-w-4.5 items-center justify-center rounded border border-sui-line bg-sui-surface px-1 font-sans text-11"
+          class="inline-flex h-4.5 min-w-4.5 items-center justify-center rounded border border-sui-fill-line bg-sui-fill px-1 font-sans text-11"
           >{{ key }}</kbd
         >{{ label }}
       </span>

@@ -17,7 +17,7 @@ export interface BadgeProps {
 const props = withDefaults(defineProps<BadgeProps>(), { tone: 'neutral', variant: 'soft', dot: true, label: undefined })
 
 const tones: Record<BadgeTone, { chip: string; text: string; dot: string }> = {
-  neutral: { chip: 'bg-sui-sunken text-sui-ink-subtle', text: 'text-sui-ink-muted', dot: 'bg-sui-mark-faint' },
+  neutral: { chip: 'bg-sui-fill text-sui-ink-subtle', text: 'text-sui-ink-muted', dot: 'bg-sui-mark-faint' },
   accent: { chip: 'bg-sui-accent-wash text-sui-accent', text: 'text-sui-accent', dot: 'bg-sui-accent-solid' },
   success: {
     chip: 'bg-sui-success-soft text-sui-success',

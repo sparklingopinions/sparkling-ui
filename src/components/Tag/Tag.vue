@@ -61,12 +61,12 @@ const dots: Record<Hue, string> = {
   <button
     v-if="pressable"
     :aria-pressed="pressed"
-    class="inline-flex cursor-pointer items-center rounded-md border leading-none font-medium whitespace-nowrap transition-colors duration-150 outline-hidden focus-visible:sui-ring disabled:cursor-default disabled:opacity-50"
+    class="inline-flex cursor-pointer items-center rounded-full border leading-none font-medium whitespace-nowrap transition-colors duration-150 outline-hidden focus-visible:sui-ring disabled:cursor-default disabled:opacity-50"
     :class="[
-      size === 'sm' ? 'h-5.5 gap-1 px-2 text-xs' : 'h-7 gap-1.5 px-3 text-13',
+      size === 'sm' ? 'h-5.5 gap-1 px-2.5 text-xs' : 'h-7 gap-1.5 px-3 text-13',
       pressed
         ? 'border-sui-accent-line bg-sui-accent-wash text-sui-accent enabled:hover:border-sui-accent-bright enabled:hover:bg-sui-accent-soft enabled:active:border-sui-accent-solid enabled:active:bg-sui-accent-soft'
-        : 'border-sui-line bg-sui-surface text-sui-ink-body enabled:hover:border-sui-line-strong enabled:hover:bg-sui-canvas enabled:hover:text-sui-ink enabled:active:bg-sui-sunken'
+        : 'border-sui-fill-line bg-sui-fill text-sui-ink-emphasis enabled:hover:bg-sui-fill-hover enabled:hover:text-sui-ink'
     ]"
     :disabled="disabled"
     type="button"
@@ -89,7 +89,7 @@ const dots: Record<Hue, string> = {
     v-else-if="variant === 'outline'"
     class="inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs whitespace-nowrap"
     :class="
-      muted ? 'border-sui-line-subtle text-sui-ink-muted' : 'border-sui-line bg-sui-sunken font-medium text-sui-ink'
+      muted ? 'border-sui-line-subtle text-sui-ink-muted' : 'border-sui-line bg-sui-fill font-medium text-sui-ink'
     "
   >
     <Icon v-if="icon" class="size-3.5 shrink-0" :color="iconColor" :name="icon" />
@@ -97,7 +97,7 @@ const dots: Record<Hue, string> = {
   </span>
   <div
     v-else
-    class="inline-flex items-center gap-1.5 rounded-md bg-sui-sunken px-2 py-0.5 text-xs font-medium text-sui-ink-body"
+    class="inline-flex items-center gap-1.5 rounded-md bg-sui-fill px-2 py-0.5 text-xs font-medium text-sui-ink-body"
   >
     <Icon v-if="icon" class="size-3.5 shrink-0" :color="iconColor" :name="icon" />
     <span v-else-if="color" class="h-1.5 w-1.5 shrink-0 rounded-full" :class="dots[color]" />

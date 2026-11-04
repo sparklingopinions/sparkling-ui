@@ -93,7 +93,7 @@ const cells = computed(() => {
       classes: selected
         ? 'bg-sui-accent-solid font-semibold text-sui-on-accent'
         : [
-            'hover:bg-sui-sunken',
+            'hover:bg-sui-fill-hover',
             isToday
               ? 'font-semibold text-sui-accent ring-1 ring-sui-accent-line ring-inset'
               : inRange
@@ -117,7 +117,7 @@ const cells = computed(() => {
         <Tooltip :text="previousLabel">
           <button
             :aria-label="previousLabel"
-            class="flex h-7 w-7 items-center justify-center rounded-lg transition-colors hover:bg-sui-sunken focus-visible:sui-ring"
+            class="flex h-7 w-7 items-center justify-center rounded-lg transition-colors hover:bg-sui-fill-hover focus-visible:sui-ring"
             type="button"
             @click="shiftMonth(-1)"
           >
@@ -127,7 +127,7 @@ const cells = computed(() => {
         <Tooltip :text="nextLabel">
           <button
             :aria-label="nextLabel"
-            class="flex h-7 w-7 items-center justify-center rounded-lg transition-colors hover:bg-sui-sunken focus-visible:sui-ring"
+            class="flex h-7 w-7 items-center justify-center rounded-lg transition-colors hover:bg-sui-fill-hover focus-visible:sui-ring"
             type="button"
             @click="shiftMonth(1)"
           >

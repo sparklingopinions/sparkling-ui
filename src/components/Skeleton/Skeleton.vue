@@ -23,7 +23,7 @@ const style = computed(() => ({ width: props.size ?? props.width, height: props.
   <div
     aria-hidden="true"
     :class="[
-      'relative animate-pulse overflow-hidden bg-sui-sunken',
+      'relative animate-pulse overflow-hidden bg-sui-fill-hover',
       shape === 'circle' ? 'rounded-full' : 'rounded-md',
       size && 'shrink-0'
     ]"

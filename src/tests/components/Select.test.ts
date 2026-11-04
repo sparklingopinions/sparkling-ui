@@ -31,7 +31,9 @@ describe('Select', () => {
     expect(trigger.attributes('aria-expanded')).toBe('false')
     expect(trigger.attributes('aria-label')).toBeUndefined()
     expect(trigger.text()).toBe('Rows per page: Select an option')
-    expect(trigger.classes()).toEqual(expect.arrayContaining(['w-44', 'min-h-9', 'border-sui-line-strong']))
+    expect(trigger.classes()).toEqual(
+      expect.arrayContaining(['w-44', 'min-h-(--sui-control-height)', 'bg-sui-fill', 'border-sui-fill-line'])
+    )
     await expectAccessible(wrapper.element)
   })
 

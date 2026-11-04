@@ -19,7 +19,7 @@ describe('SegmentedControl', () => {
 
     expect(wrapper.attributes('role')).toBe('radiogroup')
     expect(radios.map((r) => r.attributes('aria-checked'))).toEqual(['false', 'true', 'false'])
-    expect(radios[1]!.classes()).toContain('bg-sui-surface')
+    expect(radios[1]!.classes()).toContain('bg-sui-lifted')
     expect(radios[1]!.find('svg path').attributes('d')).toBe('M5 12h14')
     await expectAccessible(wrapper.element)
     wrapper.unmount()

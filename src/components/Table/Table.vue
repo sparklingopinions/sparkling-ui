@@ -122,7 +122,7 @@ const td = computed(() => [
 ])
 // A set row height takes the cells' vertical padding with it.
 const pad = computed(() => [sm.value ? 'px-3' : 'px-4', !fixed.value && (sm.value ? 'py-1.5' : 'py-3')])
-const headTone = computed(() => (props.headerTone === 'canvas' ? 'bg-sui-canvas' : 'bg-sui-sunken'))
+const headTone = computed(() => (props.headerTone === 'canvas' ? 'bg-sui-canvas' : 'sui-band'))
 const headPad = computed(() => (sm.value ? 'px-3' : 'px-4'))
 const checkCell = 'w-12 pl-4 text-left'
 </script>
@@ -223,7 +223,7 @@ const checkCell = 'w-12 pl-4 text-left'
               :aria-selected="selectable ? selected.includes(idOf(row)) : undefined"
               class="group/row transition-colors duration-150"
               :class="[
-                selected.includes(idOf(row)) ? 'bg-sui-accent-wash' : 'hover:bg-sui-sunken',
+                selected.includes(idOf(row)) ? 'bg-sui-accent-wash' : 'hover:bg-sui-fill-hover',
                 onRowClick && 'cursor-pointer'
               ]"
               @click="onRowClick?.(row)"
@@ -257,7 +257,7 @@ const checkCell = 'w-12 pl-4 text-left'
     </div>
     <div
       v-if="$slots.footer"
-      class="flex flex-wrap items-center justify-between gap-3 border-t border-sui-line-subtle bg-sui-canvas py-2 pr-3 pl-4 text-13 text-sui-ink-muted"
+      class="flex flex-wrap items-center justify-between gap-3 border-t border-sui-line-subtle py-2 pr-3 pl-4 text-13 text-sui-ink-muted"
     >
       <slot name="footer" />
     </div>

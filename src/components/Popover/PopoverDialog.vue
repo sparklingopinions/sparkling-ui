@@ -151,7 +151,7 @@ const panelWidth = computed(() => (typeof props.width === 'number' ? `${props.wi
       <PopoverContent
         align="start"
         :aria-label="title"
-        class="z-[1100] flex max-h-(--reka-popover-content-available-height) flex-col gap-2.5 overflow-y-auto rounded-lg border border-sui-line-subtle bg-sui-surface px-4 py-3.5 text-sm text-sui-ink shadow-xl outline-hidden data-[state=closed]:animate-sui-overlay-out data-[state=open]:animate-sui-overlay-in"
+        class="z-[1100] flex max-h-(--reka-popover-content-available-height) flex-col gap-2.5 overflow-y-auto rounded-xl border border-sui-edge bg-sui-raised px-4 py-3.5 text-sm text-sui-ink shadow-xl outline-hidden data-[state=closed]:animate-sui-overlay-out data-[state=open]:animate-sui-overlay-in"
         :collision-padding="8"
         :data-sui-panel="trigger.panelKey"
         role="dialog"
