@@ -113,7 +113,8 @@
   --sui-raised: 255 255 255;
   --sui-edge: 0 0 0;
   --sui-edge-alpha: 0.08;
-  --sui-shadow-floating: 0 16px 70px rgb(0 0 0 / 0.16), 0 2px 8px rgb(0 0 0 / 0.04);
+  --sui-shadow-floating:
+    0 2px 6px rgb(0 0 0 / 0.06), 0 12px 28px -6px rgb(0 0 0 / 0.18), 0 24px 70px -8px rgb(0 0 0 / 0.16);
 
   /* Soft fills: ink at a low alpha, so controls read the same on any ground (fields, secondary buttons, chips, keys) */
   --sui-fill: 0 0 0;
@@ -232,7 +233,8 @@
   --sui-raised: 35 35 38;
   --sui-edge: 255 255 255;
   --sui-edge-alpha: 0.09;
-  --sui-shadow-floating: 0 16px 70px rgb(0 0 0 / 0.55), 0 2px 8px rgb(0 0 0 / 0.3);
+  --sui-shadow-floating:
+    0 2px 6px rgb(0 0 0 / 0.35), 0 12px 28px -6px rgb(0 0 0 / 0.55), 0 24px 70px -8px rgb(0 0 0 / 0.6);
 
   /* Soft fills */
   --sui-fill: 255 255 255;
