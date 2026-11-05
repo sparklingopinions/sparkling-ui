@@ -1,5 +1,12 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.16.0
+
+### Minor Changes
+
+- f41309a: Board takes `columnTone` (`fill`, the default, `canvas` or `sunken`), so its columns can sit on the same ground as a Table's or DataList's header and the cards stand out.
+- f41309a: A clickable card's hover, shared instead of copied into each app: the `sui-card-hover` utility firms a card's border to `line` and fades its ground into the new `--sui-card-hover` (the soft fill mixed into surface), over 150ms.
+
 ## 0.15.0
 
 ### Minor Changes
