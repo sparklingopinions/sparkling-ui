@@ -62,6 +62,9 @@ export const EmptyColumn: Story = { parameters: { people: people.filter((p) => p
 
 export const Loading: Story = { args: { loading: true } }
 
+/** Columns on the page's ground, as a Table's or DataList's canvas header, so the cards stand out. */
+export const CanvasColumns: Story = { args: { columnTone: 'canvas' } }
+
 const center = (el: Element) => {
   const r = el.getBoundingClientRect()
   return { x: r.x + r.width / 2, y: r.y + r.height / 2 }

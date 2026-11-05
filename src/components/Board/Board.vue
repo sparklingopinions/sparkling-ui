@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { onBeforeUnmount, ref, useId } from 'vue'
+import { computed, onBeforeUnmount, ref, useId } from 'vue'
 
 import Icon from '../Icon/Icon.vue'
 import Skeleton from '../Skeleton/Skeleton.vue'
@@ -25,6 +25,9 @@ export interface BoardProps<T> {
   onNew?: (column: BoardColumn<T>) => void
   newLabel?: string
   emptyLabel?: string
+  /** The columns' ground: a soft fill by default; `canvas` (the page's, with a hairline) or `sunken` match a Table's or
+   *  DataList's header tone, so the cards stand out on it. */
+  columnTone?: 'fill' | 'canvas' | 'sunken'
 }
 
 const props = withDefaults(defineProps<BoardProps<T>>(), {
@@ -35,7 +38,8 @@ const props = withDefaults(defineProps<BoardProps<T>>(), {
   onCardClick: undefined,
   onNew: undefined,
   newLabel: 'New',
-  emptyLabel: 'No cards'
+  emptyLabel: 'No cards',
+  columnTone: 'fill'
 })
 
 const emit = defineEmits<{
@@ -219,6 +223,9 @@ function onCardKeydown(event: KeyboardEvent, item: T) {
   props.onCardClick(item)
 }
 
+const grounds = { fill: 'bg-sui-fill', canvas: 'border border-sui-line-subtle bg-sui-canvas', sunken: 'sui-band' }
+const columnGround = computed(() => grounds[props.columnTone])
+
 const isTarget = (column: string, index: number, item: T) =>
   target.value?.column === column && target.value.index === index && dragged.value?.id !== idOf(item)
 
@@ -255,8 +262,8 @@ const frame =
         </span>
       </header>
       <div
-        class="group/body flex min-h-[120px] flex-1 flex-col gap-2.5 overflow-y-auto rounded-xl bg-sui-fill p-2.5 transition-shadow duration-150"
-        :class="target?.column === column.id && 'ring-2 ring-sui-accent-line ring-inset'"
+        class="group/body flex min-h-[120px] flex-1 flex-col gap-2.5 overflow-y-auto rounded-xl p-2.5 transition-shadow duration-150"
+        :class="[columnGround, target?.column === column.id && 'ring-2 ring-sui-accent-line ring-inset']"
         :data-board-column="column.id"
       >
         <template v-if="loading">
