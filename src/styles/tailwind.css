@@ -370,6 +370,25 @@
   --sui-focus-offset-inset: -2px;
 }
 
+/* A clickable card's hover ground: the soft fill mixed into surface, opaque so it can fade in (a gradient can't).
+   On every [data-mode] element, so a subtree in the other mode works it out again. */
+:where(:root, [data-mode]) {
+  --sui-card-hover: color-mix(in srgb, rgb(var(--sui-surface)), rgb(var(--sui-fill)) calc(var(--sui-fill-alpha) * 60%));
+}
+
+/* A clickable card on surface (a board card, a choice, a record tile): on hover its border firms up to `line` and its
+   ground fades into --sui-card-hover. Pair it with a `line-subtle` (or `line`) border and a surface ground. */
+@utility sui-card-hover {
+  transition:
+    border-color 150ms,
+    background-color 150ms;
+
+  &:hover {
+    border-color: rgb(var(--sui-line));
+    background-color: var(--sui-card-hover);
+  }
+}
+
 /* The soft fill as an opaque band over surface, for what content scrolls under or what overlaps (sticky headers,
    stacked avatars). */
 @utility sui-band {
