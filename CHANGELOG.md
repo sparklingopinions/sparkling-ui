@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.18.0
+
+### Minor Changes
+
+- 58c937d: Menu items and ActionBar options take an `iconColor`, so a status or stage shows in its own colour, as on a Board column.
+
 ## 0.17.1
 
 ### Patch Changes
