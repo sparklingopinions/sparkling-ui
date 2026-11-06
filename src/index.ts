@@ -38,13 +38,15 @@ export * from './components/Toolbar'
 export * from './components/Tooltip'
 export * from './components/TypingIndicator'
 export { hueFor, type Hue } from './utils/hues'
+export { errorMessage, settleEach, type Refusal } from './utils/settle'
 export { initColorMode, useColorMode, useForceLightMode, type ColorMode } from './composables/useColorMode'
 export {
   toast,
   type ToastAction,
   type ToastDismissReason,
   type ToastOptions,
-  type ToastSeverity
+  type ToastSeverity,
+  type UndoToastOptions
 } from './composables/toast'
 export { useConfirm, type ConfirmOptions } from './composables/useConfirm'
 export * from './aliases'
