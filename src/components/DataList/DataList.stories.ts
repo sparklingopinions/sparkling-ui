@@ -201,3 +201,55 @@ export const CardsWithLeadingSelection: Story = {
     await expect(within(menu).getByRole('menuitem', { name: /Approve/ })).toHaveAttribute('aria-disabled', 'true')
   }
 }
+
+/** Rows dragged between groups to change their status; an empty group shows only while a row is dragged. */
+export const DragBetweenGroups: Story = {
+  args: { draggable: true, hideEmpty: true, variant: 'cards', dividers: true },
+  render: (args) => ({
+    components: { DataList: DataList as Component },
+    setup: () => {
+      const records = ref(people.slice(0, 6).map((person) => ({ ...person })))
+      const stages = ['contacted', 'lead', 'customer', 'archived'] as const
+      const names: Record<string, string> = { ...stageLabels, archived: 'Archived' }
+      const lists = () =>
+        stages.map((stage) => ({
+          id: stage,
+          name: names[stage],
+          items: records.value.filter((person) => person.stage === stage)
+        }))
+      const move = (id: number, stage: string) => {
+        records.value = records.value.map((person) =>
+          person.id === id ? { ...person, stage: stage as never } : person
+        )
+      }
+      return { args, lists, move }
+    },
+    template: `<DataList v-bind="args" :groups="lists()" @move="move" />`
+  }),
+  play: async ({ canvasElement }) => {
+    const zone = (id: string) => canvasElement.querySelector<HTMLElement>(`[data-drag-zone="${id}"]`)
+    const rowNames = (id: string) =>
+      [...(zone(id)?.querySelectorAll('[data-drag-index] [data-list-row]') ?? [])].map((row) => row.textContent?.trim())
+    await expect(zone('archived')).toBeNull()
+
+    const row = zone('contacted')!.querySelector<HTMLElement>('[data-drag-index="0"]')!
+    const name = row.querySelector('[data-list-row]')!.textContent?.trim()
+    const from = row.getBoundingClientRect()
+    const start = { x: from.left + 120, y: from.top + from.height / 2 }
+    const dispatch = (type: string, el: Element, x: number, y: number) =>
+      el.dispatchEvent(
+        new PointerEvent(type, { pointerId: 1, isPrimary: true, button: 0, clientX: x, clientY: y, bubbles: true })
+      )
+    dispatch('pointerdown', row, start.x, start.y)
+    dispatch('pointermove', window.document.body, start.x + 10, start.y + 10)
+    // While dragging, the empty group is there to drop into.
+    await waitFor(() => expect(zone('archived')).not.toBeNull())
+    const to = zone('customer')!.getBoundingClientRect()
+    dispatch('pointermove', window.document.body, to.left + 40, to.top + 12)
+    dispatch('pointerup', window.document.body, to.left + 40, to.top + 12)
+
+    await waitFor(() => expect(rowNames('customer')).toContain(name))
+    await expect(rowNames('contacted')).not.toContain(name)
+    await expect(zone('archived')).toBeNull()
+  }
+}

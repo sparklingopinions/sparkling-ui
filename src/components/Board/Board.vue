@@ -1,8 +1,9 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { computed, onBeforeUnmount, ref, useId } from 'vue'
+import { computed, ref, useId } from 'vue'
 
 import Icon from '../Icon/Icon.vue'
 import Skeleton from '../Skeleton/Skeleton.vue'
+import { useDragMove } from '../internal/useDragMove'
 import type { BoardColumn } from './types'
 
 export interface BoardProps<T> {
@@ -58,158 +59,15 @@ const id = useId()
 const idOf = (item: T): unknown => item[props.rowKey ?? 'id']
 const root = ref<HTMLElement>()
 
-const dragged = ref<{ id: unknown; column: string; index: number } | null>(null)
-const target = ref<{ column: string; index: number } | null>(null)
-
-// Dragging runs on pointer events, so it works with a mouse, a pen and a finger. A mouse drags once it moves a few
-// pixels, so a click still clicks; a finger after a short press, so a swipe still scrolls.
-const MOUSE_SLOP = 4
-const TOUCH_SLOP = 8
-const TOUCH_DELAY = 250
-const EDGE = 48
-
-let pending: {
-  item: T
-  column: string
-  index: number
-  x: number
-  y: number
-  card: HTMLElement
-  touch: boolean
-} | null = null
-let pressTimer: number | undefined
-let ghost: HTMLElement | null = null
-let grab = { x: 0, y: 0 }
-let justDragged = false
-
-function onPointerDown(event: PointerEvent, item: T, column: string, index: number) {
-  if (event.button !== 0 || (event.target as HTMLElement).closest('input, textarea, select, [contenteditable]')) return
-  const touch = event.pointerType === 'touch'
-  pending = { item, column, index, x: event.clientX, y: event.clientY, card: event.currentTarget as HTMLElement, touch }
-  if (touch) pressTimer = window.setTimeout(() => pending && start(), TOUCH_DELAY)
-  window.addEventListener('pointermove', onPointerMove)
-  window.addEventListener('pointerup', onPointerUp)
-  window.addEventListener('pointercancel', stop)
-  window.addEventListener('touchmove', holdScroll, { passive: false })
-  window.addEventListener('keydown', onEscape)
-}
-
-function start() {
-  if (!pending) return
-  const rect = pending.card.getBoundingClientRect()
-  grab = { x: pending.x - rect.left, y: pending.y - rect.top }
-  ghost = pending.card.cloneNode(true) as HTMLElement
-  ghost.removeAttribute('id')
-  ghost.setAttribute('aria-hidden', 'true')
-  ghost.classList.add('pointer-events-none', 'fixed', 'top-0', 'left-0', 'z-[1300]', 'shadow-lg', 'opacity-95')
-  ghost.style.width = `${rect.width}px`
-  document.body.appendChild(ghost)
-  follow(pending.x, pending.y)
-  dragged.value = { id: idOf(pending.item), column: pending.column, index: pending.index }
-}
-
-function onPointerMove(event: PointerEvent) {
-  if (!pending) return
-  if (!dragged.value) {
-    const moved = Math.hypot(event.clientX - pending.x, event.clientY - pending.y)
-    // A finger that moves before the press is long enough is scrolling.
-    if (pending.touch) return moved > TOUCH_SLOP ? stop() : undefined
-    if (moved < MOUSE_SLOP) return
-    start()
-  }
-  event.preventDefault()
-  follow(event.clientX, event.clientY)
-  aim(event.clientX, event.clientY)
-  scrollNear(event.clientX, event.clientY)
-}
-
-function follow(x: number, y: number) {
-  if (ghost) ghost.style.transform = `translate(${x - grab.x}px, ${y - grab.y}px) rotate(1.5deg)`
-}
-
-// What's under the pointer: a card's top half drops before it, the bottom half after; an empty spot, at the end.
-function aim(x: number, y: number) {
-  const under = document.elementFromPoint(x, y)
-  const body = under?.closest<HTMLElement>('[data-board-column]')
-  if (!body || !root.value?.contains(body)) {
-    target.value = null
-    return
-  }
-  const column = body.dataset.boardColumn!
-  const card = under!.closest<HTMLElement>('[data-board-index]')
-  let index = props.columns.find((c) => c.id === column)?.items.length ?? 0
-  if (card && body.contains(card)) {
-    const rect = card.getBoundingClientRect()
-    index = Number(card.dataset.boardIndex) + (y < rect.top + rect.height / 2 ? 0 : 1)
-  }
-  if (target.value?.column !== column || target.value.index !== index) target.value = { column, index }
-}
-
-// Near a column's top or bottom, or the board's sides, it scrolls that way.
-function scrollNear(x: number, y: number) {
-  const body = document.elementFromPoint(x, y)?.closest<HTMLElement>('[data-board-column]')
-  if (body) {
-    const rect = body.getBoundingClientRect()
-    if (y < rect.top + EDGE) body.scrollTop -= 12
-    else if (y > rect.bottom - EDGE) body.scrollTop += 12
-  }
-  const board = root.value?.getBoundingClientRect()
-  if (board && root.value) {
-    if (x < board.left + EDGE) root.value.scrollLeft -= 12
-    else if (x > board.right - EDGE) root.value.scrollLeft += 12
-  }
-}
-
-function onPointerUp() {
-  const from = dragged.value
-  const to = target.value
-  if (from && to) {
-    let index = to.index
-    if (from.column === to.column) {
-      // Within a column the dragged card leaves its old slot first.
-      if (index > from.index) index--
-      if (props.sortable && index !== from.index) emit('move', from.id, to.column, index)
-    } else {
-      emit('move', from.id, to.column, index)
-    }
-  }
-  stop()
-}
-
-function holdScroll(event: TouchEvent) {
-  if (dragged.value) event.preventDefault()
-}
-
-function onEscape(event: KeyboardEvent) {
-  if (event.key === 'Escape' && dragged.value) {
-    event.preventDefault()
-    stop()
-  }
-}
-
-function stop() {
-  window.clearTimeout(pressTimer)
-  window.removeEventListener('pointermove', onPointerMove)
-  window.removeEventListener('pointerup', onPointerUp)
-  window.removeEventListener('pointercancel', stop)
-  window.removeEventListener('touchmove', holdScroll)
-  window.removeEventListener('keydown', onEscape)
-  ghost?.remove()
-  ghost = null
-  // The click that ends a drag isn't a click on the card.
-  if (dragged.value) {
-    justDragged = true
-    window.setTimeout(() => (justDragged = false))
-  }
-  pending = null
-  dragged.value = null
-  target.value = null
-}
-
-onBeforeUnmount(stop)
+const { dragged, target, onPointerDown, endedDrag } = useDragMove({
+  root,
+  countOf: (column) => props.columns.find((c) => c.id === column)?.items.length ?? 0,
+  sortable: () => props.sortable,
+  onMove: (id, column, index) => emit('move', id, column, index)
+})
 
 function clickCard(event: MouseEvent, item: T) {
-  if (justDragged) {
+  if (endedDrag()) {
     event.preventDefault()
     event.stopPropagation()
     return
@@ -227,7 +85,12 @@ const grounds = { fill: 'bg-sui-fill', canvas: 'border border-sui-line-subtle bg
 const columnGround = computed(() => grounds[props.columnTone])
 
 const isTarget = (column: string, index: number, item: T) =>
-  target.value?.column === column && target.value.index === index && dragged.value?.id !== idOf(item)
+  target.value?.zone === column && target.value.index === index && dragged.value?.id !== idOf(item)
+// Past a column's last card, or into an empty one.
+const dropsAtEnd = (column: BoardColumn<T>) =>
+  target.value?.zone === column.id &&
+  target.value.index >= column.items.length &&
+  !(dragged.value?.zone === column.id && dragged.value.index === column.items.length - 1)
 
 const frame =
   'border border-sui-edge bg-sui-raised p-4 transition-[border-color,opacity] duration-150 hover:border-sui-line-strong'
@@ -263,8 +126,9 @@ const frame =
       </header>
       <div
         class="group/body flex min-h-[120px] flex-1 flex-col gap-2.5 overflow-y-auto rounded-xl p-2.5 transition-shadow duration-150"
-        :class="[columnGround, target?.column === column.id && 'ring-2 ring-sui-accent-line ring-inset']"
+        :class="[columnGround, target?.zone === column.id && 'ring-2 ring-sui-accent-line ring-inset']"
         :data-board-column="column.id"
+        :data-drag-zone="column.id"
       >
         <template v-if="loading">
           <div v-for="i in 3" :key="i" aria-hidden="true" class="rounded-xl border border-sui-edge bg-sui-raised p-4">
@@ -289,13 +153,14 @@ const frame =
                 isTarget(column.id, index, item) && 'shadow-[0_-6px_0_-4px_rgb(var(--sui-accent-solid))]'
               ]"
               :data-board-index="index"
+              :data-drag-index="index"
               :role="onCardClick ? 'button' : undefined"
               :tabindex="onCardClick ? 0 : undefined"
               @click.capture="clickCard($event, item)"
               @contextmenu="dragged && $event.preventDefault()"
               @dragstart.prevent
               @keydown="onCardKeydown($event, item)"
-              @pointerdown="onPointerDown($event, item, column.id, index)"
+              @pointerdown="onPointerDown($event, idOf(item), column.id, index)"
             >
               <slot :column="column" :item="item" name="card">
                 <p class="m-0 text-sm font-semibold text-sui-ink">{{ item.name }}</p>
@@ -303,8 +168,14 @@ const frame =
             </div>
           </li>
         </ul>
+        <!-- Where a card dropped past the last one lands. -->
+        <div
+          v-if="dragged && dropsAtEnd(column)"
+          aria-hidden="true"
+          class="h-1 shrink-0 rounded-full bg-sui-accent-solid"
+        />
         <button
-          v-if="onNew && !loading"
+          v-if="onNew && !loading && !dragged"
           class="flex h-(--sui-control-height) w-full shrink-0 items-center justify-center gap-1.5 rounded-lg border border-dashed border-sui-line-strong text-xs font-medium text-sui-ink-muted opacity-0 outline-hidden transition-all duration-150 group-hover/body:opacity-100 hover:border-sui-ink-muted hover:bg-sui-surface/60 hover:text-sui-ink-body focus-visible:opacity-100 focus-visible:sui-ring"
           type="button"
           @click="onNew(column)"

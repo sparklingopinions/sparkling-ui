@@ -5,6 +5,7 @@ import Checkbox from '../Checkbox/Checkbox.vue'
 import ContextMenu from '../ContextMenu/ContextMenu.vue'
 import Skeleton from '../Skeleton/Skeleton.vue'
 import type { DropdownMenuAction, DropdownMenuEntry } from '../internal/menu'
+import { useDragMove } from '../internal/useDragMove'
 import type { DataListGroup } from './types'
 
 export interface DataListProps<T> {
@@ -33,6 +34,11 @@ export interface DataListProps<T> {
   rowHeight?: number
   /** A hairline between rows. */
   dividers?: boolean
+  /** Rows drag between groups (`@move`), e.g. to change a record's status: a copy follows the pointer and a line marks
+   *  where it lands. With a mouse after a few pixels, with a finger after a short press; Escape cancels. */
+  draggable?: boolean
+  /** Groups with no items are left out, except while a row is dragged, so one can still be dropped into them. */
+  hideEmpty?: boolean
   /** Wraps each row in a ContextMenu of these items (`@context-item`); return [] for none. */
   contextItems?: (item: T) => DropdownMenuEntry[]
   /** The context menu's accessible name. */
@@ -59,6 +65,8 @@ const props = withDefaults(defineProps<DataListProps<T>>(), {
   collapsible: true,
   rowHeight: undefined,
   dividers: false,
+  draggable: false,
+  hideEmpty: false,
   contextItems: undefined,
   contextLabel: undefined,
   onRowClick: undefined,
@@ -69,7 +77,11 @@ const props = withDefaults(defineProps<DataListProps<T>>(), {
   selectLabel: 'Select'
 })
 
-const emit = defineEmits<{ 'context-item': [action: DropdownMenuAction, item: T] }>()
+const emit = defineEmits<{
+  'context-item': [action: DropdownMenuAction, item: T]
+  /** A row dropped into another group, at its index there. Show it moved at once; put it back if saving fails. */
+  move: [id: unknown, group: string, index: number]
+}>()
 
 const selected = defineModel<unknown[]>('selected', { default: () => [] })
 const collapsed = defineModel<string[]>('collapsed', { default: () => [] })
@@ -97,6 +109,31 @@ const root = useTemplateRef<HTMLElement>('root')
 
 const idOf = (item: T): unknown => item[props.rowKey ?? 'id']
 const interactive = computed(() => !!props.onRowClick || props.selectable)
+
+const { dragged, target, onPointerDown, endedDrag } = useDragMove({
+  root,
+  countOf: (group) => props.groups.find((g) => g.id === group)?.items.length ?? 0,
+  onMove: (id, group, index) => emit('move', id, group, index),
+  ghostMaxWidth: 360,
+  tilt: false,
+  // A row has no ground of its own: the copy takes the list's surface and a hairline.
+  ghostStyle: {
+    background: 'rgb(var(--sui-raised))',
+    border: '1px solid rgb(var(--sui-edge))',
+    borderRadius: '10px'
+  }
+})
+const shownGroups = computed(() =>
+  props.hideEmpty && !dragged.value ? props.groups.filter((group) => group.items.length > 0) : props.groups
+)
+const isTarget = (group: string, index: number, item: T) =>
+  target.value?.zone === group &&
+  target.value.index === index &&
+  dragged.value?.id !== idOf(item) &&
+  dragged.value?.zone !== group
+// Dropped past a group's last row, into an empty group, or onto a collapsed one: it lands at the end.
+const dropsAtEnd = (group: DataListGroup<T>) =>
+  target.value?.zone === group.id && dragged.value?.zone !== group.id && target.value.index >= group.items.length
 const isEmpty = computed(() => !props.loading && props.groups.every((group) => group.items.length === 0))
 
 function toggleGroup(groupId: string) {
@@ -133,6 +170,7 @@ function select(...items: T[]) {
 }
 
 function clickRow(event: MouseEvent, item: T) {
+  if (endedDrag()) return
   if (props.selectable && event.shiftKey) selectRange(item)
   else if (props.selectable && (event.metaKey || event.ctrlKey)) toggle(item)
   // Leading checkboxes stand in for the row's mark, so while selecting a click selects, as in a mail list.
@@ -239,11 +277,15 @@ const iconButton =
     </template>
     <template v-else>
       <section
-        v-for="group in groups"
+        v-for="group in shownGroups"
         :key="group.id"
         :aria-label="group.label"
         :aria-labelledby="!group.label && (group.name || custom(group)) ? `${id}-${group.id}-name` : undefined"
-        :class="cards ? card : 'border-t border-sui-line-subtle first:border-t-0'"
+        :class="[
+          cards ? card : 'border-t border-sui-line-subtle first:border-t-0',
+          dragged && target?.zone === group.id && dragged.zone !== group.id && 'ring-2 ring-sui-accent-line ring-inset'
+        ]"
+        :data-drag-zone="draggable ? group.id : undefined"
       >
         <header
           v-if="group.name || custom(group)"
@@ -319,7 +361,7 @@ const iconButton =
         </header>
         <ul v-show="!isCollapsed(group)" :id="`${id}-${group.id}`" class="m-0 list-none p-0">
           <ContextMenu
-            v-for="item in group.items"
+            v-for="(item, index) in group.items"
             :key="idOf(item) as PropertyKey"
             :disabled="!contextItems"
             :items="contextItems?.(item)"
@@ -327,14 +369,20 @@ const iconButton =
             @click-item="emit('context-item', $event, item)"
           >
             <li
-              class="group/row relative flex h-[var(--sui-list-row,2.5rem)] items-center transition-colors duration-100 has-focus-visible:sui-ring-inset"
+              class="group/row relative flex h-[var(--sui-list-row,2.5rem)] items-center transition-[background-color,opacity] duration-100 has-focus-visible:sui-ring-inset"
               :class="[
                 dividers && '[&+&]:border-t [&+&]:border-sui-line-subtle',
+                draggable && 'select-none',
+                dragged?.id === idOf(item) && 'opacity-40',
+                isTarget(group.id, index, item) && 'shadow-[inset_0_2px_0_rgb(var(--sui-accent-solid))]',
                 selected.includes(idOf(item))
                   ? 'bg-sui-accent-wash'
                   : 'hover:bg-sui-fill-hover has-focus-visible:bg-sui-fill-hover'
               ]"
+              :data-drag-index="draggable ? index : undefined"
               :style="item.depth ? { paddingLeft: `${item.depth * 22}px` } : undefined"
+              @dragstart.prevent
+              @pointerdown="draggable && onPointerDown($event, idOf(item), group.id, index)"
             >
               <!-- Outside the row, which is a button, over the leading slot's first mark: 16px in, or more for a child. -->
               <span
@@ -342,6 +390,7 @@ const iconButton =
                 class="absolute top-1/2 z-[1] flex size-4 -translate-y-1/2 items-center justify-center"
                 :class="!selected.length && 'hidden group-hover/row:flex group-has-focus-visible/row:flex'"
                 data-list-check
+                data-no-drag
                 :style="{ left: `${16 + (item.depth ?? 0) * 22}px` }"
               >
                 <Checkbox
@@ -355,6 +404,7 @@ const iconButton =
                 v-if="gutter"
                 class="flex w-7 shrink-0 justify-end transition-opacity duration-100"
                 :class="selected.length ? 'opacity-100' : 'opacity-0 group-hover/row:opacity-100'"
+                data-no-drag
               >
                 <Checkbox
                   :aria-label="selectLabel"
@@ -403,6 +453,7 @@ const iconButton =
               </div>
             </li>
           </ContextMenu>
+          <li v-if="dragged && dropsAtEnd(group)" aria-hidden="true" class="h-0.5 bg-sui-accent-solid" />
         </ul>
       </section>
     </template>
