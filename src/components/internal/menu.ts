@@ -48,30 +48,39 @@ export const menuItemClass =
   'relative rounded-lg text-sm text-sui-ink transition-colors duration-150 outline-hidden hover:bg-sui-fill-hover focus-visible:sui-ring-inset data-highlighted:bg-sui-fill-hover'
 export const menuSeparatorClass = 'my-1 border-t border-sui-line-subtle'
 
+/**
+ * Asks what a menu item asks before it runs, in the same words and with the same buttons, and resolves whether to go
+ * ahead: false for a disabled item or a declined ask, true straight away for an item that doesn't ask. For running an
+ * item from its key (the `shortcut` the menu shows) exactly as a click would.
+ */
+export function useMenuConfirm(labels: Omit<MenuConfirmLabels, 'id'> = {}) {
+  const confirm = useConfirm()
+
+  return async function ask(item: DropdownMenuAction): Promise<boolean> {
+    if (item.disabled) return false
+    if (!item.confirm && !item.confirmed) return true
+    const words = { ...menuConfirmDefaults, ...labels }
+    const destructive = item.variant === 'danger' || item.action === 'delete'
+    return confirm({
+      title: item.confirm?.title ?? words.confirmTitle,
+      message: item.confirm?.message ?? words.confirmMessage,
+      cancelLabel: words.cancelLabel,
+      confirmLabel: item.confirm?.acceptLabel ?? (item.action === 'delete' ? words.deleteLabel : words.confirmLabel),
+      confirmVariant: destructive ? 'danger' : 'primary'
+    })
+  }
+}
+
 /** Runs an item: asks first when it says so, then emits it with the menu's `id`. */
 export function useMenuSelect(
   props: Required<Omit<MenuConfirmLabels, 'id'>> & { id?: string },
   emit: (item: DropdownMenuAction & { id?: string }) => void
 ) {
-  const confirm = useConfirm()
+  const ask = useMenuConfirm(props)
 
   return async function select(item: DropdownMenuAction, event?: Event) {
-    if (item.disabled) {
-      // Keeps the menu open.
-      event?.preventDefault()
-      return
-    }
-    if (item.confirm || item.confirmed) {
-      const destructive = item.variant === 'danger' || item.action === 'delete'
-      const confirmed = await confirm({
-        title: item.confirm?.title ?? props.confirmTitle,
-        message: item.confirm?.message ?? props.confirmMessage,
-        cancelLabel: props.cancelLabel,
-        confirmLabel: item.confirm?.acceptLabel ?? (item.action === 'delete' ? props.deleteLabel : props.confirmLabel),
-        confirmVariant: destructive ? 'danger' : 'primary'
-      })
-      if (!confirmed) return
-    }
-    emit({ id: props.id, ...item })
+    // A disabled item keeps the menu open.
+    if (item.disabled) return event?.preventDefault()
+    if (await ask(item)) emit({ id: props.id, ...item })
   }
 }
