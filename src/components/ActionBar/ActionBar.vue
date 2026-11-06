@@ -77,9 +77,13 @@ const pick = (item: ActionBarAction, index: string | undefined) => {
   if (option) emit('click-item', { ...item, value: option.value })
 }
 
-const typing = (target: EventTarget | null) =>
-  target instanceof HTMLElement &&
-  !!target.closest('input, textarea, select, [contenteditable=""], [contenteditable="true"]')
+// Typing into a field, not pressing a key on a checkbox or button (a row's checkbox keeps the focus after a click).
+const NOT_TYPED = ['checkbox', 'radio', 'button', 'submit', 'reset', 'range', 'color', 'file', 'image']
+const typing = (target: EventTarget | null) => {
+  if (!(target instanceof HTMLElement)) return false
+  if (target instanceof HTMLInputElement) return !NOT_TYPED.includes(target.type)
+  return !!target.closest('textarea, select, [contenteditable=""], [contenteditable="true"]')
+}
 
 // Escape clears the selection and an action's key runs it, unless a dialog or menu is open and takes the key.
 function onKeydown(event: KeyboardEvent) {
