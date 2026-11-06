@@ -26,7 +26,7 @@ defineProps<{ item: DropdownMenuAction; reasonId?: string }>()
       v-if="item.icon"
       class="h-4 w-4 shrink-0"
       :class="item.disabled && 'opacity-50'"
-      :color="item.variant === 'danger' ? 'danger' : 'ink-muted'"
+      :color="item.variant === 'danger' ? 'danger' : (item.iconColor ?? 'ink-muted')"
       :name="item.icon"
     />
     <span class="flex min-w-0 flex-1 flex-col">

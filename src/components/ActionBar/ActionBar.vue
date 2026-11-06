@@ -4,6 +4,7 @@ import { computed, onBeforeUnmount, watch } from 'vue'
 import Button from '../Button/Button.vue'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 import Icon from '../Icon/Icon.vue'
+import type { IconColor } from '../Icon/colors'
 import Kbd from '../Kbd/Kbd.vue'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import CloseIcon from '../internal/CloseIcon.vue'
@@ -13,6 +14,7 @@ export interface ActionBarOption {
   /** Passed back as the action's `value`. */
   value: unknown
   icon?: string
+  iconColor?: IconColor
   disabled?: boolean
 }
 
@@ -70,6 +72,7 @@ const menuItems = (item: ActionBarAction) =>
     label: option.label,
     action: String(index),
     icon: option.icon,
+    iconColor: option.iconColor,
     disabled: option.disabled
   }))
 const pick = (item: ActionBarAction, index: string | undefined) => {

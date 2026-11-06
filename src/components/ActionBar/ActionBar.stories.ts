@@ -41,8 +41,8 @@ export const ShortcutsAndMenus: Story = {
         label: 'Set status',
         action: 'status',
         options: [
-          { label: 'To reply', value: 'to_reply' },
-          { label: 'Done', value: 'done' }
+          { label: 'To reply', value: 'to_reply', icon: 'reply', iconColor: 'warning' },
+          { label: 'Done', value: 'done', icon: 'circle-check', iconColor: 'success' }
         ]
       },
       { label: 'Snooze', action: 'snooze', icon: 'calendar', shortcut: 's' },
