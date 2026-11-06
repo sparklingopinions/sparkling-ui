@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.17.1
+
+### Patch Changes
+
+- 210a03c: ActionBar's keys work with a row's checkbox focused: only text-entry fields count as typing now. Clicking a row's checkbox keeps the focus on it, which silenced every shortcut.
+
 ## 0.17.0
 
 ### Minor Changes
