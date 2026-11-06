@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import ActionBar from './ActionBar.vue'
 
@@ -30,4 +31,44 @@ export const Floating: Story = { args: { floating: true } }
 
 export const WithDisabledAction: Story = {
   args: { actions: [{ label: 'Merge', action: 'merge', disabled: true }, ...actions.slice(1)] }
+}
+
+/** A key runs an action while records are selected; a menu action emits the option picked. */
+export const ShortcutsAndMenus: Story = {
+  args: {
+    actions: [
+      {
+        label: 'Set status',
+        action: 'status',
+        options: [
+          { label: 'To reply', value: 'to_reply' },
+          { label: 'Done', value: 'done' }
+        ]
+      },
+      { label: 'Snooze', action: 'snooze', icon: 'calendar', shortcut: 's' },
+      { label: 'Not relevant', action: 'junk', shortcut: 'n', disabled: true, disabledReason: 'None of these can be' }
+    ]
+  },
+  render: (args) => ({
+    components: { ActionBar },
+    setup: () => {
+      const done = ref<string[]>([])
+      return { args, done, count: ref(2) }
+    },
+    template: `
+      <ActionBar v-bind="args" :count="count" @clear="count = 0"
+        @click-item="(item) => done.push(item.action + (item.value ? ':' + item.value : ''))" />
+      <p data-done>{{ done.join(', ') }}</p>`
+  }),
+  play: async ({ canvasElement }) => {
+    const done = () => canvasElement.querySelector('[data-done]')!.textContent
+    await userEvent.keyboard('s')
+    await waitFor(() => expect(done()).toBe('snooze'))
+    // A disabled action's key does nothing.
+    await userEvent.keyboard('n')
+    await expect(done()).toBe('snooze')
+    await userEvent.click(within(canvasElement).getByRole('button', { name: /Set status/ }))
+    await userEvent.click(await within(document.body).findByRole('menuitem', { name: 'Done' }))
+    await waitFor(() => expect(done()).toBe('snooze, status:done'))
+  }
 }

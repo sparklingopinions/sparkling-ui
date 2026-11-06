@@ -1,5 +1,7 @@
 import { shallowReactive } from 'vue'
 
+import { errorMessage } from '../utils/settle'
+
 export type ToastSeverity = 'info' | 'success' | 'warning' | 'error'
 
 /** A button on the toast: pressing it runs `onClick`, then closes the toast. */
@@ -68,8 +70,36 @@ export function removeToast(id: number, reason: ToastDismissReason = 'close') {
   }, 500)
 }
 
-/** Shows a message in the app's <Toaster />: `toast.info('Saved')`. */
+export interface UndoToastOptions extends Omit<ToastOptions, 'action' | 'actions' | 'onDismiss'> {
+  undoLabel?: string
+  /** Shown once the undo worked. */
+  undoneLabel?: string
+  /** Shown when the undo failed and the server gave no reason. */
+  failedLabel?: string
+}
+
+/** A one-tap change's receipt with Undo, which runs only when pressed; a refused undo says why. */
+function undo(summary: string, run?: (() => unknown) | null, options: UndoToastOptions = {}) {
+  const { undoLabel = 'Undo', undoneLabel = 'Undone', failedLabel = 'This can no longer be undone.', ...rest } = options
+  if (!run) return add('success', summary, rest)
+  return add('success', summary, {
+    ...rest,
+    action: { label: undoLabel, onClick: () => {} },
+    onDismiss: async (reason) => {
+      if (reason !== 'action') return
+      try {
+        await run()
+        add('info', undoneLabel)
+      } catch (error) {
+        add('error', errorMessage(error, failedLabel))
+      }
+    }
+  })
+}
+
+/** Shows a message in the app's <Toaster />: `toast.info('Saved')`; `toast.undo('Archived 3 loops', restore)`. */
 export const toast = {
+  undo,
   info: (summary: string, options?: ToastOptions) => add('info', summary, options),
   success: (summary: string, options?: ToastOptions) => add('success', summary, options),
   warning: (summary: string, options?: ToastOptions) => add('warning', summary, options),
