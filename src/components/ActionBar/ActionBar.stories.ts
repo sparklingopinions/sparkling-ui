@@ -64,11 +64,21 @@ export const ShortcutsAndMenus: Story = {
     const done = () => canvasElement.querySelector('[data-done]')!.textContent
     await userEvent.keyboard('s')
     await waitFor(() => expect(done()).toBe('snooze'))
+    // Not while typing into a field, but still with a checkbox focused.
+    const field = document.createElement('input')
+    canvasElement.appendChild(field)
+    const press = () => field.dispatchEvent(new KeyboardEvent('keydown', { key: 's', bubbles: true }))
+    press()
+    await expect(done()).toBe('snooze')
+    field.type = 'checkbox'
+    press()
+    await waitFor(() => expect(done()).toBe('snooze, snooze'))
+    field.remove()
     // A disabled action's key does nothing.
     await userEvent.keyboard('n')
-    await expect(done()).toBe('snooze')
+    await expect(done()).toBe('snooze, snooze')
     await userEvent.click(within(canvasElement).getByRole('button', { name: /Set status/ }))
     await userEvent.click(await within(document.body).findByRole('menuitem', { name: 'Done' }))
-    await waitFor(() => expect(done()).toBe('snooze, status:done'))
+    await waitFor(() => expect(done()).toBe('snooze, snooze, status:done'))
   }
 }
