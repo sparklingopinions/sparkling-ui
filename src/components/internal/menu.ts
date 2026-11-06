@@ -1,10 +1,13 @@
 import { useConfirm } from '../../composables/useConfirm'
+import type { IconColor } from '../Icon/colors'
 
 export interface DropdownMenuAction {
   type: 'action'
   label: string
   action?: string
   icon?: string
+  /** The icon's colour, e.g. a status's; muted by default. */
+  iconColor?: IconColor
   variant?: 'danger'
   shortcut?: string
   /** Asks first, with this wording; `confirmed: true` asks with the generic wording. */
