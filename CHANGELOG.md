@@ -1,5 +1,12 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.17.0
+
+### Minor Changes
+
+- 10586ed: What a bulk action needs, shared instead of rebuilt per app: ActionBar actions take a `shortcut` (a key that runs them while records are selected, shown on the button), `options` (a menu; picking one emits `click-item` with its `value`) and a `disabledReason` tooltip; `toast.undo(summary, undo)` is a receipt whose Undo runs only when pressed and says why a refused undo failed; `settleEach(items, run)` runs an action on each record and returns the ones done and the ones refused with the server's reason (`errorMessage`).
+- 9652ff9: DataList rows drag between groups (`draggable`, `@move`), to change a record's status, and `hideEmpty` leaves empty groups out except while a row is dragged. Board's drag is fixed: the card that follows the pointer is now pinned with inline styles, so an app's CSS order can't drop it into the page (it showed nowhere in apps whose `relative` won over `fixed`); it takes the floating shadow, a line marks a drop past a column's last card, and the column's New button hides while dragging. Both share one internal drag helper.
+
 ## 0.16.0
 
 ### Minor Changes
