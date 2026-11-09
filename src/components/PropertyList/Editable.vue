@@ -145,7 +145,8 @@ const field =
     @click="edit"
     @keydown.enter="!editing && ($event.preventDefault(), edit())"
   >
-    <div>
+    <!-- Hidden while editing: the textarea goes transparent on focus, so this would show through it -->
+    <div :class="{ invisible: editing }">
       <span v-if="name" class="sr-only">{{ name }}: </span>
       <span v-if="!local" class="text-sui-ink-muted">{{ placeholder }}</span>
       <span v-else :class="{ 'whitespace-pre-wrap': multiline }">{{ local }}</span>

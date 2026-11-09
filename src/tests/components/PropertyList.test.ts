@@ -84,6 +84,7 @@ describe('Editable', () => {
     expect(wrapper.classes()).toContain('text-lg')
     await wrapper.trigger('click')
     await nextTick()
+    expect(wrapper.get('span:not(.sr-only)').element.parentElement?.classList).toContain('invisible')
     await wrapper.get('textarea').setValue('Ada Lovelace')
     await wrapper.get('textarea').trigger('blur')
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['Ada Lovelace'])
