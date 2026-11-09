@@ -6,8 +6,11 @@ import Alert from './Alert.vue'
 const meta: Meta<typeof Alert> = {
   title: 'Components/Feedback/Alert',
   component: Alert,
-  args: { tone: 'warning', inset: false, dismissible: false },
-  argTypes: { tone: { control: 'select', options: ['danger', 'warning', 'info', 'neutral'] } },
+  args: { tone: 'warning', inset: false, dismissible: false, align: 'center' },
+  argTypes: {
+    tone: { control: 'select', options: ['danger', 'warning', 'info', 'neutral'] },
+    align: { control: 'inline-radio', options: ['center', 'start'] }
+  },
   render: (args) => ({
     components: { Alert },
     setup: () => ({ args }),
@@ -46,6 +49,22 @@ export const WithAction: Story = {
         Your Gmail connection expired.
         <template #action><Button size="sm">Reconnect</Button></template>
       </Alert>
+    `
+  })
+}
+
+export const AlignedToTheFirstLine: Story = {
+  args: { tone: 'info', icon: 'info', inset: true, dismissible: true, align: 'start' },
+  render: (args) => ({
+    components: { Alert },
+    setup: () => ({ args }),
+    template: `
+      <div class="max-w-[18rem]">
+        <Alert v-bind="args">
+          If someone else edits a scheduled record, it goes back to review. It keeps its time and goes out once
+          approved again.
+        </Alert>
+      </div>
     `
   })
 }

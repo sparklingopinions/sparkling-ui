@@ -15,9 +15,16 @@ export interface AlertProps {
   dismissLabel?: string
   /** A rounded notice inside a card or form, instead of a full-width bar. */
   inset?: boolean
+  /** Where the icon, dot and dismiss sit beside the text: centred on it, or on its first line for text that wraps. */
+  align?: 'center' | 'start'
 }
 
-const props = withDefaults(defineProps<AlertProps>(), { tone: 'warning', icon: undefined, dismissLabel: 'Dismiss' })
+const props = withDefaults(defineProps<AlertProps>(), {
+  tone: 'warning',
+  icon: undefined,
+  dismissLabel: 'Dismiss',
+  align: 'center'
+})
 
 defineEmits<{ dismiss: [] }>()
 
@@ -54,24 +61,27 @@ const tones: Record<AlertTone, { bar: string; line: string; tile: string; icon: 
 }
 
 const tone = computed(() => tones[props.tone])
+const start = computed(() => props.align === 'start')
 </script>
 
 <template>
   <div
     :class="[
       tone.bar,
+      start ? 'items-start' : 'items-center',
       inset
-        ? ['flex w-full items-center gap-2.5 rounded-xl border px-3 py-2.5', tone.line]
-        : 'flex w-full items-center gap-3 border-b border-sui-line-subtle px-6 py-3'
+        ? ['flex w-full gap-2.5 rounded-xl border px-3 py-2.5', tone.line]
+        : 'flex w-full gap-3 border-b border-sui-line-subtle px-6 py-3'
     ]"
   >
     <slot v-if="$slots.leading" name="leading" />
     <span v-else-if="icon" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" :class="tone.tile">
       <Icon class="h-4 w-4" :color="tone.icon" :name="icon" />
     </span>
-    <span v-else class="h-1.5 w-1.5 shrink-0 rounded-full" :class="tone.dot" />
+    <span v-else class="h-1.5 w-1.5 shrink-0 rounded-full" :class="[tone.dot, start && 'mt-[11px]']" />
 
-    <div class="min-w-0 flex-1 text-sm leading-snug text-sui-ink-body">
+    <!-- On start, padded so its first line centres on the 28px tile, where the dot and dismiss sit too. -->
+    <div class="min-w-0 flex-1 text-sm leading-snug text-sui-ink-body" :class="start && 'py-1'">
       <slot />
     </div>
 
@@ -83,6 +93,7 @@ const tone = computed(() => tones[props.tone])
       v-if="dismissible"
       :aria-label="dismissLabel"
       class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-sui-ink-faint transition-colors hover:bg-sui-fill-hover hover:text-sui-ink-body focus-visible:sui-ring"
+      :class="start && 'mt-0.5'"
       type="button"
       @click="$emit('dismiss')"
     >
