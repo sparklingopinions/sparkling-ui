@@ -17,7 +17,7 @@ const preview: Preview = {
           'Components',
           [
             'Actions',
-            ['Button', 'Toolbar', 'DropdownMenu', 'ContextMenu'],
+            ['Button', 'SplitButton', 'Toolbar', 'DropdownMenu', 'ContextMenu'],
             'Forms',
             [
               'Input',
