@@ -1,5 +1,15 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.21.0
+
+### Minor Changes
+
+- 63cf55a: `SplitButton`: a main action joined to a chevron that opens the other ways to do it, `<SplitButton :items="items" menu-label="More ways to approve" @click="approve" @click-item="run">Approve</SplitButton>`. It takes Button's `variant`, `size` and `disabled`, and the menu's `items`; the chevron turns off when there are none. `Button` gains `attached: 'start' | 'end'`, which squares its corners on the side that meets a neighbour.
+
+### Patch Changes
+
+- ca84c3d: Editable: the shown value no longer shows through the field while editing, which doubled the text of a title.
+
 ## 0.20.0
 
 ### Minor Changes
