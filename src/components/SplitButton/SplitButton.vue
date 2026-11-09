@@ -22,12 +22,20 @@ const props = withDefaults(defineProps<SplitButtonProps>(), {
   menuLabel: 'More options'
 })
 
+// The line between the halves, quieter than the page showing through: the fill's own ink, faint.
+const seams: Partial<Record<ButtonVariant, string>> = {
+  primary: 'border-l-sui-on-accent/25',
+  contrast: 'border-l-sui-on-contrast/25',
+  danger: 'border-l border-l-sui-on-danger/25'
+}
+
 const emit = defineEmits<{ click: [event: MouseEvent]; 'click-item': [item: DropdownMenuAction & { id?: string }] }>()
 </script>
 
 <template>
-  <div class="inline-flex items-stretch gap-px" role="group">
-    <!-- The main action and a chevron for its variations, joined by a hairline (one root, so classes fall through). -->
+  <div class="inline-flex items-stretch" role="group">
+    <!-- The main action and a chevron for its variations, touching, the chevron a pixel over so their edges become one
+         line; on a filled button that line is a faint tint of its own text colour (one root, so classes fall through). -->
     <Button
       attached="end"
       :disabled="disabled"
@@ -43,6 +51,7 @@ const emit = defineEmits<{ click: [event: MouseEvent]; 'click-item': [item: Drop
         <Button
           :aria-label="menuLabel"
           attached="start"
+          :class="['-ml-px', seams[variant]]"
           :disabled="disabled || !props.items.length"
           icon-only
           :size="size"
