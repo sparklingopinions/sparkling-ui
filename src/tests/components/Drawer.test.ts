@@ -16,6 +16,8 @@ describe('Drawer', () => {
     expect(wrapper.classes()).toEqual(expect.arrayContaining(['left-0', 'visible', 'translate-x-0']))
     expect(wrapper.attributes('style')).toContain('width: 320px')
     expect(wrapper.attributes('inert')).toBeUndefined()
+    // Shown at once: visibility isn't among what an opening drawer transitions, so focus can move inside right away.
+    expect(wrapper.classes()).toContain('transition-[transform,translate,box-shadow]')
     await expectAccessible(wrapper.element)
     wrapper.unmount()
   })
@@ -26,6 +28,7 @@ describe('Drawer', () => {
     expect(wrapper.classes()).toEqual(expect.arrayContaining(['right-0', 'invisible', 'translate-x-full']))
     expect(wrapper.attributes('inert')).toBeDefined()
     expect(wrapper.attributes('data-state')).toBe('closed')
+    expect(wrapper.classes()).toContain('transition-[transform,translate,box-shadow,visibility]')
   })
 
   it('floats only while open', async () => {
