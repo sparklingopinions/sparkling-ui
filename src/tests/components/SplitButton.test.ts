@@ -21,7 +21,13 @@ describe('SplitButton', () => {
     expect(chevron.classes()).toContain('rounded-s-none')
     // Touching, with a faint seam drawn in the fill's own ink rather than a gap.
     expect(wrapper.classes()).not.toContain('gap-px')
-    expect(chevron.classes()).toEqual(expect.arrayContaining(['-ml-px', 'border-l-sui-on-accent/25']))
+    expect(chevron.classes()).toEqual(
+      expect.arrayContaining([
+        '-ml-px',
+        'border-l-sui-on-accent/12',
+        'group-hover/split:not-data-disabled:border-l-transparent'
+      ])
+    )
     await expectAccessible(wrapper.element)
     wrapper.unmount()
   })
