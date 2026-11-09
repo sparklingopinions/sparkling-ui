@@ -1,5 +1,15 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.22.0
+
+### Minor Changes
+
+- 8ce9553: `Drawer`: a non-modal panel pinned to one edge of its container, `<Drawer :open="open" side="end" width="340px" :floating="covers">…</Drawer>`. It slides in and out (none with reduced motion); closed, it turns hidden and inert once it has slid out, and gives the focus back if it held it. `floating` raises it with the floating shadow where it covers content. Its container is `position: relative` and clips it (`overflow: clip`), so a closed drawer never widens the page.
+
+### Patch Changes
+
+- cd38ca8: `SplitButton`'s halves now touch, with a faint seam in the button's own ink at 12% (on primary, contrast and danger) that goes while either half is hovered, instead of a 1px gap showing the page through, and a single shared border on outlined variants. Its chevron is drawn smaller, to sit level with a label's icon.
+
 ## 0.21.0
 
 ### Minor Changes
