@@ -46,13 +46,14 @@ src/
 
 ### Build and how apps get the styles
 
-- Vite library mode, ESM only, one output file per module (`preserveModules`) so apps bundle only what they import. `vue`, `reka-ui` and `@tanstack/vue-virtual` stay external.
+- Vite library mode, ESM only, one output file per module (`preserveModules`) so apps bundle only what they import. `vue`, `reka-ui`, `@tanstack/vue-virtual` and `@tiptap/*` stay external.
+- Two entries: `src/index.ts` (everything) and `src/markdown-editor.ts` (MarkdownEditor and MarkdownOutline). The editor lives only in the second, so the main entry never imports TipTap and apps that don't use it never install it.
 - Type declarations come from `vue-tsc -p tsconfig.build.json`. Because they keep import paths as written, **the library imports relatively; there is no `@/` alias** (ESLint enforces it).
 - **No compiled CSS ships.** Components are styled with Tailwind classes in their templates, and anything a class can't express lives in `src/styles/` (in `@layer components`). Apps import `sparkling-ui/tailwind.css` into their own Tailwind 4 build; its `@source` points at `dist/`, so one build generates the app's classes and the components' together. Consequences:
   - Never build a class name at runtime (`` `bg-${hue}-10` ``): Tailwind can't see it. Use a lookup of full class strings, or an inline style.
   - Don't write `<style>` blocks in components; they would be compiled here and not in the app.
 - Apps import `tailwind.css` at the end of their Tailwind entry: an app theme that resets a namespace (Tamable's `--color-*: initial`) would otherwise remove ours. MustLoop's PostCSS inlines imports with `postcss-import` before Tailwind runs; it has to skip `sparkling-ui`, because only Tailwind's resolver reads `exports`.
-- Package exports: `.` (components and composables), `./tailwind.css` and `./base.css`. Published publicly to npm as `@sparklingopinions/sparkling-ui`; apps alias it to `sparkling-ui`.
+- Package exports: `.` (components and composables), `./markdown-editor`, `./tailwind.css` and `./base.css`. Published publicly to npm as `@sparklingopinions/sparkling-ui`; apps alias it to `sparkling-ui`.
 
 ### Tokens and classes
 
@@ -106,4 +107,4 @@ Changesets. Stay on 0.x until both apps are migrated. A PR that changes what app
 
 ## Dependencies
 
-The agreed runtime dependencies are `reka-ui` and `@tanstack/vue-virtual` (each added with the first component that uses it), with `vue` and `tailwindcss` as peers. **Ask before adding any other runtime dependency.** Dev dependencies are fine.
+The agreed runtime dependencies are `reka-ui` and `@tanstack/vue-virtual` (each added with the first component that uses it), with `vue` and `tailwindcss` as peers. TipTap (`@tiptap/core`, `pm`, `vue-3`, `starter-kit`, `markdown`, `extensions`) is an optional peer, for `sparkling-ui/markdown-editor` only: a peer, so an app that also uses TipTap itself shares one copy (two copies of ProseMirror break each other); optional, so apps without the editor don't install it. **Ask before adding any other runtime dependency.** Dev dependencies are fine.

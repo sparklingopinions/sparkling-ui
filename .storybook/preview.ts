@@ -22,6 +22,7 @@ const preview: Preview = {
             [
               'Input',
               'Textarea',
+              'MarkdownEditor',
               'FormField',
               'Checkbox',
               'Radio',

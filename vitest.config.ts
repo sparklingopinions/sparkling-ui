@@ -10,7 +10,9 @@ const storyProject = (mode: 'light' | 'dark') => ({
   plugins: [storybookTest({ configDir: '.storybook' })],
   define: { 'import.meta.env.STORY_MODE': JSON.stringify(mode) },
   // Found mid-run on a cold cache (always, in CI), Vite reloads the page and the run fails.
-  optimizeDeps: { include: ['vue', 'reka-ui'] },
+  optimizeDeps: {
+    include: ['vue', 'reka-ui', '@tiptap/vue-3', '@tiptap/starter-kit', '@tiptap/markdown', '@tiptap/extensions']
+  },
   test: {
     name: `stories-${mode}`,
     browser: {

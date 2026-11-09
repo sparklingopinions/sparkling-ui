@@ -596,3 +596,138 @@
     }
   }
 }
+
+/* A Markdown document as MarkdownEditor shows it: reading type, headings that lead their sections, calm list markers. */
+@utility sui-markdown {
+  color: rgb(var(--sui-ink-body));
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+
+  & > * + * {
+    margin-top: 0.75em;
+  }
+
+  & :where(h1, h2, h3, h4) {
+    margin: 1.4em 0 0.35em;
+    color: rgb(var(--sui-ink));
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    scroll-margin-top: 1rem;
+  }
+
+  & > :where(h1, h2, h3, h4):first-child {
+    margin-top: 0;
+  }
+
+  & h1 {
+    font-size: 1.375rem;
+  }
+
+  & h2 {
+    font-size: 1.125rem;
+  }
+
+  & h3 {
+    font-size: 1rem;
+  }
+
+  & h4 {
+    font-size: 0.9375rem;
+    color: rgb(var(--sui-ink-emphasis));
+  }
+
+  & :where(h1, h2, h3, h4) + * {
+    margin-top: 0;
+  }
+
+  & p {
+    margin: 0;
+  }
+
+  & :where(ul, ol) {
+    margin-bottom: 0;
+    padding-left: 1.25rem;
+  }
+
+  & ul {
+    list-style: disc;
+  }
+
+  & ol {
+    list-style: decimal;
+  }
+
+  & li {
+    margin: 0.2em 0;
+  }
+
+  & li > :where(ul, ol) {
+    margin-top: 0.2em;
+  }
+
+  & li::marker {
+    color: rgb(var(--sui-ink-faint));
+  }
+
+  & strong {
+    color: rgb(var(--sui-ink));
+    font-weight: 600;
+  }
+
+  & a {
+    color: rgb(var(--sui-accent));
+    text-decoration: underline;
+    text-decoration-color: rgb(var(--sui-accent) / 0.4);
+    text-underline-offset: 2px;
+  }
+
+  & blockquote {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0.875rem;
+    border-left: 2px solid rgb(var(--sui-line));
+    color: rgb(var(--sui-ink-subtle));
+  }
+
+  & code {
+    padding: 0.1em 0.3em;
+    border-radius: 4px;
+    background: rgb(var(--sui-fill) / var(--sui-fill-alpha));
+    font-size: 0.875em;
+  }
+
+  & pre {
+    overflow-x: auto;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: rgb(var(--sui-fill) / var(--sui-fill-alpha));
+  }
+
+  & pre code {
+    padding: 0;
+    background: none;
+  }
+
+  & hr {
+    margin: 1.5em 0;
+    border: 0;
+    border-top: 1px solid rgb(var(--sui-line-subtle));
+  }
+
+  /* A placeholder outline (MarkdownEditor's placeholder slot): the document's shapes, all in the placeholder ink. */
+  &[data-faint],
+  &[data-faint] :where(h1, h2, h3, h4, strong, a) {
+    color: rgb(var(--sui-ink-faint));
+  }
+
+  /* The placeholder: TipTap marks the empty first paragraph. */
+  & p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    color: rgb(var(--sui-ink-faint));
+    pointer-events: none;
+  }
+}
