@@ -22,6 +22,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./markdown-editor": {
+      "types": "./dist/markdown-editor.d.ts",
+      "import": "./dist/markdown-editor.js"
+    },
     "./tailwind.css": "./src/styles/tailwind.css",
     "./base.css": "./src/styles/base.css"
   },
@@ -41,6 +45,12 @@
     "release": "npm run build && changeset publish"
   },
   "peerDependencies": {
+    "@tiptap/core": "^3.33.0",
+    "@tiptap/extensions": "^3.33.0",
+    "@tiptap/markdown": "^3.33.0",
+    "@tiptap/pm": "^3.33.0",
+    "@tiptap/starter-kit": "^3.33.0",
+    "@tiptap/vue-3": "^3.33.0",
     "tailwindcss": "^4.1.0",
     "vue": "^3.5.0"
   },
@@ -53,6 +63,12 @@
     "@storybook/addon-vitest": "^10.6.2",
     "@storybook/vue3-vite": "^10.6.2",
     "@tailwindcss/vite": "^4.3.3",
+    "@tiptap/core": "^3.33.0",
+    "@tiptap/extensions": "^3.33.0",
+    "@tiptap/markdown": "^3.33.0",
+    "@tiptap/pm": "^3.33.0",
+    "@tiptap/starter-kit": "^3.33.0",
+    "@tiptap/vue-3": "^3.33.0",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/node": "^26.6.5",
     "@vitejs/plugin-vue": "^6.0.10",
@@ -81,5 +97,25 @@
   },
   "dependencies": {
     "reka-ui": "^2.11.0"
+  },
+  "peerDependenciesMeta": {
+    "@tiptap/core": {
+      "optional": true
+    },
+    "@tiptap/extensions": {
+      "optional": true
+    },
+    "@tiptap/markdown": {
+      "optional": true
+    },
+    "@tiptap/pm": {
+      "optional": true
+    },
+    "@tiptap/starter-kit": {
+      "optional": true
+    },
+    "@tiptap/vue-3": {
+      "optional": true
+    }
   }
 }
