@@ -20,6 +20,8 @@ export interface ButtonProps extends PrimitiveProps {
   /** A toggle's state, as `aria-pressed`. Drawn on for ghost, ghost-inverse and secondary; leave it unset on a plain
    *  button. */
   pressed?: boolean
+  /** Joined to a neighbouring button on that side, as in SplitButton: its corners there are square. */
+  attached?: 'start' | 'end'
 }
 
 const props = withDefaults(defineProps<ButtonProps>(), {
@@ -27,7 +29,8 @@ const props = withDefaults(defineProps<ButtonProps>(), {
   variant: 'secondary',
   size: 'md',
   iconPosition: 'start',
-  pressed: undefined
+  pressed: undefined,
+  attached: undefined
 })
 
 const variants: Record<ButtonVariant, string> = {
@@ -97,6 +100,7 @@ const classes = computed(() => [
   props.iconOnly ? 'aspect-square px-0' : paddings[props.size],
   // xs uses rounded-md: rounded-lg reads as a pill at that height.
   props.pill ? 'rounded-full' : props.size === 'xs' ? 'rounded-md' : 'rounded-(--sui-radius-button)',
+  props.attached === 'start' ? 'rounded-s-none' : props.attached === 'end' ? 'rounded-e-none' : '',
   props.iconOnly ? '' : props.iconPosition === 'end' ? '[&_svg]:ml-2' : '[&_svg:first-child]:mr-2'
 ])
 
