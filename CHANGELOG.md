@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.20.0
+
+### Minor Changes
+
+- 94ba11f: `Alert` takes `align: 'start'` for text that wraps: the icon tile (or dot) and the dismiss button sit on the first line instead of centred on the whole text. `'center'` stays the default.
+
 ## 0.19.0
 
 ### Minor Changes
