@@ -29,10 +29,17 @@ watch(
 <template>
   <div
     ref="root"
-    class="absolute inset-y-0 z-[30] flex transition-[transform,translate,box-shadow,visibility] duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] motion-reduce:transition-none"
+    class="absolute inset-y-0 z-[30] flex duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] motion-reduce:transition-none"
     :class="[
       side === 'start' ? 'left-0' : 'right-0',
-      open ? 'visible translate-x-0' : ['invisible', side === 'start' ? '-translate-x-full' : 'translate-x-full'],
+      // Opening, visibility isn't transitioned, so it shows at once and what opens it can focus inside straight away;
+      // closing, it is, so it stays visible until the slide ends.
+      open
+        ? 'visible translate-x-0 transition-[transform,translate,box-shadow]'
+        : [
+            'invisible transition-[transform,translate,box-shadow,visibility]',
+            side === 'start' ? '-translate-x-full' : 'translate-x-full'
+          ],
       floating && open ? 'shadow-(--sui-shadow-floating)' : ''
     ]"
     :data-state="open ? 'open' : 'closed'"
