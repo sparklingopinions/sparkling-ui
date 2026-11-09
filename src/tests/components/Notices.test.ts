@@ -40,6 +40,15 @@ describe('Alert', () => {
     expect(wrapper.text()).toContain('Retry')
   })
 
+  it('centres its icon on the text, or sets it on the first line', () => {
+    const centred = mount(Alert, { props: { icon: 'info' }, slots: { default: 'Text' } })
+    expect(centred.classes()).toContain('items-center')
+
+    const start = mount(Alert, { props: { icon: 'info', align: 'start' }, slots: { default: 'Text' } })
+    expect(start.classes()).toContain('items-start')
+    expect(start.classes()).not.toContain('items-center')
+  })
+
   it('has a named dismiss button', async () => {
     const wrapper = mount(Alert, {
       props: { dismissible: true, dismissLabel: 'Hide' },
