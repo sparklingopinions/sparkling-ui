@@ -1,5 +1,12 @@
 <script setup lang="ts">
-defineProps<{ direction: 'left' | 'right' | 'down' }>()
+defineProps<{ direction: 'left' | 'right' | 'down' | 'up' }>()
+
+const paths = {
+  left: 'M10 3 5 8l5 5',
+  right: 'm6 3 5 5-5 5',
+  down: 'm4.5 6.5 3.5 3.5 3.5-3.5',
+  up: 'm4.5 9.5 3.5-3.5 3.5 3.5'
+}
 </script>
 
 <template>
@@ -14,8 +21,6 @@ defineProps<{ direction: 'left' | 'right' | 'down' }>()
     stroke-width="1.5"
     width="16"
   >
-    <path
-      :d="direction === 'left' ? 'M10 3 5 8l5 5' : direction === 'down' ? 'm4.5 6.5 3.5 3.5 3.5-3.5' : 'm6 3 5 5-5 5'"
-    />
+    <path :d="paths[direction]" />
   </svg>
 </template>

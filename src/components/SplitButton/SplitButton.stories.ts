@@ -14,7 +14,8 @@ const meta: Meta<typeof SplitButton> = {
   args: { variant: 'primary', size: 'md', disabled: false, items, menuLabel: 'More ways to approve' },
   argTypes: {
     variant: { control: 'select', options: ['primary', 'secondary', 'tinted'] },
-    size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }
+    size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+    side: { control: 'inline-radio', options: ['bottom', 'top'] }
   },
   render: (args) => ({
     components: { SplitButton, Icon },
@@ -31,6 +32,17 @@ export const Primary: Story = {}
 export const Secondary: Story = { args: { variant: 'secondary' } }
 
 export const Disabled: Story = { args: { disabled: true } }
+
+/** At the foot of the screen (a floating decision bar): the menu opens above, and the chevron points up. */
+export const OpensAbove: Story = {
+  args: { side: 'top' },
+  render: (args) => ({
+    components: { SplitButton, Icon },
+    setup: () => ({ args }),
+    template:
+      '<div class="flex h-48 items-end"><SplitButton v-bind="args"><Icon name="check" />Approve</SplitButton></div>'
+  })
+}
 
 export const Sizes: Story = {
   render: (args) => ({

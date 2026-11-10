@@ -48,4 +48,15 @@ describe('SplitButton', () => {
     expect(main.attributes('disabled')).toBeUndefined()
     expect(chevron.attributes('disabled')).toBeDefined()
   })
+
+  it('points the chevron down by default, and up when the menu opens above', () => {
+    const path = (side?: 'top' | 'bottom') =>
+      mount(SplitButton, { props: { items, side }, slots: { default: 'Approve' } })
+        .findAll('button')[1]
+        .find('path')
+        .attributes('d')
+
+    expect(path()).toBe('m4.5 6.5 3.5 3.5 3.5-3.5')
+    expect(path('top')).toBe('m4.5 9.5 3.5-3.5 3.5 3.5')
+  })
 })
