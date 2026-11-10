@@ -13,13 +13,16 @@ export interface SplitButtonProps {
   items?: DropdownMenuEntry[]
   /** The chevron's name and tooltip. */
   menuLabel?: string
+  /** Which side the menu opens on, and so which way the chevron points: up for a button at the foot of the screen. */
+  side?: 'top' | 'bottom'
 }
 
 const props = withDefaults(defineProps<SplitButtonProps>(), {
   variant: 'primary',
   size: 'md',
   items: () => [],
-  menuLabel: 'More options'
+  menuLabel: 'More options',
+  side: 'bottom'
 })
 
 // The line between the halves, quieter than the page showing through: the fill's own ink, faint (12%).
@@ -48,7 +51,13 @@ const emit = defineEmits<{ click: [event: MouseEvent]; 'click-item': [item: Drop
     >
       <slot />
     </Button>
-    <DropdownMenu align="end" :items="props.items" :tooltip="menuLabel" @click-item="emit('click-item', $event)">
+    <DropdownMenu
+      align="end"
+      :items="props.items"
+      :side="side"
+      :tooltip="menuLabel"
+      @click-item="emit('click-item', $event)"
+    >
       <template #trigger>
         <Button
           :aria-label="menuLabel"
@@ -60,7 +69,7 @@ const emit = defineEmits<{ click: [event: MouseEvent]; 'click-item': [item: Drop
           type="button"
           :variant="variant"
         >
-          <ChevronIcon direction="down" />
+          <ChevronIcon :direction="side === 'top' ? 'up' : 'down'" />
         </Button>
       </template>
     </DropdownMenu>

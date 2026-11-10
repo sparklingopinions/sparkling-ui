@@ -36,6 +36,8 @@ export interface DropdownMenuProps extends MenuConfirmLabels {
   tooltip?: string | null
   /** Lines the menu up with the trigger's start or end edge. */
   align?: 'start' | 'end'
+  /** Which side of the trigger the menu opens on: above it for a trigger at the foot of the screen. */
+  side?: 'top' | 'bottom'
 }
 
 const props = withDefaults(defineProps<DropdownMenuProps>(), {
@@ -44,7 +46,8 @@ const props = withDefaults(defineProps<DropdownMenuProps>(), {
   buttonIcon: 'more-vertical',
   buttonLabel: undefined,
   tooltip: 'More actions',
-  align: 'start'
+  align: 'start',
+  side: 'bottom'
 })
 
 const emit = defineEmits<{ 'click-item': [item: DropdownMenuAction & { id?: string }]; show: []; hide: [] }>()
@@ -86,7 +89,7 @@ function onOpenChange(value: boolean) {
         <DropdownMenuContent
           :align="align"
           :class="[menuContentClass, 'min-w-[max(12rem,var(--reka-dropdown-menu-trigger-width))]']"
-          side="bottom"
+          :side="side"
         >
           <template v-for="(item, index) in items" :key="index">
             <DropdownMenuSeparator v-if="item.type === 'separator'" :class="menuSeparatorClass" />
