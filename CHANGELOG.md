@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.24.0
+
+### Minor Changes
+
+- 3a27b76: SplitButton and DropdownMenu take a `side` (`'top'` or `'bottom'`, the default): a split button at the foot of the screen opens its menu above, with its chevron pointing up.
+
 ## 0.23.0
 
 ### Minor Changes
