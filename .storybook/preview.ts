@@ -35,7 +35,18 @@ const preview: Preview = {
               'PropertyList'
             ],
             'Data display',
-            ['Avatar', 'Badge', 'Tag', 'Kbd', 'Icon', 'PropertyRow', 'Collapsible', 'Meter', 'PricingCard'],
+            [
+              'Avatar',
+              'Badge',
+              'Tag',
+              'Kbd',
+              'CopyBlock',
+              'Icon',
+              'PropertyRow',
+              'Collapsible',
+              'Meter',
+              'PricingCard'
+            ],
             'Collections',
             ['Table', 'DataList', 'Board', 'FilterChip', 'FilterMenu', 'SortMenu', 'ActionBar', 'Pagination'],
             'Feedback',
