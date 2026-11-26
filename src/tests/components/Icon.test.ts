@@ -2,7 +2,7 @@ import { defineComponent, h, nextTick } from 'vue'
 
 import { mount } from '@vue/test-utils'
 
-import { iconSet } from '../../components/Icon/iconSet'
+import { iconAliases, iconSet } from '../../components/Icon/iconSet'
 import { Icon, iconNames, setIconResolver } from '../../index'
 import { expectAccessible } from '../support/axe'
 
@@ -76,7 +76,7 @@ describe('Icon', () => {
     expect(wrapper.element.tagName).toBe('svg')
     expect(wrapper.attributes()).toMatchObject({ viewBox: '0 0 16 16', 'stroke-width': '1.5', style: 'fill: none;' })
     expect(wrapper.find('path').exists()).toBe(true)
-    expect(iconNames).toHaveLength(141)
+    expect(iconNames).toHaveLength(204)
   })
 
   it('draws every icon on the 16 grid, or the 8 or 24 one', () => {
@@ -93,6 +93,46 @@ describe('Icon', () => {
     expect(wrapper.findAll('circle')).toHaveLength(3)
     expect(wrapper.attributes('style')).toBe('stroke: none;')
     expect(mount(Icon, { props: { name: 'people' } }).html()).toBe(mount(Icon, { props: { name: 'users' } }).html())
+  })
+
+  it('resolves every alias to a drawing, and no alias hides one', () => {
+    const broken = Object.entries(iconAliases).filter(([alias, name]) => !iconSet[name] || iconSet[alias])
+
+    expect(broken).toEqual([])
+  })
+
+  it('names each drawing for what it shows', () => {
+    const body = (name: string) => mount(Icon, { props: { name } }).html()
+
+    // The page is a document, the pen is a pen, the euro sign is euro; building and funnel have their own drawings.
+    expect(body('file-text')).toBe(body('document'))
+    expect(body('posts')).toBe(body('document'))
+    expect(body('companies')).toBe(body('building'))
+    expect(body('pen')).not.toBe(body('document'))
+    expect(body('euro')).not.toBe(body('funnel'))
+    // Ideas with a drawing of their own never borrow another's.
+    expect(body('user')).not.toBe(body('users'))
+    expect(body('person')).toBe(body('user'))
+    expect(body('repeat')).not.toBe(body('cycle'))
+    expect(body('mark-as-read')).toBe(body('mail-open'))
+    for (const gone of ['library', 'collection', 'stack', 'focus', 'flip', 'flip-left', 'alt-text']) {
+      expect(iconSet[gone] ?? iconAliases[gone]).toBeUndefined()
+    }
+  })
+
+  it('draws a twin as its partner mirrored, so the pair matches', () => {
+    for (const [twin, of] of [
+      ['chevron-up', 'chevron-down'],
+      ['panel-left', 'panel-right'],
+      ['panel-left-close', 'panel-right-close'],
+      ['arrow-up-circle', 'arrow-down-circle'],
+      ['arrow-left-circle', 'arrow-right-circle'],
+      ['thumbs-down', 'thumbs-up']
+    ]) {
+      expect(iconSet[twin].body).toContain(iconSet[of].body)
+      expect(iconSet[twin].body).toMatch(/^<g transform="translate\(/)
+      expect(iconSet[twin].viewBox).toBe(iconSet[of].viewBox)
+    }
   })
 
   it('draws 24px-grid icons at the same visual stroke', () => {
