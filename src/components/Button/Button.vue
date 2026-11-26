@@ -4,7 +4,16 @@ import { computed } from 'vue'
 import { Primitive, type PrimitiveProps } from 'reka-ui'
 
 export type ButtonVariant =
-  'primary' | 'secondary' | 'tinted' | 'ghost' | 'contrast' | 'danger' | 'danger-outline' | 'ghost-inverse'
+  | 'primary'
+  | 'secondary'
+  | 'tinted'
+  | 'ghost'
+  | 'contrast'
+  | 'danger'
+  | 'danger-outline'
+  | 'ghost-inverse'
+  | 'link'
+  | 'link-muted'
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
 export interface ButtonProps extends PrimitiveProps {
@@ -48,6 +57,11 @@ const variants: Record<ButtonVariant, string> = {
   danger: 'bg-sui-danger-solid text-sui-on-danger not-data-disabled:hover:bg-sui-danger-hover',
   'danger-outline':
     'border border-sui-danger-line bg-sui-surface text-sui-danger not-data-disabled:hover:bg-sui-danger-soft [&_svg]:stroke-sui-danger',
+  // A button that reads as a link, for a light next step inside text or a notice: the main one in the accent, a
+  // second one muted. No box, so the size sets only the text.
+  link: 'text-sui-accent underline-offset-2 not-data-disabled:hover:underline [&_svg]:stroke-sui-accent',
+  'link-muted':
+    'text-sui-ink-muted underline-offset-2 not-data-disabled:hover:text-sui-ink not-data-disabled:hover:underline [&_svg]:stroke-sui-ink-muted',
   // For inverse grounds: toasts, dark bands.
   'ghost-inverse':
     'border border-transparent bg-transparent text-sui-on-inverse not-data-disabled:hover:bg-sui-on-inverse/[0.12] not-data-disabled:active:bg-sui-on-inverse/[0.2] [&_svg]:stroke-sui-on-inverse'
@@ -85,7 +99,8 @@ const texts: Record<ButtonSize, string> = {
 }
 
 // Filled buttons turn neutral when off, rather than fading their colour; ghosts, with nothing to fill, fade.
-const ghosts: ButtonVariant[] = ['ghost', 'ghost-inverse']
+const ghosts: ButtonVariant[] = ['ghost', 'ghost-inverse', 'link', 'link-muted']
+const links: ButtonVariant[] = ['link', 'link-muted']
 const offClass =
   'data-disabled:border-sui-fill-line data-disabled:bg-sui-fill data-disabled:text-sui-ink-muted data-disabled:shadow-none data-disabled:[&_svg]:stroke-sui-ink-muted'
 
@@ -95,11 +110,17 @@ const classes = computed(() => [
   ghosts.includes(props.variant) ? 'data-disabled:opacity-50' : offClass,
   props.variant === 'ghost-inverse' ? 'focus-visible:sui-ring-inverse' : 'focus-visible:sui-ring',
   (props.pressed && pressedVariants[props.variant]) || variants[props.variant],
-  heights[props.size],
+  links.includes(props.variant) ? 'h-auto' : heights[props.size],
   texts[props.size],
-  props.iconOnly ? 'aspect-square px-0' : paddings[props.size],
-  // xs uses rounded-md: rounded-lg reads as a pill at that height.
-  props.pill ? 'rounded-full' : props.size === 'xs' ? 'rounded-md' : 'rounded-(--sui-radius-button)',
+  links.includes(props.variant) ? 'px-0' : props.iconOnly ? 'aspect-square px-0' : paddings[props.size],
+  // xs uses rounded-md: rounded-lg reads as a pill at that height. A link's ring hugs its text.
+  links.includes(props.variant)
+    ? 'rounded'
+    : props.pill
+      ? 'rounded-full'
+      : props.size === 'xs'
+        ? 'rounded-md'
+        : 'rounded-(--sui-radius-button)',
   props.attached === 'start' ? 'rounded-s-none' : props.attached === 'end' ? 'rounded-e-none' : '',
   props.iconOnly ? '' : props.iconPosition === 'end' ? '[&_svg]:ml-2' : '[&_svg:first-child]:mr-2'
 ])
@@ -116,6 +137,7 @@ const isNativeButton = computed(() => props.as === 'button' && !props.asChild)
     :as-child="asChild"
     :class="classes"
     :data-disabled="disabled ? '' : undefined"
+    :data-link="variant === 'link' ? '' : undefined"
     :disabled="isNativeButton ? disabled : undefined"
   >
     <slot />

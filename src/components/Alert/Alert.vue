@@ -8,7 +8,7 @@ export type AlertTone = 'danger' | 'warning' | 'success' | 'info' | 'neutral'
 
 export interface AlertProps {
   tone?: AlertTone
-  /** An icon for the tile; without one, the banner shows a dot. */
+  /** An icon in the tone's colour, on the first line; without one, the banner shows a dot. */
   icon?: string
   dismissible?: boolean
   /** The dismiss button's accessible name. */
@@ -34,42 +34,42 @@ const props = withDefaults(defineProps<AlertProps>(), {
 
 defineEmits<{ dismiss: [] }>()
 
-// The tile is a soft filled chip, its alpha tuned so each tone reads with equal weight on its own tinted ground.
-const tones: Record<AlertTone, { bar: string; line: string; tile: string; icon: IconColor; dot: string }> = {
+// A link in the actions takes the tone's ink, which holds 4.5:1 on its ground where the accent doesn't.
+const tones: Record<AlertTone, { bar: string; line: string; icon: IconColor; dot: string; link: string }> = {
   danger: {
     bar: 'bg-sui-danger-soft',
     line: 'border-sui-danger-line',
-    tile: 'bg-sui-danger-solid/20',
     icon: 'danger',
-    dot: 'bg-sui-danger-solid'
+    dot: 'bg-sui-danger-solid',
+    link: '[&_[data-link]]:text-sui-danger [&_[data-link]_svg]:stroke-sui-danger'
   },
   success: {
     bar: 'bg-sui-success-soft',
     line: 'border-sui-success-line',
-    tile: 'bg-sui-success-mid/20',
     icon: 'success-mid',
-    dot: 'bg-sui-success-mid'
+    dot: 'bg-sui-success-mid',
+    link: '[&_[data-link]]:text-sui-success [&_[data-link]_svg]:stroke-sui-success'
   },
   warning: {
     bar: 'bg-sui-warning-soft',
     line: 'border-sui-warning-line',
-    tile: 'bg-sui-warning-bright/20',
     icon: 'warning-mid',
-    dot: 'bg-sui-warning-mid'
+    dot: 'bg-sui-warning-mid',
+    link: '[&_[data-link]]:text-sui-warning [&_[data-link]_svg]:stroke-sui-warning'
   },
   info: {
     bar: 'bg-sui-accent-soft',
     line: 'border-sui-accent-line',
-    tile: 'bg-sui-accent-solid/20',
     icon: 'accent',
-    dot: 'bg-sui-accent-solid'
+    dot: 'bg-sui-accent-solid',
+    link: ''
   },
   neutral: {
     bar: 'bg-sui-canvas',
     line: 'border-sui-line-subtle',
-    tile: 'bg-sui-line-subtle',
     icon: 'ink-muted',
-    dot: 'bg-sui-mark-faint'
+    dot: 'bg-sui-mark-faint',
+    link: ''
   }
 }
 
@@ -85,26 +85,26 @@ const below = computed(() => props.actionPlacement === 'below')
       tone.bar,
       start ? 'items-start' : 'items-center',
       inset
-        ? ['flex w-full gap-2.5 rounded-xl border px-3 py-2.5', tone.line]
+        ? ['flex w-full gap-2.5 rounded-xl border px-4.5 py-4', tone.line]
         : 'flex w-full gap-3 border-b border-sui-line-subtle px-6 py-3'
     ]"
   >
     <slot v-if="$slots.leading" name="leading" />
-    <span v-else-if="icon" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" :class="tone.tile">
+    <!-- The icon, dot and dismiss centre on the text's first line (20px) when it starts at the top. -->
+    <span v-else-if="icon" class="flex h-5 shrink-0 items-center">
       <Icon class="h-4 w-4" :color="tone.icon" :name="icon" />
     </span>
-    <span v-else class="h-1.5 w-1.5 shrink-0 rounded-full" :class="[tone.dot, start && 'mt-[11px]']" />
+    <span v-else class="h-1.5 w-1.5 shrink-0 rounded-full" :class="[tone.dot, start && 'mt-[7px]']" />
 
-    <!-- On start, padded so its first line centres on the 28px tile, where the dot and dismiss sit too. -->
-    <div class="min-w-0 flex-1 text-sm leading-snug text-sui-ink-body" :class="start && 'py-1'">
+    <div class="min-w-0 flex-1 text-sm leading-5 text-sui-ink-body">
       <p v-if="title" class="m-0 font-semibold text-sui-ink">{{ title }}</p>
       <div :class="title && 'mt-0.5'"><slot /></div>
-      <div v-if="below && $slots.action" class="mt-2.5 flex flex-wrap gap-2">
+      <div v-if="below && $slots.action" class="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-2" :class="tone.link">
         <slot name="action" />
       </div>
     </div>
 
-    <div v-if="!below && $slots.action" class="shrink-0">
+    <div v-if="!below && $slots.action" class="shrink-0" :class="tone.link">
       <slot name="action" />
     </div>
 
@@ -112,7 +112,7 @@ const below = computed(() => props.actionPlacement === 'below')
       v-if="dismissible"
       :aria-label="dismissLabel"
       class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-sui-ink-faint transition-colors hover:bg-sui-fill-hover hover:text-sui-ink-body focus-visible:sui-ring"
-      :class="start && 'mt-0.5'"
+      :class="start && '-mt-0.5'"
       type="button"
       @click="$emit('dismiss')"
     >
