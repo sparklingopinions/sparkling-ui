@@ -1,5 +1,11 @@
 # @sparklingopinions/sparkling-ui
 
+## 0.26.0
+
+### Minor Changes
+
+- 31828f8: Alert: a `success` tone, a `title` above the text, and `action-placement="below"` to put the action under the text instead of at the end of the row, so it never squeezes text that wraps. With a title or an action below, the icon, dot and dismiss sit on the first line.
+
 ## 0.25.0
 
 ### Minor Changes
