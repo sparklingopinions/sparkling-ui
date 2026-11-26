@@ -80,8 +80,94 @@ const groups = {
   ],
   Scheduling: ['calendar-check', 'calendar-x', 'calendar-clock', 'clock', 'history'],
   Editing: ['split', 'merge', 'layers', 'undo-2', 'redo', 'list-checks', 'keyboard'],
-  Layout: ['maximize', 'minimize', 'panel-right', 'panel-right-close', 'sun-moon', 'sun', 'moon'],
-  State: ['circle-dashed', 'circle-half', 'circle-check', 'circle-alert', 'triangle-alert', 'key-round', 'lock']
+  Layout: [
+    'maximize',
+    'minimize',
+    'panel-left',
+    'panel-left-close',
+    'panel-right',
+    'panel-right-close',
+    'columns',
+    'menu',
+    'sun-moon',
+    'sun',
+    'moon'
+  ],
+  State: [
+    'circle-dashed',
+    'circle-half',
+    'circle-check',
+    'circle-alert',
+    'circle-plus',
+    'circle-x',
+    'triangle-alert',
+    'key-round',
+    'lock',
+    'lock-open',
+    'shield-check'
+  ],
+  Directions: [
+    'chevron-up',
+    'chevron-down',
+    'arrow-up-circle',
+    'arrow-down-circle',
+    'arrow-left-circle',
+    'arrow-right-circle'
+  ],
+  Actions: [
+    'minus',
+    'share',
+    'scissors',
+    'pin',
+    'star',
+    'bookmark',
+    'tag',
+    'hash',
+    'archive-restore',
+    'mail-open',
+    'repeat'
+  ],
+  People: ['user', 'user-plus', 'users', 'thumbs-up', 'thumbs-down', 'megaphone', 'languages', 'map-pin'],
+  Files: [
+    'document',
+    'file-plus',
+    'folder',
+    'folder-open',
+    'folder-plus',
+    'clipboard',
+    'clipboard-check',
+    'paperclip',
+    'book-open',
+    'newspaper',
+    'pen'
+  ],
+  Media: ['pause', 'stop', 'video', 'camera', 'mic-off', 'bell-off', 'rss'],
+  Business: [
+    'building',
+    'briefcase',
+    'funnel',
+    'target',
+    'chart-pie',
+    'percent',
+    'credit-card',
+    'wallet',
+    'receipt',
+    'euro',
+    'gift',
+    'calendar-plus'
+  ],
+  Systems: [
+    'monitor',
+    'smartphone',
+    'cloud',
+    'cloud-upload',
+    'database',
+    'terminal',
+    'power',
+    'bug',
+    'zap',
+    'sliders-horizontal'
+  ]
 }
 
 const statusIcons = [

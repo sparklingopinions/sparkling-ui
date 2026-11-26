@@ -78,7 +78,7 @@ Every floating layer (Dialog, Popover, Select, DropdownMenu, ContextMenu, the fi
 
 ### Icons
 
-`Icon` draws the library's set (`components/Icon/iconSet.ts`: the design system's 141 icons with neutral names, plus `iconAliases` for older and common names). An app adds icons or replaces some with `setIconResolver`; its components win. A library component that needs a glyph of its own (close, chevron, check) draws it inline as an internal component, so an app's overrides never change it. Icon colours are a lookup of full class strings per role (`colors.ts`), as with any class.
+`Icon` draws the library's set (`components/Icon/iconSet.ts`: the design system's 204 icons with neutral names, plus `iconAliases` for other spellings of the same thing (never a different idea: a name that means something else gets its own drawing). Twins that only point the other way are the drawing mirrored (`mirrored`), so a pair always matches). An app adds icons or replaces some with `setIconResolver`; its components win. A library component that needs a glyph of its own (close, chevron, check) draws it inline as an internal component, so an app's overrides never change it. Icon colours are a lookup of full class strings per role (`colors.ts`), as with any class.
 
 ### Tests and stories
 
