@@ -43,6 +43,7 @@ const pairs: { text: string; background: string; usage: string; min?: number; wa
   { text: 'on-inverse', background: 'inverse', wash: 0.18, usage: 'Ghost-inverse toggles on' },
   { text: 'on-inverse', background: 'inverse', wash: 0.22, usage: 'Ghost-inverse toggles on, hovered' },
   { text: 'ink-body', background: 'sunken', usage: 'Tags, grey avatars' },
+  { text: 'ink', background: 'sunken', usage: 'Copy blocks' },
   { text: 'ink-body', background: 'danger-soft', usage: 'Danger banners' },
   { text: 'ink-body', background: 'warning-soft', usage: 'Warning banners' },
   { text: 'ink-body', background: 'accent-soft', usage: 'Info banners' },
