@@ -83,11 +83,39 @@ export const WithTitle: Story = {
         </Alert>
         <Alert v-bind="args" action-placement="below" icon="info" title="Not synced yet" tone="neutral">
           Syncing it uses one of your 40 syncs left this month.
-          <template #action><Button size="sm" variant="secondary">Sync now</Button></template>
+          <template #action>
+            <Button size="sm" variant="link">Sync now</Button>
+            <Button size="sm" variant="link-muted">What syncs</Button>
+          </template>
         </Alert>
         <Alert v-bind="args" action-placement="below" icon="triangle-alert" title="Sync failed" tone="warning">
           Try again in a few minutes.
-          <template #action><Button size="sm" variant="secondary">Try again</Button></template>
+          <template #action><Button size="sm" variant="link">Try again</Button></template>
+        </Alert>
+      </div>
+    `
+  })
+}
+
+// A link for advice, which can be ignored; a button when the notice blocks the way forward.
+export const LinkOrButton: Story = {
+  args: { inset: true },
+  render: (args) => ({
+    components: { Alert, Button },
+    setup: () => ({ args }),
+    template: `
+      <div class="flex max-w-[34rem] flex-col gap-3">
+        <Alert v-bind="args" action-placement="below" icon="info" title="Not reviewed yet" tone="info">
+          A second look catches what the first one missed.
+          <template #action><Button size="sm" variant="link">Ask for a review</Button></template>
+        </Alert>
+        <Alert v-bind="args" action-placement="below" icon="circle-check" title="Up to date" tone="success">
+          Nothing changed since the last sync.
+          <template #action><Button size="sm" variant="link">Sync anyway</Button></template>
+        </Alert>
+        <Alert v-bind="args" action-placement="below" icon="circle-alert" title="Connection expired" tone="danger">
+          Nothing can be sent until it's connected again.
+          <template #action><Button size="sm" variant="secondary">Reconnect</Button></template>
         </Alert>
       </div>
     `

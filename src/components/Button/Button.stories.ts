@@ -39,6 +39,10 @@ export const Ghost: Story = { args: { variant: 'ghost' } }
 
 export const Danger: Story = { args: { variant: 'danger' } }
 
+export const Link: Story = { args: { variant: 'link' } }
+
+export const LinkMuted: Story = { args: { variant: 'link-muted' } }
+
 export const GhostInverse: Story = {
   args: { variant: 'ghost-inverse', size: 'sm' },
   render: (args) => ({

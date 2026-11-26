@@ -13,7 +13,11 @@ const pairs: { text: string; background: string; usage: string; min?: number; wa
   { text: 'ink-subtle', background: 'canvas', usage: 'Ghost buttons on the page background' },
   { text: 'ink-subtle', background: 'sunken', usage: 'Grey pills, table headers' },
   { text: 'ink-muted', background: 'surface', usage: 'Ledger labels, inline form hints, empty states, chips' },
-  { text: 'ink-muted', background: 'canvas', usage: 'The same text, on the page background' },
+  {
+    text: 'ink-muted',
+    background: 'canvas',
+    usage: 'The same text, on the page background; muted link buttons in neutral notices'
+  },
   { text: 'ink-faint', background: 'surface', usage: 'Placeholders' },
   { text: 'ink', background: 'raised', usage: 'Dialog, menu and popover titles' },
   { text: 'ink-emphasis', background: 'raised', usage: 'Dialog body text' },
@@ -33,9 +37,13 @@ const pairs: { text: string; background: string; usage: string; min?: number; wa
   { text: 'on-danger', background: 'danger-solid', usage: 'Danger buttons' },
   { text: 'on-danger', background: 'danger-hover', usage: 'Danger buttons on hover' },
   { text: 'danger', background: 'surface', usage: 'Danger outline buttons, errors' },
-  { text: 'danger', background: 'danger-soft', usage: 'Danger pills, danger outline buttons on hover' },
-  { text: 'success', background: 'success-soft', usage: 'Pills' },
-  { text: 'warning', background: 'warning-soft', usage: 'Pills' },
+  {
+    text: 'danger',
+    background: 'danger-soft',
+    usage: 'Danger pills, danger outline buttons on hover, link buttons in danger notices'
+  },
+  { text: 'success', background: 'success-soft', usage: 'Pills, link buttons in success notices' },
+  { text: 'warning', background: 'warning-soft', usage: 'Pills, link buttons in warning notices' },
   { text: 'info', background: 'info-soft', usage: 'Pills' },
   { text: 'on-inverse', background: 'inverse', usage: 'Tooltips, toasts, ghost-inverse buttons' },
   { text: 'on-inverse', background: 'inverse', wash: 0.12, usage: 'Ghost-inverse buttons on hover' },
@@ -44,6 +52,7 @@ const pairs: { text: string; background: string; usage: string; min?: number; wa
   { text: 'on-inverse', background: 'inverse', wash: 0.22, usage: 'Ghost-inverse toggles on, hovered' },
   { text: 'ink-body', background: 'sunken', usage: 'Tags, grey avatars' },
   { text: 'ink', background: 'sunken', usage: 'Copy blocks' },
+  { text: 'accent', background: 'canvas', usage: 'Link buttons in neutral notices' },
   { text: 'ink-body', background: 'danger-soft', usage: 'Danger banners' },
   { text: 'ink-body', background: 'warning-soft', usage: 'Warning banners' },
   { text: 'ink-body', background: 'accent-soft', usage: 'Info banners' },
