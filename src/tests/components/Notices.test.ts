@@ -8,6 +8,37 @@ import { expectAccessible } from '../support/axe'
 beforeAll(() => setIconResolver((name) => () => h('svg', { 'data-icon': name })))
 
 describe('Alert', () => {
+  it('has a success tone, in its own colours', () => {
+    const wrapper = mount(Alert, { props: { tone: 'success', inset: true }, slots: { default: 'Synced' } })
+
+    expect(wrapper.classes()).toEqual(expect.arrayContaining(['bg-sui-success-soft', 'border-sui-success-line']))
+    expect(wrapper.find('span').classes()).toContain('bg-sui-success-mid')
+  })
+
+  it('puts a title above the text, everything on its first line', () => {
+    const wrapper = mount(Alert, {
+      props: { title: 'Sync stopped', icon: 'info' },
+      slots: { default: 'Reconnect it.' }
+    })
+
+    expect(wrapper.find('p').text()).toBe('Sync stopped')
+    expect(wrapper.text()).toBe('Sync stoppedReconnect it.')
+    expect(wrapper.classes()).toContain('items-start')
+  })
+
+  it('puts the action under the text when asked, so it never squeezes it', () => {
+    const below = mount(Alert, {
+      props: { actionPlacement: 'below' },
+      slots: { default: 'Text', action: '<button>Retry</button>' }
+    })
+    const text = below.find('.flex-1')
+    expect(text.find('button').exists()).toBe(true)
+
+    const end = mount(Alert, { slots: { default: 'Text', action: '<button>Retry</button>' } })
+    expect(end.find('.flex-1').find('button').exists()).toBe(false)
+    expect(end.find('button').exists()).toBe(true)
+  })
+
   it('is a warning bar with a dot by default', async () => {
     const wrapper = mount(Alert, { slots: { default: 'Sync paused' }, attachTo: document.body })
 

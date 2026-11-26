@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import type { IconColor } from '../Icon/colors'
 
-export type AlertTone = 'danger' | 'warning' | 'info' | 'neutral'
+export type AlertTone = 'danger' | 'warning' | 'success' | 'info' | 'neutral'
 
 export interface AlertProps {
   tone?: AlertTone
@@ -17,13 +17,19 @@ export interface AlertProps {
   inset?: boolean
   /** Where the icon, dot and dismiss sit beside the text: centred on it, or on its first line for text that wraps. */
   align?: 'center' | 'start'
+  /** A short line above the text, in the ink's strongest weight: what happened, with the text saying what it means. */
+  title?: string
+  /** Where the action slot sits: at the end of the row, or under the text, so it never squeezes text that wraps. */
+  actionPlacement?: 'end' | 'below'
 }
 
 const props = withDefaults(defineProps<AlertProps>(), {
   tone: 'warning',
   icon: undefined,
   dismissLabel: 'Dismiss',
-  align: 'center'
+  align: 'center',
+  title: undefined,
+  actionPlacement: 'end'
 })
 
 defineEmits<{ dismiss: [] }>()
@@ -36,6 +42,13 @@ const tones: Record<AlertTone, { bar: string; line: string; tile: string; icon: 
     tile: 'bg-sui-danger-solid/20',
     icon: 'danger',
     dot: 'bg-sui-danger-solid'
+  },
+  success: {
+    bar: 'bg-sui-success-soft',
+    line: 'border-sui-success-line',
+    tile: 'bg-sui-success-mid/20',
+    icon: 'success-mid',
+    dot: 'bg-sui-success-mid'
   },
   warning: {
     bar: 'bg-sui-warning-soft',
@@ -61,7 +74,9 @@ const tones: Record<AlertTone, { bar: string; line: string; tile: string; icon: 
 }
 
 const tone = computed(() => tones[props.tone])
-const start = computed(() => props.align === 'start')
+// A title or an action under the text makes several lines: everything sits on the first.
+const start = computed(() => props.align === 'start' || !!props.title || props.actionPlacement === 'below')
+const below = computed(() => props.actionPlacement === 'below')
 </script>
 
 <template>
@@ -82,10 +97,14 @@ const start = computed(() => props.align === 'start')
 
     <!-- On start, padded so its first line centres on the 28px tile, where the dot and dismiss sit too. -->
     <div class="min-w-0 flex-1 text-sm leading-snug text-sui-ink-body" :class="start && 'py-1'">
-      <slot />
+      <p v-if="title" class="m-0 font-semibold text-sui-ink">{{ title }}</p>
+      <div :class="title && 'mt-0.5'"><slot /></div>
+      <div v-if="below && $slots.action" class="mt-2.5 flex flex-wrap gap-2">
+        <slot name="action" />
+      </div>
     </div>
 
-    <div v-if="$slots.action" class="shrink-0">
+    <div v-if="!below && $slots.action" class="shrink-0">
       <slot name="action" />
     </div>
 
